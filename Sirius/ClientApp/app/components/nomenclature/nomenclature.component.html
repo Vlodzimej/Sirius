@@ -1,0 +1,149 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">Фильтр</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Наименование">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Цена">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Остаток">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Единицы измерения">
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a class="btn btn-default btn-block" [routerLink]="['/newitem']">Новый</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+        <div class="panel panel-default">
+            <table class="table table-hover table-striped table-bordered">
+                <tr>
+                    <th class="text-center">№</th>
+                    <th>Наименование</th>
+                    <th>Последняя цена</th>
+                    <th>На складе</th>
+                    <th>Ед. измерения</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Название 1</td>
+                    <td>102.00</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Название 2</td>
+                    <td>23.00</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Название 3</td>
+                    <td>345.45</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Название 4</td>
+                    <td>12.15</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Название 5</td>
+                    <td>44.03</td>
+                    <td>5</td>
+                    <td>мл.</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Название 6</td>
+                    <td>767.77</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Название 7</td>
+                    <td>67.99</td>
+                    <td>5</td>
+                    <td>мл.</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Название 8</td>
+                    <td>45.01</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Название 9</td>
+                    <td>98.01</td>
+                    <td>5</td>
+                    <td>уп.</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Название 10</td>
+                    <td>33.00</td>
+                    <td>5</td>
+                    <td>шт.</td>
+                </tr>
+            </table>
+            <div class="panel-footer">
+                <ul class="pagination">
+                    <li>
+                        <a href="#">&laquo;</a>
+                    </li>
+                    <li>
+                        <a href="#">1</a>
+                    </li>
+                    <li>
+                        <a href="#">2</a>
+                    </li>
+                    <li>
+                        <a href="#">3</a>
+                    </li>
+                    <li>
+                        <a href="#">4</a>
+                    </li>
+                    <li>
+                        <a href="#">5</a>
+                    </li>
+                    <li>
+                        <a href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>One fine body&hellip;</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>

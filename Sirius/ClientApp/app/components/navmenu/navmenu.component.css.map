@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AACI,YADQ,CACR,CAAC,CAAC;EACE,WAAW,EAAE,IAAI;CACpB;;AAGL,AAAA,MAAM,CAAC;EACH,KAAK,EAAE,OAAO;EACd,WAAW,EAAE,IAAI;EACjB,cAAc,EAAE,SAAS;CAC5B",
+    "sources": [
+        "navmenu.component.scss"
+    ],
+    "names": [],
+    "file": "navmenu.component.css"
+}

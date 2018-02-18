@@ -1,33 +1,96 @@
-<div class='main-nav'>
-    <div class='navbar navbar-inverse'>
-        <div class='navbar-header'>
-            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
-                <span class='sr-only'>Toggle navigation</span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
-            <a class='navbar-brand' [routerLink]="['/home']">Sirius</a>
+            <a class="navbar-brand" href="#">
+                <div class="title">Сириус-Вет</div>
+            </a>
         </div>
-        <div class='clearfix'></div>
-        <div class='navbar-collapse collapse'>
-            <ul class='nav navbar-nav'>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/home']">
-                        <span class='glyphicon glyphicon-home'></span> Home
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-left">
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Документы
+                        <b class="caret"></b>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Расходные накладные</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Приходные накладные</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Списание</a>
+                        </li>
+                    </ul>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/counter']">
-                        <span class='glyphicon glyphicon-education'></span> Counter
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Справочники
+                        <b class="caret"></b>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Номенклатура</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Категории</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Услуги</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Поставщики</a>
+                        </li>
+                    </ul>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/fetch-data']">
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Отчеты
+                        <b class="caret"></b>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Остатки</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Мониторинг цен
+                            </a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Приход товаров
+                            </a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Расход товаров</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Профиль
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Настройки</a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/nomenclature']">Выход
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
     </div>
-</div>
+</nav>
