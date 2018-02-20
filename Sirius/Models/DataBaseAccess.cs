@@ -8,13 +8,13 @@ namespace Sirius.Models
 {
     public class DataBaseAccess
     {
-        public void CreateDB()
+        public static void CreateDB()
         {
             using (SiriusContext db = new SiriusContext())
             {
                 // создаем два объекта User
-                User user1 = new User { Id = Guid.NewGuid(), Login = "vlodzi", Password = "111" };
-                User user2 = new User { Id = Guid.NewGuid(), Login = "admin", Password = "admin" };
+                User user1 = new User("vlodzi", "111");
+                User user2 = new User("admin", "admin");
 
                 // добавляем их в бд
                 db.Users.Add(user1);

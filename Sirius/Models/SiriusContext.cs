@@ -12,7 +12,7 @@ namespace Sirius.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SiriusDB;Username=siriususer;Password=340571578");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SiriusDB;Username=sirius_user;Password=340571578");
         }
     }
 }

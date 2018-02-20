@@ -15,18 +15,13 @@ namespace Sirius
     {
         public static void Main(string[] args)
         {
+            DataBaseAccess.CreateDB();
             BuildWebHost(args).Run();
-            CreateDatabase();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
-
-        public static void CreateDatabase()
-        {
-
-        }
     }
 }

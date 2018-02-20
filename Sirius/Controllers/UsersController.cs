@@ -123,10 +123,9 @@ namespace Sirius.Controllers
         }
 
         [HttpGet("create")]
-        public async Task<IActionResult> CreateUsers([FromRoute] Guid id)
+        public void CreateUsers([FromRoute] Guid id)
         {
             DataBaseAccess.CreateDB();
-            return null;
         }
     }
 }

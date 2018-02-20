@@ -16,7 +16,9 @@ import { UserListComponent } from "./components/userlist/userlist.component";
         AppComponent,
         NavMenuComponent,
         HomeComponent,
-        NomenclatureComponent
+        NomenclatureComponent,
+        LoginComponent,
+        UserListComponent
     ],
     imports: [
         CommonModule,
