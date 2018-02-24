@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sirius.Models;
 using Sirius.DAL;
+using Sirius.BLL;
 using System.Web;
 using Newtonsoft.Json;
 
@@ -15,41 +16,41 @@ namespace Sirius.Controllers
     [Route("api/User")]
     public class UserController : Controller
     {
-        private UnitOfWork unitOfWork = new UnitOfWork();
+        private SiriusService siriusService = new SiriusService(new UnitOfWork());
 
         // GET: api/User
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            var result = unitOfWork.UserRepository.Get();
-            return result;
+            return siriusService.GetAllUsers();
         }
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(Guid id)
+        public User Get(Guid id)
         {
-            var user = unitOfWork.UserRepository.GetByID(id);
-            string result = JsonConvert.SerializeObject(user).Replace(@"\", "");
-            return result;
+            return siriusService.GetUserById(id);
         }
         
         // POST: api/User
         [HttpPost]
-        public void Post([FromBody]string value)
+        public bool Post([FromQuery]string login, [FromQuery]string password)
         {
+            return siriusService.CreateUser(login, password);
         }
         
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody]string value)
         {
+
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public bool Delete(Guid id)
         {
+            return siriusService.DeleteUser(id);
         }
     }
 }
