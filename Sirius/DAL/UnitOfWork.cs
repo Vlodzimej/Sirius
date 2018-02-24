@@ -6,13 +6,22 @@ namespace Sirius.DAL
     public class UnitOfWork : IDisposable
     {
         private SiriusContext context = new SiriusContext();
-        private GenericRepository<Item> itemRepository;
 
-        public GenericRepository<Item> DepartmentRepository
+        private GenericRepository<Item> itemRepository;
+        public GenericRepository<Item> ItemRepository
         {
             get
             {
                 return itemRepository ?? new GenericRepository<Item>(context);
+            }
+        }
+
+        private GenericRepository<User> userRepository;
+        public GenericRepository<User> UserRepository
+        {
+            get
+            {
+                return userRepository ?? new GenericRepository<User>(context);
             }
         }
 

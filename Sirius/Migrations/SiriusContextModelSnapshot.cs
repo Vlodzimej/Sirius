@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using Sirius.Models;
+using Sirius.DAL;
 using System;
 
 namespace Sirius.Migrations
@@ -25,9 +25,13 @@ namespace Sirius.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("FinishDate");
+
                     b.Property<string>("Login");
 
                     b.Property<string>("Password");
+
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 

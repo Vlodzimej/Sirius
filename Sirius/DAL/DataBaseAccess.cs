@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sirius.Models;
+using Sirius.DAL;
 
 namespace Sirius.Models
 {
@@ -13,6 +13,7 @@ namespace Sirius.Models
             using (SiriusContext db = new SiriusContext())
             {
                 // создаем два объекта User
+                /*
                 User user1 = new User("vlodzi", "111");
                 User user2 = new User("admin", "admin");
 

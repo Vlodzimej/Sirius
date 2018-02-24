@@ -15,7 +15,7 @@ namespace Sirius
     {
         public static void Main(string[] args)
         {
-            DataBaseAccess.CreateDB();
+            //DataBaseAccess.CreateDB();
             BuildWebHost(args).Run();
         }
 

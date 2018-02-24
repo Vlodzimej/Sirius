@@ -15,7 +15,6 @@ namespace Sirius.Models
         public UserRepository(SiriusContext context)
         {
             this.context = context;
-            // Add(new User("admin", "admin"));
         }
 
         public IEnumerable<User> GetAll()

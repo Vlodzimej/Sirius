@@ -11,8 +11,8 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    [Migration("20180218171701_Initial")]
-    partial class Initial
+    [Migration("20180224151912_UserModify")]
+    partial class UserModify
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,13 @@ namespace Sirius.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("FinishDate");
+
                     b.Property<string>("Login");
 
                     b.Property<string>("Password");
+
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 

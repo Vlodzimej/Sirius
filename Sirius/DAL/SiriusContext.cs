@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Sirius.Models;
 
-namespace Sirius.Models
+namespace Sirius.DAL
 {
     public class SiriusContext : DbContext
     {
