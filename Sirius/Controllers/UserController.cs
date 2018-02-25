@@ -18,39 +18,71 @@ namespace Sirius.Controllers
     {
         private SiriusService siriusService = new SiriusService(new UnitOfWork());
 
-        // GET: api/User
-        [HttpGet]
-        public IEnumerable<User> Get()
+        // GET: api/Users
+        public IActionResult Get()
         {
-            return siriusService.GetAllUsers();
+            var users = siriusService.GetAllUsers();
+            return new ObjectResult(users);
         }
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public User Get(Guid id)
+        public IActionResult Get(Guid id)
         {
-            return siriusService.GetUserById(id);
+            var user = siriusService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(user);
         }
         
         // POST: api/User
         [HttpPost]
-        public bool Post([FromQuery]string login, [FromQuery]string password)
+        public IActionResult Post([FromQuery]string login, [FromQuery]string password)
         {
-            return siriusService.CreateUser(login, password);
+            siriusService.CreateUser(login, password);
+            var user = siriusService.GetUserByLogin(login);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            user.Password = null;
+            var result = CreatedAtRoute("Get", new { id = user.Id }, user);
+            return result;
         }
         
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put([FromBody]string value)
+        public IActionResult Put(Guid id, [FromBody]User user)
         {
+            if (user == null || user.Id != id)
+            {
+                return BadRequest();
+            }
 
+            if (!siriusService.CheckUserById(id))
+            {
+                return NotFound();
+            }
+
+            siriusService.UpdateUser(user);
+
+            return new NoContentResult();
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public bool Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            return siriusService.DeleteUser(id);
+            if (!siriusService.CheckUserById(id))
+            {
+                return NotFound();
+            }
+            siriusService.DeleteUser(id);
+            return new NoContentResult();
         }
     }
 }
