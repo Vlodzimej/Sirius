@@ -12,6 +12,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegistrationComponent } from './components/registration/registration.component';
 import { UserListComponent } from "./components/userlist/userlist.component";
 
+import { ApiService } from './components/api/api.service';
 import { UserService } from './components/user/user.service';
 
 @NgModule({
@@ -38,7 +39,7 @@ import { UserService } from './components/user/user.service';
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ HttpModule, UserService ]
+    providers: [ HttpModule, ApiService, UserService ]
 })
 export class AppModuleShared {
 }

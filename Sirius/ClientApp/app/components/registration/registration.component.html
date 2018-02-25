@@ -1,27 +1,56 @@
 <div class="row">
     <div class="col-md-4 col-sm-3 col-xs-1"></div>
     <div class="col-md-4 col-sm-6 col-xs-10">
-        <div class="card">
+
+        <div class="card" *ngIf="state == 'in-progress'">
             <div class="card-body">
                 <img src="../../assets/images/logo.png" width="124" height="124" class="center-block">
                 <form>
                     <div class="form-group">
                         <label for="login">Имя пользователя</label>
-                        <input type="text" class="form-control" id="login" placeholder="Имя" [(ngModel)]="user.login" [ngModelOptions]="{standalone: true}">
+                        <input type="text" class="form-control" id="login" placeholder="Имя" [(ngModel)]="user.login" [ngModelOptions]="{standalone: true}"
+                            #login="ngModel" required pattern="[a-zA-Zа-яА-Я0-9]*">
+                        <div [hidden]="login.valid || login.untouched" class="alert alert-danger">
+                            <p class="small">Логин может содержать только английские и русские буквы, а так же цифры</p>
+                        </div>
                     </div>
+
                     <div class="form-group">
                         <label for="password">Пароль</label>
-                        <input type="password" class="form-control" id="password" placeholder="Пароль" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}">
+                        <input type="password" class="form-control" id="password" placeholder="Пароль" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}"
+                            #password="ngModel" required minlength="4" pattern="[a-zA-Z0-9]*">
+                        <div [hidden]="password.valid || password.untouched" class="alert alert-danger">
+                            <p class="small">
+                            Пароль может содержать только латинские буквы и цифры<br>
+                            Размер пароля должен быть не менее 4-х символов
+                            </p>
+                        </div>
                     </div>
+
                     <div class="form-group">
                         <label for="password-repeat">Пароль</label>
                         <input type="password-repeat" class="form-control" id="password-repeat" placeholder="Пароль ещё раз">
                     </div>
-                    <button type="submit" class="btn btn-primary" (click)="CreateUser()">Ок</button>
+                    <button type="submit" class="btn btn-primary" (click)="CreateUser()" [disabled]="login.invalid || password.invalid">Ок</button>
                     <a type="button" class="btn btn-link pull-right" (click)="Cancel()">Назад</a>
                 </form>
             </div>
         </div>
+
+        <div class="card" *ngIf="state == 'success'">
+            <div class="card-body">
+                <div class="alert alert-success">Регистрация завершена</div>
+                <a [routerLink]="['/login']" class="btn btn-link center-block">Вход</a>
+            </div>
+        </div>
+
+        <div class="card" *ngIf="state == 'fail'">
+            <div class="card-body">
+                <div class="alert alert-danger">Ошибка регистрации</div>
+                <button class="btn btn-link center-block" (click)="state = 'in-progress'">Вернуться</button>
+            </div>
+        </div>
+
     </div>
     <div class="col-md-4 col-sm-3 col-xs-1"></div>
 </div>

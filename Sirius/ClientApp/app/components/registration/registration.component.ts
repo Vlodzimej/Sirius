@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { Http } from '@angular/http';
 import { User } from './../user/user';
 import { UserService } from './../user/user.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-registration',
@@ -10,16 +11,28 @@ import { UserService } from './../user/user.service';
     styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-    public user: User = new User("", "");
 
-    constructor(private location: Location, private userService: UserService) { }
+    public user: User = new User();
+    public state: string = "in-progress";
+    public success: boolean = false;
+    public fail: boolean = false;
+
+    constructor(private location: Location, private userService: UserService, private router: Router) { }
 
     ngOnInit() { }
 
     // Создание пользователя
     CreateUser() {
-        console.log(this.user);
-        this.userService.Create(this.user);
+        this.userService.Create(this.user).subscribe(
+            response => {
+                this.state = "success";
+                console.log(response.json());
+            },
+            error => {
+                this.state = "fail";
+                console.error(`Error: ${error.status} ${error.statusText}`)
+            }
+        );
     }
 
     // Назад

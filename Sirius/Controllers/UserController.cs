@@ -36,20 +36,36 @@ namespace Sirius.Controllers
             }
             return new ObjectResult(user);
         }
-        
-        // POST: api/User
-        [HttpPost]
-        public IActionResult Post([FromQuery]string login, [FromQuery]string password)
-        {
-            siriusService.CreateUser(login, password);
-            var user = siriusService.GetUserByLogin(login);
 
+        /// <summary>
+        /// Добавление пользователя
+        /// POST: api/User 
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Post([FromBody] UserContract newUser)
+        {
+            User user = null;
+            // Отправлены ли данные нового пользователя
+            if(newUser == null)
+            {
+                return BadRequest();
+            }
+            // Проверка заполнения полей логина и пароля
+            if (newUser.login != null && newUser.password != null)
+            {
+                siriusService.CreateUser(newUser);
+                user = siriusService.GetUserByLogin(newUser.login);
+            }
+            // Если пользователь не добавлен - возвращаем 415
             if (user == null)
             {
                 return BadRequest();
             }
-
+            // Обнуление пароля
             user.Password = null;
+            // Возвращение положительного ответа с данными пользователя
             var result = CreatedAtRoute("Get", new { id = user.Id }, user);
             return result;
         }
@@ -81,7 +97,7 @@ namespace Sirius.Controllers
             {
                 return NotFound();
             }
-            siriusService.DeleteUser(id);
+             siriusService.DeleteUser(id);
             return new NoContentResult();
         }
     }

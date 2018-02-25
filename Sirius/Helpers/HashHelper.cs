@@ -5,12 +5,15 @@ namespace Sirius.Helpers
 {
     public static class HashHelper
     {
-        public static string CalculateMD5Hash(string input)
+        public static string CalculateMD5Hash(string value)
         {
-
+            if (value == null || value == "")
+            {
+                return "";
+            }
             // step 1, calculate MD5 hash from input
             MD5 md5 = MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+            byte[] inputBytes = Encoding.ASCII.GetBytes(value);
             byte[] hash = md5.ComputeHash(inputBytes);
 
             // step 2, convert byte array to hex string
@@ -21,6 +24,7 @@ namespace Sirius.Helpers
             }
 
             return sb.ToString();
+
         }
     }
 }

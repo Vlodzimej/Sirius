@@ -59,14 +59,14 @@ namespace Sirius.BLL
         /// </summary>
         /// <param name="login">Логин</param>
         /// <param name="password">Пароль</param>
-        public void CreateUser(string login, string password)
+        public void CreateUser(UserContract newUser)
         {
-            string passwordHash = HashHelper.CalculateMD5Hash(password);
+            string passwordHash = HashHelper.CalculateMD5Hash(newUser.password);
 
             User user = new User
             {
                 Id = Guid.NewGuid(),
-                Login = login,
+                Login = newUser.login,
                 StartDate = DateTime.Now,
                 FinishDate = DateTime.MaxValue,
                 Password = passwordHash
