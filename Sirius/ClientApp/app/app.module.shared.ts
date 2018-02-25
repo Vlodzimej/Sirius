@@ -9,7 +9,10 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { NomenclatureComponent } from './components/nomenclature/nomenclature.component';
 import { LoginComponent } from "./components/login/login.component";
+import { RegistrationComponent } from './components/registration/registration.component';
 import { UserListComponent } from "./components/userlist/userlist.component";
+
+import { UserService } from './components/user/user.service';
 
 @NgModule({
     declarations: [
@@ -18,6 +21,7 @@ import { UserListComponent } from "./components/userlist/userlist.component";
         HomeComponent,
         NomenclatureComponent,
         LoginComponent,
+        RegistrationComponent,
         UserListComponent
     ],
     imports: [
@@ -29,10 +33,12 @@ import { UserListComponent } from "./components/userlist/userlist.component";
             { path: 'home', component: HomeComponent },
             { path: 'nomenclature', component: NomenclatureComponent },
             { path: 'login', component: LoginComponent },
+            { path: 'registration', component: RegistrationComponent},
             { path: 'userlist', component: UserListComponent },
             { path: '**', redirectTo: 'home' }
         ])
-    ]
+    ],
+    providers: [ HttpModule, UserService ]
 })
 export class AppModuleShared {
 }
