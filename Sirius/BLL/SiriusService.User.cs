@@ -55,6 +55,26 @@ namespace Sirius.BLL
         }
 
         /// <summary>
+        /// Проверка существования пользователя по логину и паролю
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>bool</returns>
+        public bool CheckUserByLoginAndPassword(string login, string password)
+        {
+            bool result = false;
+            var user = GetAllUsers().Where(x => x.Login == login).FirstOrDefault();
+            if(user != null)
+            {
+                if(user.Password == HashHelper.CalculateMD5Hash(password))
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Создание пользователя
         /// </summary>
         /// <param name="login">Логин</param>
@@ -114,6 +134,16 @@ namespace Sirius.BLL
             var user = unitOfWork.UserRepository.GetByID(id);
             unitOfWork.UserRepository.Delete(user);
             unitOfWork.Save();
+        }
+
+        public Guid? Login(UserContract user)
+        {
+            Guid? result = null;
+            if(CheckUserByLoginAndPassword(user.login, user.password))
+            {
+                result = GetUserByLogin(user.login).Id;
+            }
+            return result;
         }
     }
 }

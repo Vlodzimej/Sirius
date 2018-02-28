@@ -1,0 +1,1 @@
+export enum PageStates { InProgress, Success, Failed, ServerError };

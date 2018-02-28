@@ -2,7 +2,7 @@
     <div class="col-md-4 col-sm-3 col-xs-1"></div>
     <div class="col-md-4 col-sm-6 col-xs-10">
 
-        <div class="card" *ngIf="state == 'in-progress'">
+        <div class="card" *ngIf="state == 0">
             <div class="card-body">
                 <img src="../../assets/images/logo.png" width="124" height="124" class="center-block">
                 <form>
@@ -29,7 +29,7 @@
 
                     <div class="form-group">
                         <label for="password-repeat">Пароль</label>
-                        <input type="password-repeat" class="form-control" id="password-repeat" placeholder="Пароль ещё раз">
+                        <input type="password" class="form-control" id="password-repeat" placeholder="Пароль ещё раз">
                     </div>
                     <button type="submit" class="btn btn-primary" (click)="CreateUser()" [disabled]="login.invalid || password.invalid">Ок</button>
                     <a type="button" class="btn btn-link pull-right" (click)="Cancel()">Назад</a>
@@ -37,14 +37,14 @@
             </div>
         </div>
 
-        <div class="card" *ngIf="state == 'success'">
+        <div class="card" *ngIf="state == 1">
             <div class="card-body">
                 <div class="alert alert-success">Регистрация завершена</div>
                 <a [routerLink]="['/login']" class="btn btn-link center-block">Вход</a>
             </div>
         </div>
 
-        <div class="card" *ngIf="state == 'fail'">
+        <div class="card" *ngIf="state == 2">
             <div class="card-body">
                 <div class="alert alert-danger">Ошибка регистрации</div>
                 <button class="btn btn-link center-block" (click)="state = 'in-progress'">Вернуться</button>

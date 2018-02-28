@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Location } from '@angular/common';
-import { Http } from '@angular/http';
 import { User } from './../user/user';
 import { UserService } from './../user/user.service';
-import { Router } from '@angular/router';
+import { PageStates } from './../states/page.states';
 
 @Component({
     selector: 'app-registration',
@@ -13,24 +12,23 @@ import { Router } from '@angular/router';
 export class RegistrationComponent implements OnInit {
 
     public user: User = new User();
-    public state: string = "in-progress";
-    public success: boolean = false;
-    public fail: boolean = false;
+    public state: PageStates = PageStates.InProgress;
 
-    constructor(private location: Location, private userService: UserService, private router: Router) { }
+    constructor(private location: Location, private userService: UserService) { }
 
     ngOnInit() { }
 
     // Создание пользователя
     CreateUser() {
+        
         this.userService.Create(this.user).subscribe(
             response => {
-                this.state = "success";
+                this.state = PageStates.Success;
                 console.log(response.json());
             },
             error => {
-                this.state = "fail";
-                console.error(`Error: ${error.status} ${error.statusText}`)
+                this.state = PageStates.Failed;
+                console.error(`Error: ${error.status} ${error.statusText}`);
             }
         );
     }

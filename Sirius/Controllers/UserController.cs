@@ -9,11 +9,15 @@ using Sirius.DAL;
 using Sirius.BLL;
 using System.Web;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Sirius.Controllers
 {
     [Produces("application/json")]
     [Route("api/User")]
+
     public class UserController : Controller
     {
         private SiriusService siriusService = new SiriusService(new UnitOfWork());
@@ -48,7 +52,7 @@ namespace Sirius.Controllers
         {
             User user = null;
             // Отправлены ли данные нового пользователя
-            if(newUser == null)
+            if (newUser == null)
             {
                 return BadRequest();
             }
@@ -69,7 +73,7 @@ namespace Sirius.Controllers
             var result = CreatedAtRoute("Get", new { id = user.Id }, user);
             return result;
         }
-        
+
         // PUT: api/User/5
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]User user)
@@ -88,7 +92,7 @@ namespace Sirius.Controllers
 
             return new NoContentResult();
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
@@ -97,8 +101,45 @@ namespace Sirius.Controllers
             {
                 return NotFound();
             }
-             siriusService.DeleteUser(id);
+            siriusService.DeleteUser(id);
             return new NoContentResult();
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserContract user)
+        {
+            Guid? userId;
+            userId = siriusService.Login(user);
+
+            if (userId == null)
+            {
+                return new BadRequestResult();
+            }
+            else
+            {
+                await Authenticate(user.login);
+                return new JsonResult(userId);
+            }
+        }
+
+        private async Task Authenticate(string login)
+        {
+            // создаем один claim
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, login)
+            };
+            // создаем объект ClaimsIdentity
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            // установка аутентификационных куки
+            var claimsPrincipal = new ClaimsPrincipal(id);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
     }
 }

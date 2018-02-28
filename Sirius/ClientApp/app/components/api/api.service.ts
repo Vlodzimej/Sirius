@@ -20,4 +20,5 @@ export class ApiService {
         var result = this.http.post(this.baseUrl + 'api/'+controller, obj, { headers: this.headers });
         return result;
     }
+
 }
