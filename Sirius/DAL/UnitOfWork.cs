@@ -16,12 +16,12 @@ namespace Sirius.DAL
             }
         }
 
-        private GenericRepository<User> userRepository;
-        public GenericRepository<User> UserRepository
+        private UserRepository userRepository;
+        public UserRepository UserRepository
         {
             get
             {
-                return userRepository ?? new GenericRepository<User>(context);
+                return userRepository ?? new UserRepository(context);
             }
         }
 

@@ -9,11 +9,12 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { NomenclatureComponent } from './components/nomenclature/nomenclature.component';
 import { LoginComponent } from "./components/login/login.component";
-import { RegistrationComponent } from './components/registration/registration.component';
+import { RegisterComponent } from './components/register';
 import { UserListComponent } from "./components/userlist/userlist.component";
 
-import { ApiService } from './components/api/api.service';
-import { UserService } from './components/user/user.service';
+import { ApiService, UserService, AuthenticationService, AlertService } from './components/_services';
+
+import { AuthGuard } from './components/_guards/auth.guard';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,7 @@ import { UserService } from './components/user/user.service';
         HomeComponent,
         NomenclatureComponent,
         LoginComponent,
-        RegistrationComponent,
+        RegisterComponent,
         UserListComponent
     ],
     imports: [
@@ -34,12 +35,12 @@ import { UserService } from './components/user/user.service';
             { path: 'home', component: HomeComponent },
             { path: 'nomenclature', component: NomenclatureComponent },
             { path: 'login', component: LoginComponent },
-            { path: 'registration', component: RegistrationComponent},
+            { path: 'register', component: RegisterComponent},
             { path: 'userlist', component: UserListComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ HttpModule, ApiService, UserService ]
+    providers: [ HttpModule, ApiService, UserService, AuthenticationService, AlertService ]
 })
 export class AppModuleShared {
 }
