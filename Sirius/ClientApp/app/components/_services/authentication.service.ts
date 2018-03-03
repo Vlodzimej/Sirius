@@ -1,5 +1,6 @@
-﻿import { Injectable, Inject } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+﻿import { OnInit } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
 
 import 'rxjs/add/operator/map';
 
@@ -23,4 +24,20 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
     }
+
+    // private helper methods
+    jwt() {
+        // create authorization header with jwt token
+        let cu = localStorage.getItem('currentUser');
+        console.log("Current User: " + cu);
+        if (cu) {
+            let currentUser = JSON.parse(cu);
+            if (currentUser && currentUser.token) {
+                let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
+                return new RequestOptions({ headers: headers });
+            }
+        }
+        return new RequestOptions();
+    }
+
 }

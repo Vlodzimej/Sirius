@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sirius.Models;
 using Sirius.DAL;
 using Sirius.BLL;
 using Sirius.Helpers;
-using System.Web;
-using Newtonsoft.Json;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.Extensions.Options;
@@ -25,7 +18,7 @@ namespace Sirius.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/User")]
+    [Route("api/user")]
 
     public class UserController : Controller
     {
