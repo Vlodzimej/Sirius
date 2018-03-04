@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AuthenticationService {
+
     constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) { }
 
     login(username: string, password: string) {
@@ -26,12 +27,12 @@ export class AuthenticationService {
     }
 
     // private helper methods
-    jwt() {
+    jwt() : RequestOptions {
         // create authorization header with jwt token
-        let cu = localStorage.getItem('currentUser');
-        console.log("Current User: " + cu);
-        if (cu) {
-            let currentUser = JSON.parse(cu);
+        let cookies = localStorage.getItem('currentUser');
+        console.log("Current User: " + cookies);
+        if (cookies) {
+            let currentUser = JSON.parse(cookies);
             if (currentUser && currentUser.token) {
                 let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
                 return new RequestOptions({ headers: headers });
@@ -40,4 +41,11 @@ export class AuthenticationService {
         return new RequestOptions();
     }
 
+    checkAuth() {
+        // remove user from local storage to log user out
+        if(localStorage.getItem('currentUser')){
+            return true;
+        }
+        return false;
+    }
 }

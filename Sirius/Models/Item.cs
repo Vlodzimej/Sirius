@@ -6,13 +6,8 @@ namespace Sirius.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Guid UnitId { get; set; }
-
-        public Item(string name, Guid unitId)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            UnitId = unitId;
-        }
+        public Guid DimensionId { get; set; }
+        public Guid CategoryId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from './../_services';
-
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -8,8 +8,22 @@ import { AuthenticationService } from './../_services';
 })
 export class AppComponent implements OnInit {
 
-    constructor(private authenticationService:AuthenticationService) { }
+    public showNavBar: boolean = false;
+    constructor(
+        private router: Router,
+        private authenticationService: AuthenticationService) {
 
-    ngOnInit() { }
+    }
+
+    ngOnInit() {
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.showNavBar = this.authenticationService.checkAuth();
+                if(this.router.url == '/login') {
+                    this.showNavBar = false;
+                }
+            }
+        });
+    }
 
 }

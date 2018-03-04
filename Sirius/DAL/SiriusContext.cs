@@ -10,6 +10,9 @@ namespace Sirius.DAL
     public class SiriusContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Dimension> Dimensions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

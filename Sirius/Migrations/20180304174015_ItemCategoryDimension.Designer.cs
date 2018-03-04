@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180304174015_ItemCategoryDimension")]
+    partial class ItemCategoryDimension
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +32,7 @@ namespace Sirius.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Sirius.Models.Dimension", b =>
@@ -43,7 +44,7 @@ namespace Sirius.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Dimensions");
+                    b.ToTable("Dimension");
                 });
 
             modelBuilder.Entity("Sirius.Models.Item", b =>
@@ -61,7 +62,7 @@ namespace Sirius.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("Sirius.Models.User", b =>

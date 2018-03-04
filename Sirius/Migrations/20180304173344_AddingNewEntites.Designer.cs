@@ -11,58 +11,15 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180304173344_AddingNewEntites")]
+    partial class AddingNewEntites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
-
-            modelBuilder.Entity("Sirius.Models.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid>("parentId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Sirius.Models.Dimension", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dimensions");
-                });
-
-            modelBuilder.Entity("Sirius.Models.Item", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("CategoryId");
-
-                    b.Property<Guid>("DimensionId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Items");
-                });
 
             modelBuilder.Entity("Sirius.Models.User", b =>
                 {

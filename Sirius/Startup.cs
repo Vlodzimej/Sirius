@@ -94,7 +94,7 @@ namespace Sirius
                 .AllowAnyHeader()
                 .AllowCredentials());
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 

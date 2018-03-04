@@ -16,6 +16,7 @@ import { AlertComponent } from './components/_directives/';
 import { ApiService, UserService, AuthenticationService, AlertService } from './components/_services';
 
 import { AuthGuard } from './components/_guards/auth.guard';
+import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
 
 @NgModule({
     declarations: [
@@ -32,13 +33,14 @@ import { AuthGuard } from './components/_guards/auth.guard';
         CommonModule,
         HttpModule,
         FormsModule,
+        Angular2FontawesomeModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full', canActivate: [AuthGuard] },
             { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-            { path: 'nomenclature', component: NomenclatureComponent },
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
-            { path: 'userlist', component: UserListComponent },
+            { path: 'nomenclature', component: NomenclatureComponent, canActivate: [AuthGuard] },
+            { path: 'userlist', component: UserListComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

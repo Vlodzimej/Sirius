@@ -10,11 +10,10 @@ export class UserService {
         private authenticationService: AuthenticationService) { }
 
     getAll() {
-        console.log();
-        return this.http.get(this.baseUrl + 'api/user', this.authenticationService.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.baseUrl + 'api/user', this.authenticationService.jwt()).map((response: Response) => response.json() as User[]);
     }
 
-    getById(id: number) {
+    getById(id: any) {
         return this.http.get(this.baseUrl + 'api/user/' + id, this.authenticationService.jwt()).map((response: Response) => response.json());
     }
 
@@ -26,7 +25,7 @@ export class UserService {
         return this.http.put(this.baseUrl + 'api/user/' + user.id, user, this.authenticationService.jwt());
     }
 
-    delete(id: number) {
+    delete(id: any) {
         return this.http.delete(this.baseUrl + 'api/user/' + id, this.authenticationService.jwt());
     }
 }

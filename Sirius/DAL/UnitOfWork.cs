@@ -25,6 +25,15 @@ namespace Sirius.DAL
             }
         }
 
+        private GenericRepository<Dimension> dimensionRepository;
+        public GenericRepository<Dimension> DimensionRepository
+        {
+            get
+            {
+                return dimensionRepository ?? new GenericRepository<Dimension>(context);
+            }
+        }
+
         public void Save()
         {
             context.SaveChanges();

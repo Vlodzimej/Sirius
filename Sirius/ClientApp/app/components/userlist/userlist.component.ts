@@ -1,24 +1,39 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { UserService } from './../_services';
 import { User } from '../_models';
-import { AlertService } from './../_services';
+import { UserService, AlertService } from './../_services';
+import { DatePipe } from '@angular/common'
+
 @Component({
     selector: 'userlist',
-    templateUrl: './userlist.component.html'
+    templateUrl: './userlist.component.html',
+    providers: [DatePipe]
 })
 export class UserListComponent implements OnInit {
     public users: User[] = [];
 
-    constructor(private userService: UserService, private alertService: AlertService) { }
+    constructor(private userService: UserService, private alertService: AlertService, public datepipe: DatePipe) { }
 
     ngOnInit() {
         this.userService.getAll()
             .subscribe(
+                data => {
+                    this.users = data;
+                    console.log(this.users);
+                },
+                error => {
+                    this.alertService.error('Ошибка загрузки', true);
+                });
+    }
+
+    removeUser(userId: any) {
+        this.userService.delete(userId).subscribe(
             data => {
-                this.users = data;
+                const filtered = this.users.filter((user: User, index) => user.id == userId);
+                const i = this.users.indexOf(filtered[0]);
+                this.users.splice(i, 1);
             },
             error => {
-                this.alertService.error('Ошибка загрузки', true);
+                this.alertService.error('Ошибка удаления', true);
             });
     }
 }

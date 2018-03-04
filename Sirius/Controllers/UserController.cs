@@ -90,7 +90,7 @@ namespace Sirius.Controllers
         public IActionResult GetAll()
         {
             var users = siriusService.GetAllUsers();
-            var userDtos = _mapper.Map<IList<UserDto>>(users);
+            var userDtos = _mapper.Map<IEnumerable<User> , IEnumerable<UserDto>>(users);
             return Ok(userDtos);
         }
 

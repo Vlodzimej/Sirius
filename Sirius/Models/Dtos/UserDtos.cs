@@ -9,5 +9,7 @@ namespace Sirius.Dtos
         public string LastName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string StartDate { get; set; }
+        public string FinishDate { get; set; }
     }
 }

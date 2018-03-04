@@ -10,7 +10,7 @@ import { AlertService, AuthenticationService } from './../_services';
 export class LoginComponent implements OnInit {
     model: any = {};
     loading = false;
-    returnUrl: string;
+    returnUrl: string = "";
 
     constructor(
         private route: ActivatedRoute,

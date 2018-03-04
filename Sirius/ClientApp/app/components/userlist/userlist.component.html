@@ -5,12 +5,14 @@
             <th>Логин</th>
             <th>ФИО</th>
             <th>Дата регистрации</th>
+            <th></th>
         </tr>
         <tr *ngFor="let user of users; let n = index">
             <td class="text-center">{{n}}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.fitstname }} {{ user.lastname }}</td>
-            <td></td>
+            <td>{{ user.firstName }} {{ user.lastName }}</td>
+            <td>{{ user.startDate }}</td>
+            <td><button class="btb btn-danger btn-xs" (click)="removeUser(user.id)"><i class="glyphicon glyphicon-minus"></i></button></td>
         </tr>
     </table>
 </div>
