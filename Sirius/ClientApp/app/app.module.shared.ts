@@ -17,6 +17,7 @@ import { ApiService, UserService, AuthenticationService, AlertService } from './
 
 import { AuthGuard } from './components/_guards/auth.guard';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
+import { DimensionListComponent } from './components/dimension.list/dimension.list.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawe
         NomenclatureComponent,
         LoginComponent,
         RegisterComponent,
-        UserListComponent
+        UserListComponent,
+        DimensionListComponent
     ],
     imports: [
         CommonModule,
@@ -41,6 +43,7 @@ import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawe
             { path: 'register', component: RegisterComponent },
             { path: 'nomenclature', component: NomenclatureComponent, canActivate: [AuthGuard] },
             { path: 'userlist', component: UserListComponent, canActivate: [AuthGuard] },
+            { path: 'dimensionlist', component: DimensionListComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

@@ -1,0 +1,13 @@
+<div class="panel panel-default">
+    <table class="table table-hover table-striped table-bordered">
+        <tr>
+            <th class="text-center">№</th>
+            <th>Единицы измерения</th>
+        </tr>
+        <tr *ngFor="let dimension of dimensions; let n = index">
+            <td class="text-center">{{n}}</td>
+            <td>{{ dimension.name }}</td>
+            <td></td>
+        </tr>
+    </table>
+</div>
