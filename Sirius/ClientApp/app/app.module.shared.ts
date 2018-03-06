@@ -12,17 +12,19 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
 import { UserListComponent } from "./components/userlist/userlist.component";
 
-import { AlertComponent } from './components/_directives/';
-import { ApiService, UserService, AuthenticationService, AlertService } from './components/_services';
+import { AlertComponent, ModalComponent } from './components/_directives/';
+import { ApiService, UserService, AuthenticationService, AlertService, ModalService  } from './components/_services';
 
 import { AuthGuard } from './components/_guards/auth.guard';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
 import { DimensionListComponent } from './components/dimension.list/dimension.list.component';
 
+
 @NgModule({
     declarations: [
         AppComponent,
         AlertComponent,
+        ModalComponent,
         NavMenuComponent,
         HomeComponent,
         NomenclatureComponent,
@@ -47,7 +49,7 @@ import { DimensionListComponent } from './components/dimension.list/dimension.li
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard]
+    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService ]
 })
 export class AppModuleShared {
 }

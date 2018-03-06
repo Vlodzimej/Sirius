@@ -52,6 +52,7 @@ namespace Sirius.Controllers
         [HttpPost]
         public void Post([FromBody]Dimension dimension)
         {
+            dimension.Id = Guid.NewGuid();
             siriusService.AddDimension(dimension);
         }
 
