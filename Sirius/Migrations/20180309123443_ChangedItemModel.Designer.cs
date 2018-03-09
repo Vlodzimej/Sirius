@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180309123443_ChangedItemModel")]
+    partial class ChangedItemModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,15 +60,11 @@ namespace Sirius.Migrations
 
                     b.Property<Guid>("UserId");
 
-                    b.Property<Guid>("VendorId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("DimensionId");
-
-                    b.HasIndex("VendorId");
 
                     b.ToTable("Items");
                 });
@@ -96,22 +93,6 @@ namespace Sirius.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Sirius.Models.Vendor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("Contact");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vendors");
-                });
-
             modelBuilder.Entity("Sirius.Models.Item", b =>
                 {
                     b.HasOne("Sirius.Models.Category", "Category")
@@ -122,11 +103,6 @@ namespace Sirius.Migrations
                     b.HasOne("Sirius.Models.Dimension", "Dimension")
                         .WithMany()
                         .HasForeignKey("DimensionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Sirius.Models.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

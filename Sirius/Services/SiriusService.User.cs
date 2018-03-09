@@ -6,10 +6,16 @@ using Sirius.Helpers;
 using Sirius.DAL;
 using System.Threading.Tasks;
 
-namespace Sirius.BLL
+namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
+        /// <summary>
+        /// Аутентификация пользователей
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public User Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
@@ -29,11 +35,22 @@ namespace Sirius.BLL
             return user;
         }
 
+        /// <summary>
+        /// Получения пользователя по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public User GetById(Guid id)
         {
             return unitOfWork.UserRepository.GetByID(id);
         }
 
+        /// <summary>
+        /// Создание пользователя
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public User CreateUser(User user, string password)
         {
             // validation
@@ -55,7 +72,13 @@ namespace Sirius.BLL
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        /// <summary>
+        /// Обновление данных пользователя
+        /// </summary>
+        /// <param name="userParam"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public User Update(User userParam, string password = null)
         {
             var user = unitOfWork.UserRepository.GetByID(userParam.Id);
 
@@ -86,20 +109,34 @@ namespace Sirius.BLL
 
             unitOfWork.UserRepository.Update(user);
             unitOfWork.Save();
+            user = unitOfWork.UserRepository.GetByID(user.Id);
+            return user;
+
         }
 
-        public void Delete(Guid id)
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool Delete(Guid id)
         {
             var user = unitOfWork.UserRepository.GetByID(id);
             if (user != null)
             {
                 unitOfWork.UserRepository.Delete(user);
                 unitOfWork.Save();
+                return true;
             }
+            return false;
         }
 
-        // private helper methods
-
+        /// <summary>
+        /// Создание хэша пароля
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="passwordHash"></param>
+        /// <param name="passwordSalt"></param>
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
@@ -112,6 +149,13 @@ namespace Sirius.BLL
             }
         }
 
+        /// <summary>
+        /// Верификация хэша пароля
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="storedHash"></param>
+        /// <param name="storedSalt"></param>
+        /// <returns></returns>
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
@@ -132,10 +176,10 @@ namespace Sirius.BLL
         }
 
         /// <summary>
-        /// Получение пользователя по идентификатору
+        /// Получение пользователя по Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Пользователь</returns>
+        /// <returns></returns>
         public User GetUserById(Guid id)
         {
             return unitOfWork.UserRepository.GetByID(id);
@@ -144,7 +188,7 @@ namespace Sirius.BLL
         /// <summary>
         /// Получение списка пользователей
         /// </summary>
-        /// <returns>Cписок всех пользователей</returns>
+        /// <returns></returns>
         public IEnumerable<User> GetAllUsers()
         {
             return unitOfWork.UserRepository.Get();

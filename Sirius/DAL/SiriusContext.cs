@@ -13,6 +13,7 @@ namespace Sirius.DAL
         public DbSet<Item> Items { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Dimension> Dimensions { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

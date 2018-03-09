@@ -20,8 +20,8 @@ export class ApiService {
         return this.http.get(this.baseUrl + 'api/'+controller, this.authenticationService.jwt()).map((response: Response) => response.json() as T[]);
     }
 
-    getById(id: any) {
-        return this.http.get(this.baseUrl + 'api/{controller}/' + id, this.authenticationService.jwt()).map((response: Response) => response.json());
+    getById<T>(controller: string, id: any) {
+        return this.http.get(this.baseUrl + 'api/'+controller+'/' + id, this.authenticationService.jwt()).map((response: Response) => response.json() as T);
     }
 
     create<T>(controller: string, object: T) {
@@ -32,7 +32,7 @@ export class ApiService {
         return this.http.put(this.baseUrl + 'api/'+controller+'/' + id, object, this.authenticationService.jwt());
     }
 
-    delete(id: any, controller: string) {
+    delete(controller: string, id: any) {
         return this.http.delete(this.baseUrl + 'api/'+controller+'/' + id, this.authenticationService.jwt());
     }
 }

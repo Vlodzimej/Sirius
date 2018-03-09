@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
-using Sirius.BLL;
+using Sirius.Services;
 using Sirius.DAL;
 using Sirius.Helpers;
 

@@ -15,14 +15,14 @@ namespace Sirius.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/dimension")]
-    public class DimensionController : Controller
+    [Route("api/item")]
+    public class ItemController : Controller
     {
         private SiriusService siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public DimensionController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public ItemController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
             siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
@@ -30,63 +30,80 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// GET: api/Dimension
+        /// GET: api/item
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
-            var dimensions = siriusService.GetAllDimension();
-            return Ok(dimensions);
-        }
-
-        /// <summary>
-        /// GET: api/Dimension/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}", Name = "GetDimension")]
-        public IActionResult Get(Guid id)
-        {
-            var dimension = siriusService.GetDimensionById(id);
-            return Ok(dimension);
-        }
-
-        /// <summary>
-        /// POST: api/Dimension
-        /// </summary>
-        /// <param name="dimension"></param>
-        [HttpPost]
-        public void Post([FromBody]Dimension dimension)
-        {
-            siriusService.AddDimension(dimension);
-        }
-
-        /// <summary>
-        /// PUT: api/Dimension/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Dimension value)
-        {
-            var dimension = siriusService.UpdateDimension(id, value);
-            if(dimension != null)
+            var items = siriusService.GetAllItems();
+            if (items != null)
             {
-                return Ok(dimension);
+                return Ok(items);
             }
             return new BadRequestResult();
         }
 
         /// <summary>
-        /// DELETE: api/ApiWithActions/5
+        /// GET: api/item/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            var item = siriusService.GetItemById(id);
+            if (item != null)
+            {
+                return Ok(item);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// POST: api/item
+        /// </summary>
+        /// <param name="item"></param>
+        [HttpPost]
+        public IActionResult Post([FromBody]Item item)
+        {
+            var result = siriusService.AddItem(item);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// PUT: api/item/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody]Item value)
+        {
+            var item = siriusService.UpdateItem(id, value);
+            if (item != null)
+            {
+                return Ok(item);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// DELETE: api/item/5
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            siriusService.DeleteDimensionById(id);
+            if (siriusService.DeleteItemById(id))
+            {
+                return Ok();
+            }
+            return new BadRequestResult();
         }
     }
 }

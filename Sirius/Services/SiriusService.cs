@@ -1,7 +1,7 @@
 ﻿using Sirius.DAL;
 using System;
 
-namespace Sirius.BLL
+namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {

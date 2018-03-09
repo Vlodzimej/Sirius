@@ -1,14 +1,14 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { User } from '../_models';
-import { UserService, AlertService } from './../_services';
+import { User } from '../../_models';
+import { UserService, AlertService } from '../../_services';
 import { DatePipe } from '@angular/common'
 
 @Component({
-    selector: 'userlist',
-    templateUrl: './userlist.component.html',
+    selector: 'app-user-dictionary',
+    templateUrl: './user.dictionary.component.html',
     providers: [DatePipe]
 })
-export class UserListComponent implements OnInit {
+export class UserDictionaryComponent implements OnInit {
     public users: User[] = [];
 
     constructor(private userService: UserService, private alertService: AlertService, public datepipe: DatePipe) { }

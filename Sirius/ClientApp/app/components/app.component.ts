@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router, NavigationStart, NavigationEnd } from '@angular/router';
-import { AuthenticationService } from './../_services';
+import { AuthenticationService } from './_services';
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',

@@ -1,11 +1,8 @@
 ﻿using System;
 using Sirius.Models;
-using Sirius.DAL;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Sirius.BLL
+namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
@@ -46,9 +43,29 @@ namespace Sirius.BLL
         /// Добавление новой единицы измерения
         /// </summary>
         /// <param name="dimension"></param>
-        public void AddDimension(Dimension dimension)
+        public Dimension AddDimension(Dimension dimension)
         {
+            dimension.Id = Guid.NewGuid();
+
             unitOfWork.DimensionRepository.Insert(dimension);
+            unitOfWork.Save();
+
+            return unitOfWork.DimensionRepository.GetByID(dimension.Id) ?? null;
+        }
+
+        /// <summary>
+        /// Обновление единицы измерения
+        /// </summary>
+        /// <param name="dimension"></param>
+        public Dimension UpdateDimension(Guid dimensionId, Dimension dimension)
+        {
+            if (dimensionId == dimension.Id)
+            {
+                unitOfWork.DimensionRepository.Update(dimension);
+                unitOfWork.Save();
+                return unitOfWork.DimensionRepository.GetByID(dimensionId);
+            }
+            return null;
         }
     }
 }

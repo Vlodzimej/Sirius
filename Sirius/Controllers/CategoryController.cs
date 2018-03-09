@@ -15,14 +15,14 @@ namespace Sirius.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/dimension")]
-    public class DimensionController : Controller
+    [Route("api/category")]
+    public class CategoryController : Controller
     {
         private SiriusService siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public DimensionController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public CategoryController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
             siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
@@ -30,51 +30,64 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// GET: api/Dimension
+        /// GET: api/category
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
-            var dimensions = siriusService.GetAllDimension();
-            return Ok(dimensions);
+            var categories = siriusService.GetAllCategory();
+            if (categories != null)
+            {
+                return Ok(categories);
+            }
+            return new BadRequestResult();
         }
 
         /// <summary>
-        /// GET: api/Dimension/5
+        /// GET: api/category/5
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}", Name = "GetDimension")]
+        [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var dimension = siriusService.GetDimensionById(id);
-            return Ok(dimension);
+            var category = siriusService.GetCategoryById(id);
+            if (category != null)
+            {
+                return Ok(category);
+            }
+            return new BadRequestResult();
         }
 
         /// <summary>
-        /// POST: api/Dimension
+        /// POST: api/category
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="category"></param>
         [HttpPost]
-        public void Post([FromBody]Dimension dimension)
+        public IActionResult Post([FromBody]Category category)
         {
-            siriusService.AddDimension(dimension);
+            var result = siriusService.AddCategory(category);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
         }
 
         /// <summary>
-        /// PUT: api/Dimension/5
+        /// PUT: api/category/5
         /// </summary>
         /// <param name="id"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Dimension value)
+        public IActionResult Put(Guid id, [FromBody]Category value)
         {
-            var dimension = siriusService.UpdateDimension(id, value);
-            if(dimension != null)
+            var category = siriusService.UpdateCategory(id, value);
+            if (category != null)
             {
-                return Ok(dimension);
+                return Ok(category);
             }
             return new BadRequestResult();
         }
@@ -84,9 +97,13 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            siriusService.DeleteDimensionById(id);
+            if (siriusService.DeleteCategoryById(id))
+            {
+                return Ok();
+            }
+            return new BadRequestResult();
         }
     }
 }

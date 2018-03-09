@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Sirius.Models;
 using Sirius.DAL;
-using Sirius.BLL;
+using Sirius.Services;
 using Sirius.Helpers;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;

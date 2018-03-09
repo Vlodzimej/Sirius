@@ -15,14 +15,14 @@ namespace Sirius.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/dimension")]
-    public class DimensionController : Controller
+    [Route("api/vendor")]
+    public class VendorController : Controller
     {
         private SiriusService siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public DimensionController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public VendorController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
             siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
@@ -30,63 +30,80 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// GET: api/Dimension
+        /// GET: api/vendor
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
-            var dimensions = siriusService.GetAllDimension();
-            return Ok(dimensions);
-        }
-
-        /// <summary>
-        /// GET: api/Dimension/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}", Name = "GetDimension")]
-        public IActionResult Get(Guid id)
-        {
-            var dimension = siriusService.GetDimensionById(id);
-            return Ok(dimension);
-        }
-
-        /// <summary>
-        /// POST: api/Dimension
-        /// </summary>
-        /// <param name="dimension"></param>
-        [HttpPost]
-        public void Post([FromBody]Dimension dimension)
-        {
-            siriusService.AddDimension(dimension);
-        }
-
-        /// <summary>
-        /// PUT: api/Dimension/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Dimension value)
-        {
-            var dimension = siriusService.UpdateDimension(id, value);
-            if(dimension != null)
+            var vendors = siriusService.GetAllVendors();
+            if (vendors != null)
             {
-                return Ok(dimension);
+                return Ok(vendors);
             }
             return new BadRequestResult();
         }
 
         /// <summary>
-        /// DELETE: api/ApiWithActions/5
+        /// GET: api/vendor/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            var vendor = siriusService.GetVendorById(id);
+            if (vendor != null)
+            {
+                return Ok(vendor);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// POST: api/vendor
+        /// </summary>
+        /// <param name="vendor"></param>
+        [HttpPost]
+        public IActionResult Post([FromBody]Vendor vendor)
+        {
+            var result = siriusService.AddVendor(vendor);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// PUT: api/vendor/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody]Vendor value)
+        {
+            var vendor = siriusService.UpdateVendor(id, value);
+            if (vendor != null)
+            {
+                return Ok(vendor);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// DELETE: api/vendor/5
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            siriusService.DeleteDimensionById(id);
+            if (siriusService.DeleteVendorById(id))
+            {
+                return Ok();
+            }
+            return new BadRequestResult();
         }
     }
 }
