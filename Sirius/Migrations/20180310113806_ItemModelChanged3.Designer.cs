@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180310113806_ItemModelChanged3")]
+    partial class ItemModelChanged3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

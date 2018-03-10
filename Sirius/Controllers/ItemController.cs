@@ -36,12 +36,12 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var items = siriusService.GetAllItems();
-            if (items != null)
-            {
-                return Ok(items);
-            }
-            return new BadRequestResult();
+             var items = siriusService.GetAllItems();
+             if (items != null)
+             {
+                 return Ok(items);
+             }
+            return NotFound();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Sirius.Controllers
             {
                 return Ok(item);
             }
-            return new BadRequestResult();
+            return NotFound();
         }
 
         /// <summary>

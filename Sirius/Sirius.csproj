@@ -35,6 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180310095006_ItemModelChanged.cs" />
+    <Compile Remove="Migrations\20180310095006_ItemModelChanged.Designer.cs" />
+    <Compile Remove="Migrations\20180310095230_ItemModelChanged2.cs" />
+    <Compile Remove="Migrations\20180310095230_ItemModelChanged2.Designer.cs" />
+    <Compile Remove="Migrations\20180310095701_ItemModelChanged3.cs" />
+    <Compile Remove="Migrations\20180310095701_ItemModelChanged3.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ClientApp\app\components\userlist\userlist.component.ts" />
   </ItemGroup>
 

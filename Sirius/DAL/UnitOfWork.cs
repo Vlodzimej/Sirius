@@ -16,20 +16,49 @@ namespace Sirius.DAL
             }
         }
         */
-        private UserRepository userRepository;
+        /// <summary>
+        /// Репозиторий "Пользователь"
+        /// </summary>
         public UserRepository UserRepository => userRepository ?? new UserRepository(context);
+        private UserRepository userRepository;
 
-        private GenericRepository<Dimension> dimensionRepository;
+
+        /// <summary>
+        /// Репозиторий "Единица измерения"
+        /// </summary>
         public GenericRepository<Dimension> DimensionRepository => dimensionRepository ?? new GenericRepository<Dimension>(context);
+        private GenericRepository<Dimension> dimensionRepository;
 
-        private GenericRepository<Category> categoryRepository;
+        /// <summary>
+        /// Репозиторий "Категория"
+        /// </summary>
         public GenericRepository<Category> CategoryRepository => categoryRepository ?? new GenericRepository<Category>(context);
+        private GenericRepository<Category> categoryRepository;
 
-        private GenericRepository<Vendor> vendorRepository;
+        /// <summary>
+        /// Репозиторий "Поставщик"
+        /// </summary>
         public GenericRepository<Vendor> VendorRepository => vendorRepository ?? new GenericRepository<Vendor>(context);
+        private GenericRepository<Vendor> vendorRepository;
 
-        private GenericRepository<Item> itemRepository;
-        public GenericRepository<Item> ItemRepository => itemRepository ?? new GenericRepository<Item>(context);
+        /// <summary>
+        /// Репозиторий "Предмет"
+        /// </summary>
+        public ItemRepository ItemRepository => itemRepository ?? new ItemRepository(context);
+        private ItemRepository itemRepository;
+
+
+        /// <summary>
+        /// Репозиторий "Регистр"
+        /// </summary>
+        public GenericRepository<Register> RegisterRepository => registerRepository ?? new GenericRepository<Register>(context);
+        private GenericRepository<Register> registerRepository;
+
+        /// <summary>
+        /// Репозиторий "Накладная"
+        /// </summary>
+        public GenericRepository<Invoice> InvoiceRepository => invoiceRepository ?? new GenericRepository<Invoice>(context);
+        private GenericRepository<Invoice> invoiceRepository;
 
         public void Save()
         {

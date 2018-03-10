@@ -1,4 +1,5 @@
 ﻿using Sirius.Models;
+using Sirius.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,20 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Item GetItemById(Guid id)
+        public ItemDetailDto GetItemById(Guid id)
         {
-            return unitOfWork.ItemRepository.GetByID(id);
+            var item = unitOfWork.ItemRepository.GetByID(id);
+            return item;
         }
 
         /// <summary>
         /// Получить список всех предметов
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Item> GetAllItems()
+        public IEnumerable<ItemDto> GetAllItems()
         {
-            return unitOfWork.ItemRepository.Get();
+            var items = unitOfWork.ItemRepository.GetAll();
+            return items;
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public Item AddItem(Item item)
+        public ItemDetailDto AddItem(Item item)
         {
             item.Id = Guid.NewGuid();
 
@@ -65,7 +68,7 @@ namespace Sirius.Services
         /// <param name="itemId"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public Item UpdateItem(Guid itemId, Item item)
+        public ItemDetailDto UpdateItem(Guid itemId, Item item)
         {
             if (itemId == item.Id)
             {
@@ -75,5 +78,7 @@ namespace Sirius.Services
             }
             return null;
         }
+
+         
     }
 }

@@ -30,7 +30,7 @@ export class AuthenticationService {
     jwt() : RequestOptions {
         // create authorization header with jwt token
         let cookies = localStorage.getItem('currentUser');
-        console.log("Current User: " + cookies);
+        // console.log("Current User: " + cookies);
         if (cookies) {
             let currentUser = JSON.parse(cookies);
             if (currentUser && currentUser.token) {

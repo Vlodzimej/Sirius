@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180310101235_ItemModelChanged2")]
+    partial class ItemModelChanged2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,12 +37,12 @@ namespace Sirius.Migrations
 
             modelBuilder.Entity("Sirius.Models.Dimension", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("DimensionId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
-                    b.HasKey("Id");
+                    b.HasKey("DimensionId");
 
                     b.ToTable("Dimensions");
                 });

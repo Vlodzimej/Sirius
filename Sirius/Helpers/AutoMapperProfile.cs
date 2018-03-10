@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Sirius.Dtos;
+using Sirius.Models.Dtos;
 using Sirius.Models;
 using System;
 using System.Collections.Generic;

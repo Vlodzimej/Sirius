@@ -9,7 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Microsoft.Extensions.Options;
-using Sirius.Dtos;
+using Sirius.Models.Dtos;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
