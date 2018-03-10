@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Item, ItemDetail, Dimension, Category, Vendor } from '../../_models';
-import { ApiService, AlertService } from '../../_services';
+import { ApiService, AlertService } from '../../_services'
 import { ModalService } from '../../_services';
+import { ItemFilter } from './item.filter';
 
 @Component({
     selector: 'app-item-dictionary',
@@ -17,6 +18,8 @@ export class ItemDictionaryComponent implements OnInit {
     public dimensions: Dimension[] = [];
     public categories: Category[] = [];
     public vendors: Vendor[] = [];
+
+    public itemFilter: ItemFilter = new ItemFilter();
 
     constructor(
         private apiService: ApiService,
@@ -47,6 +50,10 @@ export class ItemDictionaryComponent implements OnInit {
     closeModal(id: string) {
         this.modalService.close(id);
     }
+    openNewItem(){
+        this.item = new Item();
+        this.modalService.open('modal-new-item');
+    }
 
     openItem(id: string) {
         this.apiService.getById<ItemDetail>('item', id).subscribe(
@@ -61,6 +68,7 @@ export class ItemDictionaryComponent implements OnInit {
     }
 
     addItem() {
+        console.log(this.item);
         this.apiService.create<Item>('item', this.item).subscribe(
             data => {
                 this.ngOnInit();
@@ -68,6 +76,10 @@ export class ItemDictionaryComponent implements OnInit {
             error => {
                 this.alertService.error('Ошибка записи', true);
             });
+    }
+
+    Test(){
+        console.log(this.item);
     }
 
     updateItem() {

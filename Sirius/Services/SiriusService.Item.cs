@@ -52,9 +52,16 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public ItemDetailDto AddItem(Item item)
+        public ItemDetailDto AddItem(ItemSaveDto savingItem)
         {
-            item.Id = Guid.NewGuid();
+            var item = new Item()
+            {
+                Id = Guid.NewGuid(),
+                Name = savingItem.Name,
+                DimensionId = savingItem.DimensionId,
+                CategoryId = savingItem.CategoryId,
+                VendorId = savingItem.VendorId
+            };
 
             unitOfWork.ItemRepository.Insert(item);
             unitOfWork.Save();

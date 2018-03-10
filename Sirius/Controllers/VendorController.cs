@@ -1,15 +1,13 @@
 ﻿using System;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using AutoMapper;
-
 using Sirius.Models;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
+using System.Collections.Generic;
 
 namespace Sirius.Controllers
 {
@@ -36,12 +34,12 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var vendors = siriusService.GetAllVendors();
-            if (vendors != null)
+            var vendors = siriusService.GetAllVendors() as List<Vendor>;
+            if (vendors.Count > 0)
             {
                 return Ok(vendors);
             }
-            return new BadRequestResult();
+            return NotFound();
         }
 
         /// <summary>
@@ -57,7 +55,7 @@ namespace Sirius.Controllers
             {
                 return Ok(vendor);
             }
-            return new BadRequestResult();
+            return NotFound();
         }
 
         /// <summary>
@@ -82,12 +80,12 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Vendor value)
+        public IActionResult Put(Guid id, [FromBody]Vendor vendor)
         {
-            var vendor = siriusService.UpdateVendor(id, value);
-            if (vendor != null)
+            var result = siriusService.UpdateVendor(id, vendor);
+            if (result != null)
             {
-                return Ok(vendor);
+                return Ok(result);
             }
             return new BadRequestResult();
         }

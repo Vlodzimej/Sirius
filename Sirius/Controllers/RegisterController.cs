@@ -13,14 +13,14 @@ namespace Sirius.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/dimension")]
-    public class DimensionController : Controller
+    [Route("api/register")]
+    public class RegisterController : Controller
     {
         private SiriusService siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public DimensionController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public RegisterController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
             siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
@@ -28,57 +28,45 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// GET: api/Dimension
+        /// GET: api/register
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Get()
         {
-            var dimensions = siriusService.GetAllDimension() as List<Dimension>;
-            if (dimensions.Count > 0)
+            var registers = siriusService.GetAllRegisters() as List<Register>;
+            if (registers.Count > 0)
             {
-                return Ok(dimensions);
+                return Ok(registers);
             }
             return NotFound();
         }
 
         /// <summary>
-        /// GET: api/dimension/5
+        /// GET: api/register/5
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var dimension = siriusService.GetDimensionById(id);
-            if (dimension != null)
+            var register = siriusService.GetRegisterById(id);
+            if (register != null)
             {
-                return Ok(dimension);
+                return Ok(register);
             }
             return NotFound();
         }
 
         /// <summary>
-        /// POST: api/Dimension
+        /// POST: api/register
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="register"></param>
         [HttpPost]
-        public void Post([FromBody]Dimension dimension)
+        public IActionResult Post([FromBody]Register register)
         {
-            siriusService.AddDimension(dimension);
-        }
-
-        /// <summary>
-        /// PUT: api/Dimension/5
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Dimension dimension)
-        {
-            var result = siriusService.UpdateDimension(id, dimension);
-            if(result != null)
+            var result = siriusService.AddRegister(register);
+            if (result != null)
             {
                 return Ok(result);
             }
@@ -86,13 +74,34 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// DELETE: api/ApiWithActions/5
+        /// PUT: api/register/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="register"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public IActionResult Put(Guid id, [FromBody]Register register)
+        {
+            var result = siriusService.UpdateRegister(id, register);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// DELETE: api/vendor/5
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
-            siriusService.DeleteDimensionById(id);
+            if (siriusService.DeleteVendorById(id))
+            {
+                return Ok();
+            }
+            return new BadRequestResult();
         }
     }
 }

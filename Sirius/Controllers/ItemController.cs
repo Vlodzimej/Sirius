@@ -1,15 +1,14 @@
 ﻿using System;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using AutoMapper;
-
 using Sirius.Models;
+using Sirius.Models.Dtos;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
+using System.Collections.Generic;
 
 namespace Sirius.Controllers
 {
@@ -65,7 +64,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="item"></param>
         [HttpPost]
-        public IActionResult Post([FromBody]Item item)
+        public IActionResult Post([FromBody]ItemSaveDto item)
         {
             var result = siriusService.AddItem(item);
             if (result != null)
@@ -82,12 +81,12 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Item value)
+        public IActionResult Put(Guid id, [FromBody]Item item)
         {
-            var item = siriusService.UpdateItem(id, value);
-            if (item != null)
+            var result = siriusService.UpdateItem(id, item);
+            if (result != null)
             {
-                return Ok(item);
+                return Ok(result);
             }
             return new BadRequestResult();
         }

@@ -43,7 +43,7 @@ export class DimensionDictionaryComponent implements OnInit {
         this.apiService.getById<Dimension>('dimension', id).subscribe(
             data => {
                 this.dimension = data;
-                this.modalService.open('modal-edit-item');
+                this.modalService.open('modal-edit-dimension');
             },
             error => {
                 this.alertService.error('Ошибка загрузки', true);

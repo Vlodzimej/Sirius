@@ -23,6 +23,7 @@ import {
 import { AuthGuard } from './components/_guards/auth.guard';
 //import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
 
+// Импорт компонентов со списками
 import { 
     UserDictionaryComponent, 
     DimensionDictionaryComponent, 
@@ -30,6 +31,9 @@ import {
     VendorDictionaryComponent,
     ItemDictionaryComponent
 } from './components/dictionaries';
+
+// Импорт компонентов с накладными
+import { ArrivalInvoiceComponent } from './components/invoces';
 
 @NgModule({
     declarations: [
@@ -45,7 +49,8 @@ import {
         DimensionDictionaryComponent,
         CategoryDictionaryComponent,
         VendorDictionaryComponent,
-        ItemDictionaryComponent
+        ItemDictionaryComponent,
+        ArrivalInvoiceComponent
     ],
     imports: [
         CommonModule,
@@ -62,6 +67,7 @@ import {
             { path: 'categories', component: CategoryDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'vendors', component: VendorDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'items', component: ItemDictionaryComponent, canActivate: [AuthGuard] },
+            { path: 'arrivalinvoice', component: ArrivalInvoiceComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

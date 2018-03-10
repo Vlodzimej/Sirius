@@ -40,7 +40,6 @@ export class CategoryDictionaryComponent implements OnInit {
     }
 
     openCategory(id: string) {
-        console.log(id);
         this.apiService.getById<Category>('category', id).subscribe(
             data => {
                 this.category = data;

@@ -1,15 +1,13 @@
 ﻿using System;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-
 using AutoMapper;
-
 using Sirius.Models;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
+using System.Collections.Generic;
 
 namespace Sirius.Controllers
 {
@@ -36,12 +34,12 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var categories = siriusService.GetAllCategory();
-            if (categories != null)
+            var categories = siriusService.GetAllCategory() as List<Category>;
+            if (categories.Count > 0)
             {
                 return Ok(categories);
             }
-            return new BadRequestResult();
+            return NotFound();
         }
 
         /// <summary>
@@ -57,7 +55,7 @@ namespace Sirius.Controllers
             {
                 return Ok(category);
             }
-            return new BadRequestResult();
+            return NotFound();
         }
 
         /// <summary>
@@ -82,12 +80,12 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Category value)
+        public IActionResult Put(Guid id, [FromBody]Category category)
         {
-            var category = siriusService.UpdateCategory(id, value);
-            if (category != null)
+            var result = siriusService.UpdateCategory(id, category);
+            if (result != null)
             {
-                return Ok(category);
+                return Ok(result);
             }
             return new BadRequestResult();
         }

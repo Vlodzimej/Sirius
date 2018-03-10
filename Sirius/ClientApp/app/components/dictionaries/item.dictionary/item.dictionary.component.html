@@ -12,22 +12,23 @@
                     <input type="text" class="form-control" placeholder="Наименование">
                 </div>
                 <div>
-                    <label for="item-category">Категория</label>
-                    <select class="form-control" name="item-category" [(ngModel)]="item.categoryId" #category="ngModel" required>
+                    <label for="item-filter-category">Категория</label>
+                    <select class="form-control" name="item-filter-category" [(ngModel)]="itemFilter.categoryId" #categoryFilter="ngModel" required>
                         <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="item-vendor">Поставщик</label>
-                    <select class="form-control" name="item-vendor" [(ngModel)]="item.vendorId" #vendor="ngModel" required>
+                    <label for="item-filter-vendor">Поставщик</label>
+                    <select class="form-control" name="item-filter-vendor" [(ngModel)]="itemFilter.vendorId" #vendorFilter="ngModel" required>
                         <option *ngFor="let vendor of vendors" value="{{vendor.id}}">{{vendor.name}}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="item-dimension">Единица измерения</label>
-                    <select class="form-control" name="item-dimension" [(ngModel)]="item.dimensionId" #dimension="ngModel" required>
+                    <label for="item-filter-dimension">Единица измерения</label>
+                    <select class="form-control" name="item-filter-dimension" [(ngModel)]="itemFilter.dimensionId" #dimensionFilter="ngModel"
+                        required>
                         <option *ngFor="let dimension of dimensions" value="{{dimension.id}}">{{dimension.name}}</option>
                     </select>
                 </div>
@@ -36,7 +37,7 @@
 
         <div class="panel panel-default">
             <div class="panel-body">
-                <button class="btn btn-default" (click)="openModal('modal-new-item')">Новый</button>
+                <button class="btn btn-default" (click)="openNewItem()">Новый</button>
             </div>
         </div>
     </div>
@@ -99,8 +100,7 @@
                     <div class="modal-footer">
                         <div class="form-group">
                             <button [disabled]="loading" class="btn btn-primary">Создать</button>
-                            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-                            />
+                            <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
                             <a (click)="closeModal('modal-new-item')" class="btn btn-link">Отмена</a>
                         </div>
                     </div>
@@ -122,28 +122,28 @@
                 <form name="form" (ngSubmit)="f.form.valid && updateItem()" #f="ngForm" novalidate>
                     <div class="modal-body">
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-                            <label for="item-name">Название</label>
-                            <input type="text" class="form-control" name="item-name" [(ngModel)]="itemDetail.name" #name="ngModel" required />
+                            <label for="item-edit-name">Название</label>
+                            <input type="text" class="form-control" name="item-edit-name" [(ngModel)]="itemDetail.name" #name="ngModel" required />
                             <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
                         </div>
 
                         <div>
-                            <label for="item-category">Категория</label>
-                            <select class="form-control" name="item-category" [(ngModel)]="itemDetail.category.id" #category="ngModel" required>
+                            <label for="item-edit-category">Категория</label>
+                            <select class="form-control" name="item-edit-category" [(ngModel)]="itemDetail.category.id" #category="ngModel" required>
                                 <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label for="item-vendor">Поставщик</label>
-                            <select class="form-control" name="item-vendor" [(ngModel)]="itemDetail.vendor.id" #vendor="ngModel" required>
+                            <label for="item-edit-vendor">Поставщик</label>
+                            <select class="form-control" name="item-edit-vendor" [(ngModel)]="itemDetail.vendor.id" #vendor="ngModel" required>
                                 <option *ngFor="let vendor of vendors" value="{{vendor.id}}">{{vendor.name}}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label for="item-dimension">Единица измерения</label>
-                            <select class="form-control" name="item-dimension" [(ngModel)]="itemDetail.dimension.id" #dimension="ngModel" required>
+                            <label for="item-edit-dimension">Единица измерения</label>
+                            <select class="form-control" name="item-edit-dimension" [(ngModel)]="itemDetail.dimension.id" #dimension="ngModel" required>
                                 <option *ngFor="let dimension of dimensions" value="{{dimension.id}}">{{dimension.name}}</option>
                             </select>
                         </div>
@@ -152,8 +152,7 @@
                     <div class="modal-footer">
                         <div class="form-group">
                             <button [disabled]="loading" class="btn btn-primary">Обновить</button>
-                            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-                            />
+                            <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
                             <a (click)="closeModal('modal-new-item')" class="btn btn-link">Отмена</a>
                         </div>
                     </div>
