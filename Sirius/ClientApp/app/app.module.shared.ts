@@ -33,7 +33,7 @@ import {
 } from './components/dictionaries';
 
 // Импорт компонентов с накладными
-import { ArrivalInvoiceComponent } from './components/invoces';
+import { ArrivalInvoiceComponent } from './components/invoices';
 
 @NgModule({
     declarations: [
