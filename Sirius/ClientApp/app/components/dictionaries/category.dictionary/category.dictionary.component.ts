@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../../_models';
-import { ApiService, AlertService } from '../../_services';
-import { ModalService } from '../../_services';
+import { ApiService, AlertService, ModalService } from '../../_services';
+
 
 @Component({
     selector: 'app-category-dictionary',

@@ -4,5 +4,4 @@ export class Item
     name: string;
     dimensionId: string;
     categoryId: string;
-    vendorId: string;
 }

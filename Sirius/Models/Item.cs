@@ -8,23 +8,17 @@ namespace Sirius.Models
     /// </summary>
     public class Item
     {
+        // Идентификатор
         public Guid Id { get; set; }
-
+        // Название
         public string Name { get; set; }
-
+        // Идентификатор единицы измерения
         public Guid DimensionId { get; set; }
-
-        [ForeignKey("DimensionId")]
+        // Единица измерения
         public Dimension Dimension { get; set; }
-
+        // Идентификатор категории
         public Guid CategoryId { get; set; }
-
-        [ForeignKey("CategoryId")]
+        // Категория
         public Category Category { get; set; }
-
-        public Guid VendorId { get; set; }
-
-        [ForeignKey("VendorId")]
-        public Vendor Vendor { get; set; }
     }
 }

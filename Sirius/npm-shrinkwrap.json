@@ -164,12 +164,14 @@
     "@types/jquery": {
       "version": "3.3.1",
       "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-3.3.1.tgz",
-      "integrity": "sha512-N3h+rzN518yl2xKrW0o6KKdNmWZ+OwG6SoM5TBEQFF0tTv5wXPEsoOuYQ2Kt3/89XbcSZUJLdjiT/2c3BR/ApQ=="
+      "integrity": "sha512-N3h+rzN518yl2xKrW0o6KKdNmWZ+OwG6SoM5TBEQFF0tTv5wXPEsoOuYQ2Kt3/89XbcSZUJLdjiT/2c3BR/ApQ==",
+      "dev": true
     },
     "@types/underscore": {
       "version": "1.8.8",
       "resolved": "https://registry.npmjs.org/@types/underscore/-/underscore-1.8.8.tgz",
-      "integrity": "sha512-EquzRwzAAs04anQ8/6MYXFKvHoD+MIlF+gu87EDda7dN9zrKvQYHsc9VFAPB1xY4tUHQVvBMtjsHrvof2EE1Mg=="
+      "integrity": "sha512-EquzRwzAAs04anQ8/6MYXFKvHoD+MIlF+gu87EDda7dN9zrKvQYHsc9VFAPB1xY4tUHQVvBMtjsHrvof2EE1Mg==",
+      "dev": true
     },
     "@types/webpack-env": {
       "version": "1.13.0",
@@ -267,6 +269,15 @@
       "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-1.0.1.tgz",
       "integrity": "sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=",
       "dev": true
+    },
+    "angular2-router-loader": {
+      "version": "0.3.5",
+      "resolved": "https://registry.npmjs.org/angular2-router-loader/-/angular2-router-loader-0.3.5.tgz",
+      "integrity": "sha1-Kxj6loPg6Kqz6UL12ToR1jw3wwM=",
+      "dev": true,
+      "requires": {
+        "loader-utils": "0.2.17"
+      }
     },
     "angular2-template-loader": {
       "version": "0.6.2",
@@ -3808,6 +3819,12 @@
       "integrity": "sha1-3skmzQqfoof7bbXHVfpIfnTOysU=",
       "dev": true
     },
+    "jquery": {
+      "version": "3.2.1",
+      "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.2.1.tgz",
+      "integrity": "sha1-XE2d5lKvbNCncBVKYxu6ErAVx4c=",
+      "dev": true
+    },
     "js-base64": {
       "version": "2.1.9",
       "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.1.9.tgz",
@@ -6487,7 +6504,8 @@
     "underscore": {
       "version": "1.8.3",
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz",
-      "integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI="
+      "integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI=",
+      "dev": true
     },
     "union-value": {
       "version": "0.2.4",

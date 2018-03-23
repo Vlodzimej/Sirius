@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Sirius.DAL;
 using System;
 
@@ -46,6 +44,32 @@ namespace Sirius.Migrations
                     b.ToTable("Dimensions");
                 });
 
+            modelBuilder.Entity("Sirius.Models.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreateDate");
+
+                    b.Property<bool>("IsRecorded");
+
+                    b.Property<bool>("IsTemporary");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid>("UserId");
+
+                    b.Property<Guid>("VendorId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("Invoice");
+                });
+
             modelBuilder.Entity("Sirius.Models.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -57,17 +81,35 @@ namespace Sirius.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<Guid>("VendorId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("DimensionId");
 
-                    b.HasIndex("VendorId");
-
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Sirius.Models.Register", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("Amount");
+
+                    b.Property<decimal>("Cost");
+
+                    b.Property<Guid>("InvoiceId");
+
+                    b.Property<Guid>("ItemId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("Register");
                 });
 
             modelBuilder.Entity("Sirius.Models.User", b =>
@@ -110,6 +152,19 @@ namespace Sirius.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("Sirius.Models.Invoice", b =>
+                {
+                    b.HasOne("Sirius.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Sirius.Models.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Sirius.Models.Item", b =>
                 {
                     b.HasOne("Sirius.Models.Category", "Category")
@@ -121,10 +176,18 @@ namespace Sirius.Migrations
                         .WithMany()
                         .HasForeignKey("DimensionId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.HasOne("Sirius.Models.Vendor", "Vendor")
+            modelBuilder.Entity("Sirius.Models.Register", b =>
+                {
+                    b.HasOne("Sirius.Models.Invoice", "Invoice")
+                        .WithMany("Registers")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Sirius.Models.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("VendorId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

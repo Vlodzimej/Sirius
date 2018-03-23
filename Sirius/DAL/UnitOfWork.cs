@@ -57,8 +57,8 @@ namespace Sirius.DAL
         /// <summary>
         /// Репозиторий "Накладная"
         /// </summary>
-        public GenericRepository<Invoice> InvoiceRepository => invoiceRepository ?? new GenericRepository<Invoice>(context);
-        private GenericRepository<Invoice> invoiceRepository;
+        public InvoiceRepository InvoiceRepository => invoiceRepository ?? new InvoiceRepository(context);
+        private InvoiceRepository invoiceRepository;
 
         public void Save()
         {

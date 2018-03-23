@@ -16,13 +16,13 @@ namespace Sirius.Controllers
     [Route("api/dimension")]
     public class DimensionController : Controller
     {
-        private SiriusService siriusService;
+        private SiriusService _siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public DimensionController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -34,7 +34,7 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var dimensions = siriusService.GetAllDimension() as List<Dimension>;
+            var dimensions = _siriusService.GetAllDimension() as List<Dimension>;
             if (dimensions.Count > 0)
             {
                 return Ok(dimensions);
@@ -50,7 +50,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var dimension = siriusService.GetDimensionById(id);
+            var dimension = _siriusService.GetDimensionById(id);
             if (dimension != null)
             {
                 return Ok(dimension);
@@ -65,7 +65,7 @@ namespace Sirius.Controllers
         [HttpPost]
         public void Post([FromBody]Dimension dimension)
         {
-            siriusService.AddDimension(dimension);
+            _siriusService.AddDimension(dimension);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Sirius.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]Dimension dimension)
         {
-            var result = siriusService.UpdateDimension(id, dimension);
+            var result = _siriusService.UpdateDimension(id, dimension);
             if(result != null)
             {
                 return Ok(result);
@@ -92,7 +92,7 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
-            siriusService.DeleteDimensionById(id);
+            _siriusService.DeleteDimensionById(id);
         }
     }
 }

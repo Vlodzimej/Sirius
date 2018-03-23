@@ -1,6 +1,7 @@
 ﻿using Sirius.Models;
 using System;
 using System.Collections.Generic;
+using Sirius.Models.Dtos;
 
 namespace Sirius.Services
 {
@@ -20,9 +21,9 @@ namespace Sirius.Services
         /// Получить список всех накладных
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Invoice> GetAllInvoices()
+        public IEnumerable<InvoiceDto> GetAllInvoices()
         {
-            return unitOfWork.InvoiceRepository.Get();
+            return unitOfWork.InvoiceRepository.GetAll();
         }
 
         /// <summary>
@@ -47,23 +48,32 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public Invoice AddRegister(Invoice invoice)
+        public Invoice AddInvoice(Invoice invoice)
         {
-            invoice.Id = Guid.NewGuid();
+            var newInvoice = new Invoice()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test",
+                UserId = Guid.Parse("c5efcdc4-cc97-481f-89ed-7614da4e6541"),
+                VendorId = Guid.Parse("7c32414b-665d-4241-8bf1-0239ad7344fa"),
+                CreateDate = DateTime.Now,
+                IsTemporary = true,
+                IsRecorded = false
+            };
 
-            unitOfWork.InvoiceRepository.Insert(invoice);
+            unitOfWork.InvoiceRepository.Insert(newInvoice);
             unitOfWork.Save();
 
             return unitOfWork.InvoiceRepository.GetByID(invoice.Id) ?? null;
         }
 
         /// <summary>
-        /// Обновить запись регистра
+        /// Обновить данные накладной
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public Invoice UpdateRegister(Guid invoiceId, Invoice invoice)
+        public Invoice UpdateInvoice(Guid invoiceId, Invoice invoice)
         {
             if (invoiceId == invoice.Id)
             {

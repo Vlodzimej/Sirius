@@ -34,14 +34,12 @@ namespace Sirius.Models
             var item = context.Items
                 .Include(i => i.Dimension)
                 .Include(i => i.Category)
-                .Include(i => i.Vendor)
                 .Select(i => new ItemDetailDto()
             {
                 Id = i.Id,
                 Name = i.Name,
                 Dimension = i.Dimension,
                 Category = i.Category,
-                Vendor = i.Vendor
             }).SingleOrDefault(i => i.Id == itemId);
             return item;
         }

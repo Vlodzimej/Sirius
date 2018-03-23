@@ -1,11 +1,13 @@
 ﻿using Sirius.DAL;
 using System;
+using Sirius.Models;
 
 namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
         private UnitOfWork unitOfWork;
+        private User currentUser;
 
         public SiriusService(UnitOfWork _unitOfWork)
         {

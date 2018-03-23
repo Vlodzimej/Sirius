@@ -22,13 +22,13 @@ namespace Sirius.Controllers
 
     public class UserController : Controller
     {
-        private SiriusService siriusService;
+        private SiriusService _siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UserController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -36,7 +36,7 @@ namespace Sirius.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
-            var user = siriusService.Authenticate(userDto.Username, userDto.Password);
+            var user = _siriusService.Authenticate(userDto.Username, userDto.Password);
 
             if (user == null)
                 return Unauthorized();
@@ -76,7 +76,7 @@ namespace Sirius.Controllers
             try
             {
                 // save 
-                siriusService.CreateUser(user, userDto.Password);
+                _siriusService.CreateUser(user, userDto.Password);
                 return Ok();
             }
             catch (AppException ex)
@@ -89,7 +89,7 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = siriusService.GetAllUsers();
+            var users = _siriusService.GetAllUsers();
             var userDtos = _mapper.Map<IEnumerable<User> , IEnumerable<UserDto>>(users);
             return Ok(userDtos);
         }
@@ -97,7 +97,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(Guid id)
         {
-            var user = siriusService.GetById(id);
+            var user = _siriusService.GetById(id);
             var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
@@ -112,7 +112,7 @@ namespace Sirius.Controllers
             try
             {
                 // save 
-                siriusService.Update(user, userDto.Password);
+                _siriusService.Update(user, userDto.Password);
                 return Ok();
             }
             catch (AppException ex)
@@ -125,7 +125,7 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            siriusService.Delete(id);
+            _siriusService.Delete(id);
             return Ok();
         }
     }

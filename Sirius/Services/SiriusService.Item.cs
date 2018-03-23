@@ -60,7 +60,6 @@ namespace Sirius.Services
                 Name = savingItem.Name,
                 DimensionId = savingItem.DimensionId,
                 CategoryId = savingItem.CategoryId,
-                VendorId = savingItem.VendorId
             };
 
             unitOfWork.ItemRepository.Insert(item);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Item, ItemDetail, Dimension, Category, Vendor } from '../../_models';
+import { Item, ItemDetail, Dimension, Category /*Vendor*/ } from '../../_models';
 import { ApiService, AlertService } from '../../_services'
 import { ModalService } from '../../_services';
 import { ItemFilter } from './item.filter';
@@ -17,7 +17,7 @@ export class ItemDictionaryComponent implements OnInit {
 
     public dimensions: Dimension[] = [];
     public categories: Category[] = [];
-    public vendors: Vendor[] = [];
+    //public vendors: Vendor[] = [];
 
     public itemFilter: ItemFilter = new ItemFilter();
 
@@ -26,6 +26,9 @@ export class ItemDictionaryComponent implements OnInit {
         private alertService: AlertService,
         private modalService: ModalService) { }
 
+    /**Инициализация
+     * 
+     */
     ngOnInit() {
         if (this.loading) {
             this.loadDictionaries();
@@ -42,19 +45,24 @@ export class ItemDictionaryComponent implements OnInit {
                 this.loading = false;
             });
     }
-
+    
+    /**Открытие модального окна  */
     openModal(id: string) {
         this.modalService.open(id);
     }
 
+    /**Закрытие модального окна */
     closeModal(id: string) {
         this.modalService.close(id);
     }
+
+    /**Открытие модального окна с формой добавления нового наименования */
     openNewItem(){
         this.item = new Item();
         this.modalService.open('modal-new-item');
     }
 
+    /**Открытие модального окна с информацией о наименовании и возможностью редактирования */
     openItem(id: string) {
         this.apiService.getById<ItemDetail>('item', id).subscribe(
             data => {
@@ -67,6 +75,7 @@ export class ItemDictionaryComponent implements OnInit {
             });
     }
 
+    /**Добавление нового наименования */
     addItem() {
         console.log(this.item);
         this.apiService.create<Item>('item', this.item).subscribe(
@@ -82,6 +91,7 @@ export class ItemDictionaryComponent implements OnInit {
         console.log(this.item);
     }
 
+    /**Обновление данных наименования */
     updateItem() {
         if (this.itemDetail.id != null || this.itemDetail.id != "") {
 
@@ -90,7 +100,6 @@ export class ItemDictionaryComponent implements OnInit {
             newItem.name = this.itemDetail.name;
             newItem.dimensionId = this.itemDetail.dimension.id;
             newItem.categoryId = this.itemDetail.category.id;
-            newItem.vendorId = this.itemDetail.vendor.id;
 
             this.apiService.update<Item>('item', newItem.id, newItem).subscribe(
                 data => {
@@ -104,6 +113,7 @@ export class ItemDictionaryComponent implements OnInit {
         }
     }
 
+    /**Загрузка необходимых справичников*/
     loadDictionaries() {
         this.apiService.getAll<Dimension>('dimension').subscribe(
             data => {
@@ -122,7 +132,7 @@ export class ItemDictionaryComponent implements OnInit {
                 this.alertService.error('Ошибка загрузки списка категорий', true);
                 this.loading = false;
             });
-
+        /*
         this.apiService.getAll<Vendor>('vendor').subscribe(
             data => {
                 this.vendors = data;
@@ -131,5 +141,6 @@ export class ItemDictionaryComponent implements OnInit {
                 this.alertService.error('Ошибка загрузки списка поставщиков', true);
                 this.loading = false;
             });
+        */      
     }
 }

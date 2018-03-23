@@ -17,13 +17,13 @@ namespace Sirius.Controllers
     [Route("api/item")]
     public class ItemController : Controller
     {
-        private SiriusService siriusService;
+        private SiriusService _siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public ItemController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -35,7 +35,7 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-             var items = siriusService.GetAllItems();
+             var items = _siriusService.GetAllItems();
              if (items != null)
              {
                  return Ok(items);
@@ -51,7 +51,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var item = siriusService.GetItemById(id);
+            var item = _siriusService.GetItemById(id);
             if (item != null)
             {
                 return Ok(item);
@@ -66,7 +66,7 @@ namespace Sirius.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]ItemSaveDto item)
         {
-            var result = siriusService.AddItem(item);
+            var result = _siriusService.AddItem(item);
             if (result != null)
             {
                 return Ok(result);
@@ -83,7 +83,7 @@ namespace Sirius.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]Item item)
         {
-            var result = siriusService.UpdateItem(id, item);
+            var result = _siriusService.UpdateItem(id, item);
             if (result != null)
             {
                 return Ok(result);
@@ -98,7 +98,7 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if (siriusService.DeleteItemById(id))
+            if (_siriusService.DeleteItemById(id))
             {
                 return Ok();
             }

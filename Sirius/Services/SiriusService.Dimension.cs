@@ -9,8 +9,8 @@ namespace Sirius.Services
         /// <summary>
         /// Получить единицу измерения по Id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Dimension</returns>
+        /// <param name="id">идентификатор единицы измерения</param>
+        /// <returns>Единица измерения (Dimension)</returns>
         public Dimension GetDimensionById(Guid id)
         {
             return unitOfWork.DimensionRepository.GetByID(id);
@@ -28,7 +28,7 @@ namespace Sirius.Services
         /// <summary>
         /// Удаление единицы измерения по Id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">идентификатор единицы измерения</param>
         public void DeleteDimensionById(Guid id)
         {
             var dimension = unitOfWork.DimensionRepository.GetByID(id);
@@ -42,7 +42,7 @@ namespace Sirius.Services
         /// <summary>
         /// Добавление новой единицы измерения
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="dimension">единица измерения</param>
         public Dimension AddDimension(Dimension dimension)
         {
             dimension.Id = Guid.NewGuid();
@@ -54,9 +54,11 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Обновление единицы измерения
+        /// Обновление данных единицы измерения
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="dimensionId">идентификатор единицы измерения</param>
+        /// <param name="dimension">единица измерения</param>
+        /// <returns>Обновленная единица измерения</returns>
         public Dimension UpdateDimension(Guid dimensionId, Dimension dimension)
         {
             if (dimensionId == dimension.Id)

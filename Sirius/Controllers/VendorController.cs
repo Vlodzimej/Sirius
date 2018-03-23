@@ -16,13 +16,13 @@ namespace Sirius.Controllers
     [Route("api/vendor")]
     public class VendorController : Controller
     {
-        private SiriusService siriusService;
+        private SiriusService _siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public VendorController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -34,7 +34,7 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var vendors = siriusService.GetAllVendors() as List<Vendor>;
+            var vendors = _siriusService.GetAllVendors() as List<Vendor>;
             if (vendors.Count > 0)
             {
                 return Ok(vendors);
@@ -50,7 +50,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var vendor = siriusService.GetVendorById(id);
+            var vendor = _siriusService.GetVendorById(id);
             if (vendor != null)
             {
                 return Ok(vendor);
@@ -65,7 +65,7 @@ namespace Sirius.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Vendor vendor)
         {
-            var result = siriusService.AddVendor(vendor);
+            var result = _siriusService.AddVendor(vendor);
             if (result != null)
             {
                 return Ok(result);
@@ -82,7 +82,7 @@ namespace Sirius.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]Vendor vendor)
         {
-            var result = siriusService.UpdateVendor(id, vendor);
+            var result = _siriusService.UpdateVendor(id, vendor);
             if (result != null)
             {
                 return Ok(result);
@@ -97,7 +97,7 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if (siriusService.DeleteVendorById(id))
+            if (_siriusService.DeleteVendorById(id))
             {
                 return Ok();
             }

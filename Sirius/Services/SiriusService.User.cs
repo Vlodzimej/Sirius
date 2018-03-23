@@ -21,18 +21,18 @@ namespace Sirius.Services
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = unitOfWork.UserRepository.GetByUsername(username);
+            currentUser = unitOfWork.UserRepository.GetByUsername(username);
 
             // check if username exists
-            if (user == null)
+            if (currentUser == null)
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(password, currentUser.PasswordHash, currentUser.PasswordSalt))
                 return null;
 
             // authentication successful
-            return user;
+            return currentUser;
         }
 
         /// <summary>

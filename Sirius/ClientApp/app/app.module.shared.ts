@@ -21,7 +21,6 @@ import {
 } from './components/_services';
 
 import { AuthGuard } from './components/_guards/auth.guard';
-//import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
 
 // Импорт компонентов со списками
 import { 
@@ -32,8 +31,15 @@ import {
     ItemDictionaryComponent
 } from './components/dictionaries';
 
-// Импорт компонентов с накладными
-import { ArrivalInvoiceComponent } from './components/invoices';
+// Импорт компонентов относящихся к накладным
+import {
+    ArrivalInvoiceListComponent,
+    ArrivalInvoiceComponent
+} from './components/invoices';
+
+import {
+    InvoiceComponent, InvoiceListComponent, InvoiceDetailComponent
+} from './components/invoice';
 
 @NgModule({
     declarations: [
@@ -50,7 +56,11 @@ import { ArrivalInvoiceComponent } from './components/invoices';
         CategoryDictionaryComponent,
         VendorDictionaryComponent,
         ItemDictionaryComponent,
-        ArrivalInvoiceComponent
+        InvoiceComponent,
+        InvoiceDetailComponent,
+        InvoiceListComponent,
+        ArrivalInvoiceComponent,
+        ArrivalInvoiceListComponent 
     ],
     imports: [
         CommonModule,
@@ -67,7 +77,9 @@ import { ArrivalInvoiceComponent } from './components/invoices';
             { path: 'categories', component: CategoryDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'vendors', component: VendorDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'items', component: ItemDictionaryComponent, canActivate: [AuthGuard] },
-            { path: 'arrivalinvoice', component: ArrivalInvoiceComponent, canActivate: [AuthGuard] },
+            { path: 'invoice', component: InvoiceListComponent, canActivate: [AuthGuard] },
+            { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
+            { path: 'arrivalinvoicelist', component: ArrivalInvoiceListComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

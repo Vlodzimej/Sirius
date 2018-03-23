@@ -16,13 +16,13 @@ namespace Sirius.Controllers
     [Route("api/category")]
     public class CategoryController : Controller
     {
-        private SiriusService siriusService;
+        private SiriusService _siriusService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public CategoryController(IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(new UnitOfWork());
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -34,7 +34,7 @@ namespace Sirius.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var categories = siriusService.GetAllCategory() as List<Category>;
+            var categories = _siriusService.GetAllCategory() as List<Category>;
             if (categories.Count > 0)
             {
                 return Ok(categories);
@@ -50,7 +50,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var category = siriusService.GetCategoryById(id);
+            var category = _siriusService.GetCategoryById(id);
             if (category != null)
             {
                 return Ok(category);
@@ -65,7 +65,7 @@ namespace Sirius.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]Category category)
         {
-            var result = siriusService.AddCategory(category);
+            var result = _siriusService.AddCategory(category);
             if (result != null)
             {
                 return Ok(result);
@@ -82,7 +82,7 @@ namespace Sirius.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, [FromBody]Category category)
         {
-            var result = siriusService.UpdateCategory(id, category);
+            var result = _siriusService.UpdateCategory(id, category);
             if (result != null)
             {
                 return Ok(result);
@@ -97,7 +97,7 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if (siriusService.DeleteCategoryById(id))
+            if (_siriusService.DeleteCategoryById(id))
             {
                 return Ok();
             }

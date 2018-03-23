@@ -6,5 +6,4 @@ export class ItemDetail
     name: string;
     dimension: Dimension = new Dimension();
     category: Category = new Category();
-    vendor: Vendor = new Vendor();
 }
