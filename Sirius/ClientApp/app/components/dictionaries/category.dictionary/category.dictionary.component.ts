@@ -5,8 +5,8 @@ import { ApiService, AlertService, ModalService } from '../../_services';
 
 @Component({
     selector: 'app-category-dictionary',
-    styleUrls: ['../../_content/modal.css'],
-    templateUrl: './category.dictionary.component.html'
+    templateUrl: './category.dictionary.component.html',
+    styleUrls: ['../../../assets/css/modal.css']
 })
 export class CategoryDictionaryComponent implements OnInit {
     public loading: boolean = true;

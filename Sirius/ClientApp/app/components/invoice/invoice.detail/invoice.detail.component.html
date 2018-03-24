@@ -1,1 +1,73 @@
-{{id}}
+<div class="row">
+    <div class="col-xs-12" *ngIf="loading">
+        <img class="center-block" src="../../../assets/images/loading.gif">
+    </div>
+
+    <div *ngIf="!loading" class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="invoice-accordion-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#info-panel">
+                        Информация
+                    </a>
+                </div>
+                <div id="info-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <p>Дата создания: </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#edit-panel">
+                        Редактирование
+                    </a>
+                </div>
+                <div id="edit-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button class="btn btn-default btn-block" (click)="addRegister()">Добавить</button>
+                        <button class="btn btn-default btn-block" [routerLink]="['/newitem']">Удалить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#control-panel">
+                        Управление
+                    </a>
+                </div>
+                <div id="control-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button class="btn btn-default btn-block">Сохранить</button>
+                        <button class="btn btn-default btn-block">Сохранить и закрыть</button>
+                        <button class="btn btn-default btn-block">Закрыть</button>
+                        <button class="btn btn-default btn-block">Пометить на удаление</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+
+
+
+        <div class="panel panel-default">
+            <table class="table table-hover table-striped table-bordered">
+                <tr>
+                    <th class="text-center">№</th>
+                    <th>Наименование</th>
+                    <th>Кол-во</th>
+                    <th>Ед. изм.</th>
+                </tr>
+                <tr *ngFor="let register of registers; let n = index" class="select-block" (click)="invoiceListItemClick(invoice.id)">
+                    <td class="text-center">{{n+1}}</td>
+                    <td>{{register.itemName}}</td>
+                    <td>{{register.amount}}</td>
+                    <td>{{register.dimension}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

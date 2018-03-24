@@ -2,7 +2,7 @@ using System;
 
 namespace Sirius.Models.Dtos
 {
-    public class InvoiceDto
+    public class InvoiceListDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

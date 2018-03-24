@@ -17,13 +17,13 @@ namespace Sirius.Models
         // Идентификатор поставщика
         public Guid VendorId { get; set; }
         // Поставщик
-        public virtual Vendor Vendor { get; set; }
+        public Vendor Vendor { get; set; }
         // Идентификатор пользователя-автора
         public Guid UserId { get; set; }
         // Пользователь-автор
-        public virtual User User { get; set; }
+        public User User { get; set; }
         // Список регистров
-        public virtual List<Register> Registers { get; set; }
+        public List<Register> Registers { get; set; }
         // Признак проведённой накладной
         public bool IsRecorded { get; set; }
         // Признак временной накладной

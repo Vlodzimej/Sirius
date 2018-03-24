@@ -1,10 +1,11 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { AlertService } from '../_services/index';
+import { AlertService } from '../../_services/index';
 
 @Component({
-    selector: 'alert',
-    templateUrl: 'alert.component.html'
+    selector: 'app-alert',
+    templateUrl: 'alert.component.html',
+    styleUrls: ['alert.component.css']
 })
 
 export class AlertComponent {
@@ -13,7 +14,10 @@ export class AlertComponent {
     constructor(private alertService: AlertService) { }
 
     ngOnInit() {
-        console.log(this.message);
         this.alertService.getMessage().subscribe(message => { this.message = message; });
+    }
+
+    close(){
+        this.message = 0;
     }
 }

@@ -1,2 +1,3 @@
-﻿export * from './alert.component';
-export * from './modal.component';
+﻿export * from './alert';
+export * from './modal';
+export * from './page.header';

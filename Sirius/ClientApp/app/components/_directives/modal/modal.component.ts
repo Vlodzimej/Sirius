@@ -1,7 +1,7 @@
 ﻿import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 import * as $ from 'jquery';
 
-import { ModalService } from '../_services/index';
+import { ModalService } from '../../_services/index';
 
 @Component({
     moduleId: module.id.toString(),
@@ -29,11 +29,11 @@ export class ModalComponent implements OnInit, OnDestroy {
         // move element to bottom of page (just before </body>) so it can be displayed above everything else
         this.element.appendTo('body');
 
-        // close modal on background click
+        // Закрытие модального окна при клике по любому месту
         this.element.on('click', function (e: any) {
             var target = $(e.target);
             if (!target.closest('.modal-body').length) {
-                modal.close();
+                // modal.close();
             }
         });
 

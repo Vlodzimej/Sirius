@@ -11,21 +11,22 @@ import { NomenclatureComponent } from './components/nomenclature/nomenclature.co
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
 
-import { AlertComponent, ModalComponent } from './components/_directives/';
-import { 
-    ApiService, 
-    UserService, 
-    AuthenticationService, 
-    AlertService, 
-    ModalService  
+import { AlertComponent, ModalComponent, PageHeaderComponent } from './components/_directives/';
+import {
+    ApiService,
+    UserService,
+    AuthenticationService,
+    AlertService,
+    ModalService,
+    PageHeaderService
 } from './components/_services';
 
 import { AuthGuard } from './components/_guards/auth.guard';
 
 // Импорт компонентов со списками
-import { 
-    UserDictionaryComponent, 
-    DimensionDictionaryComponent, 
+import {
+    UserDictionaryComponent,
+    DimensionDictionaryComponent,
     CategoryDictionaryComponent,
     VendorDictionaryComponent,
     ItemDictionaryComponent
@@ -41,6 +42,7 @@ import {
     InvoiceComponent, InvoiceListComponent, InvoiceDetailComponent
 } from './components/invoice';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -48,6 +50,7 @@ import {
         ModalComponent,
         NavMenuComponent,
         HomeComponent,
+        PageHeaderComponent,
         NomenclatureComponent,
         LoginComponent,
         RegisterComponent,
@@ -60,7 +63,7 @@ import {
         InvoiceDetailComponent,
         InvoiceListComponent,
         ArrivalInvoiceComponent,
-        ArrivalInvoiceListComponent 
+        ArrivalInvoiceListComponent
     ],
     imports: [
         CommonModule,
@@ -79,11 +82,10 @@ import {
             { path: 'items', component: ItemDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'invoice', component: InvoiceListComponent, canActivate: [AuthGuard] },
             { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
-            { path: 'arrivalinvoicelist', component: ArrivalInvoiceListComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService ]
+    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService, PageHeaderService]
 })
 export class AppModuleShared {
 }

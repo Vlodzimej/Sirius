@@ -12,7 +12,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Invoice GetInvoiceById(Guid id)
+        public InvoiceDetailDto GetInvoiceById(Guid id)
         {
             return unitOfWork.InvoiceRepository.GetByID(id);
         }
@@ -21,7 +21,7 @@ namespace Sirius.Services
         /// Получить список всех накладных
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<InvoiceDto> GetAllInvoices()
+        public IEnumerable<InvoiceListDto> GetAllInvoices()
         {
             return unitOfWork.InvoiceRepository.GetAll();
         }
@@ -48,7 +48,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public Invoice AddInvoice(Invoice invoice)
+        public InvoiceDetailDto AddInvoice(Invoice invoice)
         {
             var newInvoice = new Invoice()
             {
@@ -73,7 +73,7 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public Invoice UpdateInvoice(Guid invoiceId, Invoice invoice)
+        public InvoiceDetailDto UpdateInvoice(Guid invoiceId, Invoice invoice)
         {
             if (invoiceId == invoice.Id)
             {

@@ -6,7 +6,6 @@ import { ItemFilter } from './item.filter';
 
 @Component({
     selector: 'app-item-dictionary',
-    styleUrls: ['../../_content/modal.css'],
     templateUrl: './item.dictionary.component.html'
 })
 export class ItemDictionaryComponent implements OnInit {

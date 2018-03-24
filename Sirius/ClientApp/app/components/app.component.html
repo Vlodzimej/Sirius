@@ -1,12 +1,14 @@
-<nav-menu *ngIf="showNavBar"></nav-menu>
+<app-nav-menu *ngIf="showNavBar"></app-nav-menu>
+<div style="height: 56px"></div>
+
+<app-alert></app-alert>
 
 <div class="container">
-    <div class="row alert-block">
-        <div class="col-xs-8 col-sm-6 col-xs-offset-2 col-sm-offset-3">
-            <alert></alert>
+    <div class="row">
+        <div class="col-xs-12">
+            <app-page-header></app-page-header>
         </div>
+        <router-outlet></router-outlet>
     </div>
-    <router-outlet></router-outlet>
+    <footer></footer>
 </div>
-
-<footer></footer>

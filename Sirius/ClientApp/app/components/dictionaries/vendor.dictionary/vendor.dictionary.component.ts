@@ -4,7 +4,6 @@ import { ApiService, AlertService, ModalService } from '../../_services';
 
 @Component({
     selector: 'app-vendor-dictionary',
-    styleUrls: ['../../_content/modal.css'],
     templateUrl: './vendor.dictionary.component.html'
 })
 export class VendorDictionaryComponent implements OnInit {

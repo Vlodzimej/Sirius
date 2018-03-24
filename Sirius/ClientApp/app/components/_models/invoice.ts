@@ -4,11 +4,14 @@ export class Invoice
 {
     id: string;
     name: string;
-    vendor: Vendor;
-    user: User;
+    userId: string;
+    userFullName: string;
+    vendorId: string;
+    vendorName: string;
     registers: Register[];
-    isRecorded: boolean;
     createDate: string;
+    isRecorded: boolean;
+    isTemporary: boolean;
 }
 
 export class InvoiceListItem
