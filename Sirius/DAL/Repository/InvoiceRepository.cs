@@ -14,7 +14,7 @@ namespace Sirius.Models
 {
     public class InvoiceRepository : GenericRepository<Invoice>, IItemRepository
     {
-        public InvoiceRepository(SiriusContext context) : base(context)
+        public InvoiceRepository(SiriusContext _siriusContext) : base(_siriusContext)
         { }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Sirius.Models
             Func<IQueryable<Invoice>, IOrderedQueryable<Invoice>> orderBy = null,
             string includeProperties = "")
         {
-            var invoices = context.Invoices
+            var invoices = _siriusContext.Invoices
             .Include(i => i.User)
             .Include(i => i.Vendor);
 
@@ -42,7 +42,7 @@ namespace Sirius.Models
                 {
                     Id = i.Id,
                     Name = i.Name,
-                    Author = i.User.FirstName + " " + i.User.LastName,
+                    UserFullName = i.User.FirstName + " " + i.User.LastName,
                     CreateDate = DateConverter.ConvertToStandardString(i.CreateDate)
                 });
                 return result;
@@ -52,11 +52,7 @@ namespace Sirius.Models
 
         public InvoiceDetailDto GetByID(Guid invoiceId)
         {
-            var invoice = context.Invoices
-                .Include(i => i.User)
-                .Include(i => i.Vendor)
-                .Include(i => i.Registers)
-                .SingleOrDefault(i => i.Id == invoiceId);
+            var invoice = GetInvoiceByID(invoiceId);
 
             var result = new InvoiceDetailDto()
             {
@@ -72,6 +68,17 @@ namespace Sirius.Models
                 IsFixed = invoice.IsRecorded
             };
             return result;
+        }
+
+        public Invoice GetInvoiceByID(Guid invoiceId)
+        {
+            var invoice = _siriusContext.Invoices
+                .Include(i => i.User)
+                .Include(i => i.Vendor)
+                .Include(i => i.Registers)
+                .SingleOrDefault(i => i.Id == invoiceId);
+
+            return invoice;
         }
     }
 }

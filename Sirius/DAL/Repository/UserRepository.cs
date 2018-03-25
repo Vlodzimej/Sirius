@@ -15,12 +15,12 @@ namespace Sirius.Models
 
         public User GetByUsername(string username)
         {
-            return context.Users.Where(u => u.Username == username).FirstOrDefault();
+            return _siriusContext.Users.Where(u => u.Username == username).FirstOrDefault();
         }
 
         public bool CheckUsername(string username)
         {
-            return context.Users.Any(u => u.Username == username);
+            return _siriusContext.Users.Any(u => u.Username == username);
         }
     }
 }

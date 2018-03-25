@@ -12,7 +12,7 @@ namespace Sirius.Models
 {
     public class ItemRepository : GenericRepository<Item>, IItemRepository
     {
-        public ItemRepository(SiriusContext context) : base(context)
+        public ItemRepository(SiriusContext _siriusContext) : base(_siriusContext)
         {  }
 
         public IEnumerable<ItemDto> GetAll(
@@ -31,7 +31,7 @@ namespace Sirius.Models
 
         public ItemDetailDto GetByID(Guid itemId)
         {
-            var item = context.Items
+            var item = _siriusContext.Items
                 .Include(i => i.Dimension)
                 .Include(i => i.Category)
                 .Select(i => new ItemDetailDto()

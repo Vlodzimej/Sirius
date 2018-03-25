@@ -25,7 +25,7 @@ export class ApiService {
     }
 
     create<T>(controller: string, object: T) {
-        return this.http.post(this.baseUrl + 'api/'+controller, object, this.authenticationService.jwt());
+        return this.http.post(this.baseUrl + 'api/'+controller, object, this.authenticationService.jwt()).map((response: Response) => response.json() as T);
     }
 
     update<T>(controller: string, id: string, object: T) {
@@ -34,5 +34,9 @@ export class ApiService {
 
     delete(controller: string, id: any) {
         return this.http.delete(this.baseUrl + 'api/'+controller+'/' + id, this.authenticationService.jwt());
+    }
+
+    dbReset(){
+        return this.http.post(this.baseUrl + 'api/settings/dbreset', { }, this.authenticationService.jwt());       
     }
 }

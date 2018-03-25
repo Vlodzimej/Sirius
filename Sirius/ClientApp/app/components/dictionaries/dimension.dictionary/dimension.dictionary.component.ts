@@ -5,7 +5,8 @@ import { ModalService } from '../../_services';
 
 @Component({
     selector: 'app-dimension-dictionary',
-    templateUrl: './dimension.dictionary.component.html'
+    templateUrl: './dimension.dictionary.component.html',
+    styleUrls: ['../../../assets/css/modal.css']
 })
 export class DimensionDictionaryComponent implements OnInit {
     public loading: boolean = true;

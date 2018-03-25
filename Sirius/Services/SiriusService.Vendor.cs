@@ -13,7 +13,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public Vendor GetVendorById(Guid id)
         {
-            return unitOfWork.VendorRepository.GetByID(id);
+            return _unitOfWork.VendorRepository.GetByID(id);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Vendor> GetAllVendors()
         {
-            return unitOfWork.VendorRepository.Get();
+            return _unitOfWork.VendorRepository.Get();
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteVendorById(Guid id)
         {
-            var vendor = unitOfWork.VendorRepository.GetByID(id);
+            var vendor = _unitOfWork.VendorRepository.GetByID(id);
             if (vendor != null)
             {
-                unitOfWork.CategoryRepository.Delete(vendor);
-                unitOfWork.Save();
+                _unitOfWork.CategoryRepository.Delete(vendor);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -51,10 +51,10 @@ namespace Sirius.Services
         {
             vendor.Id = Guid.NewGuid();
 
-            unitOfWork.VendorRepository.Insert(vendor);
-            unitOfWork.Save();
+            _unitOfWork.VendorRepository.Insert(vendor);
+            _unitOfWork.Save();
 
-            return unitOfWork.VendorRepository.GetByID(vendor.Id) ?? null;
+            return _unitOfWork.VendorRepository.GetByID(vendor.Id) ?? null;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Sirius.Services
         {
             if (vendorId == vendor.Id)
             {
-                unitOfWork.VendorRepository.Update(vendor);
-                unitOfWork.Save();
-                return unitOfWork.VendorRepository.GetByID(vendorId);
+                _unitOfWork.VendorRepository.Update(vendor);
+                _unitOfWork.Save();
+                return _unitOfWork.VendorRepository.GetByID(vendorId);
             }
             return null;
         }

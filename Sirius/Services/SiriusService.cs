@@ -6,12 +6,15 @@ namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
-        private UnitOfWork unitOfWork;
+
+        private UnitOfWork _unitOfWork;
+        private SiriusContext _siriusContext;
         private User currentUser;
 
-        public SiriusService(UnitOfWork _unitOfWork)
+        public SiriusService(UnitOfWork unitOfWork)
         {
-            unitOfWork = _unitOfWork;
+            _unitOfWork = new UnitOfWork();
+            //_siriusContext = new SiriusContext();
         }
 
         #region IDisposable
@@ -23,7 +26,7 @@ namespace Sirius.Services
             {
                 if (disposing)
                 {
-                    unitOfWork.Dispose();
+                    _unitOfWork.Dispose();
                 }
             }
             this.disposed = true;

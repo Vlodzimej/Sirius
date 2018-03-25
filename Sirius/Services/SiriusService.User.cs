@@ -21,7 +21,7 @@ namespace Sirius.Services
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            currentUser = unitOfWork.UserRepository.GetByUsername(username);
+            currentUser = _unitOfWork.UserRepository.GetByUsername(username);
 
             // check if username exists
             if (currentUser == null)
@@ -42,7 +42,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public User GetById(Guid id)
         {
-            return unitOfWork.UserRepository.GetByID(id);
+            return _unitOfWork.UserRepository.GetByID(id);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Sirius.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
-            if (unitOfWork.UserRepository.CheckUsername(user.Username)) {
+            if (_unitOfWork.UserRepository.CheckUsername(user.Username)) {
                 throw new AppException("Username " + user.Username + " is already taken");
             }
             byte[] passwordHash, passwordSalt;
@@ -66,8 +66,8 @@ namespace Sirius.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            unitOfWork.UserRepository.Insert(user);
-            unitOfWork.Save();
+            _unitOfWork.UserRepository.Insert(user);
+            _unitOfWork.Save();
 
             return user;
         }
@@ -80,7 +80,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public User Update(User userParam, string password = null)
         {
-            var user = unitOfWork.UserRepository.GetByID(userParam.Id);
+            var user = _unitOfWork.UserRepository.GetByID(userParam.Id);
 
             if (user == null)
                 throw new AppException("User not found");
@@ -88,7 +88,7 @@ namespace Sirius.Services
             if (userParam.Username != user.Username)
             {
                 // username has changed so check if the new username is already taken
-                if (unitOfWork.UserRepository.CheckUsername(user.Username))
+                if (_unitOfWork.UserRepository.CheckUsername(user.Username))
                     throw new AppException("Username " + userParam.Username + " is already taken");
             }
 
@@ -107,9 +107,9 @@ namespace Sirius.Services
                 user.PasswordSalt = passwordSalt;
             }
 
-            unitOfWork.UserRepository.Update(user);
-            unitOfWork.Save();
-            user = unitOfWork.UserRepository.GetByID(user.Id);
+            _unitOfWork.UserRepository.Update(user);
+            _unitOfWork.Save();
+            user = _unitOfWork.UserRepository.GetByID(user.Id);
             return user;
 
         }
@@ -121,11 +121,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool Delete(Guid id)
         {
-            var user = unitOfWork.UserRepository.GetByID(id);
+            var user = _unitOfWork.UserRepository.GetByID(id);
             if (user != null)
             {
-                unitOfWork.UserRepository.Delete(user);
-                unitOfWork.Save();
+                _unitOfWork.UserRepository.Delete(user);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -182,7 +182,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public User GetUserById(Guid id)
         {
-            return unitOfWork.UserRepository.GetByID(id);
+            return _unitOfWork.UserRepository.GetByID(id);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<User> GetAllUsers()
         {
-            return unitOfWork.UserRepository.Get();
+            return _unitOfWork.UserRepository.Get();
         }
     }
 }

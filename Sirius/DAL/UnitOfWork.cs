@@ -5,66 +5,64 @@ namespace Sirius.DAL
 {
     public class UnitOfWork : IDisposable
     {
-        private SiriusContext context = new SiriusContext();
-        /*
-        private GenericRepository<Item> itemRepository;
-        public GenericRepository<Item> ItemRepository
-        {
-            get
-            {
-                return itemRepository ?? new GenericRepository<Item>(context);
-            }
-        }
-        */
+        private SiriusContext _siriusContext = new SiriusContext();
+
         /// <summary>
         /// Репозиторий "Пользователь"
         /// </summary>
-        public UserRepository UserRepository => userRepository ?? new UserRepository(context);
+        public UserRepository UserRepository => userRepository ?? new UserRepository(_siriusContext);
         private UserRepository userRepository;
 
 
         /// <summary>
         /// Репозиторий "Единица измерения"
         /// </summary>
-        public GenericRepository<Dimension> DimensionRepository => dimensionRepository ?? new GenericRepository<Dimension>(context);
+        public GenericRepository<Dimension> DimensionRepository => dimensionRepository ?? new GenericRepository<Dimension>(_siriusContext);
         private GenericRepository<Dimension> dimensionRepository;
 
         /// <summary>
         /// Репозиторий "Категория"
         /// </summary>
-        public GenericRepository<Category> CategoryRepository => categoryRepository ?? new GenericRepository<Category>(context);
+        public GenericRepository<Category> CategoryRepository => categoryRepository ?? new GenericRepository<Category>(_siriusContext);
         private GenericRepository<Category> categoryRepository;
 
         /// <summary>
         /// Репозиторий "Поставщик"
         /// </summary>
-        public GenericRepository<Vendor> VendorRepository => vendorRepository ?? new GenericRepository<Vendor>(context);
+        public GenericRepository<Vendor> VendorRepository => vendorRepository ?? new GenericRepository<Vendor>(_siriusContext);
         private GenericRepository<Vendor> vendorRepository;
 
         /// <summary>
         /// Репозиторий "Предмет"
         /// </summary>
-        public ItemRepository ItemRepository => itemRepository ?? new ItemRepository(context);
+        public ItemRepository ItemRepository => itemRepository ?? new ItemRepository(_siriusContext);
         private ItemRepository itemRepository;
 
 
         /// <summary>
         /// Репозиторий "Регистр"
         /// </summary>
-        public GenericRepository<Register> RegisterRepository => registerRepository ?? new GenericRepository<Register>(context);
+        public GenericRepository<Register> RegisterRepository => registerRepository ?? new GenericRepository<Register>(_siriusContext);
         private GenericRepository<Register> registerRepository;
 
         /// <summary>
         /// Репозиторий "Накладная"
         /// </summary>
-        public InvoiceRepository InvoiceRepository => invoiceRepository ?? new InvoiceRepository(context);
+        public InvoiceRepository InvoiceRepository => invoiceRepository ?? new InvoiceRepository(_siriusContext);
         private InvoiceRepository invoiceRepository;
+
+        /// <summary>
+        /// Репозиторий "Настройки"
+        /// </summary>
+        public SettingRepository SettingRepository => settingRepository ?? new SettingRepository(_siriusContext);
+        private SettingRepository settingRepository;
 
         public void Save()
         {
-            context.SaveChanges();
+            _siriusContext.SaveChanges();
         }
 
+        #region Disposed
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
@@ -73,7 +71,7 @@ namespace Sirius.DAL
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _siriusContext.Dispose();
                 }
             }
             this.disposed = true;
@@ -84,5 +82,6 @@ namespace Sirius.DAL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

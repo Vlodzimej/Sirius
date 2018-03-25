@@ -27,7 +27,7 @@ export class AuthenticationService {
     }
 
     // private helper methods
-    jwt() : RequestOptions {
+    jwt(): RequestOptions {
         // create authorization header with jwt token
         let cookies = localStorage.getItem('currentUser');
         // console.log("Current User: " + cookies);
@@ -43,9 +43,20 @@ export class AuthenticationService {
 
     checkAuth() {
         // remove user from local storage to log user out
-        if(localStorage.getItem('currentUser')){
+        if (localStorage.getItem('currentUser')) {
             return true;
         }
         return false;
+    }
+
+    getUserId(): string {
+        // create authorization header with jwt token
+        let cookies = localStorage.getItem('currentUser');
+        // console.log("Current User: " + cookies);
+        if (cookies) {
+            let currentUser = JSON.parse(cookies);
+            return currentUser.id;
+        }
+        return "";
     }
 }

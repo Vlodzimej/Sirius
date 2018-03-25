@@ -13,7 +13,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public Category GetCategoryById(Guid id)
         {
-            return unitOfWork.CategoryRepository.GetByID(id);
+            return _unitOfWork.CategoryRepository.GetByID(id);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Category> GetAllCategory()
         {
-            return unitOfWork.CategoryRepository.Get();
+            return _unitOfWork.CategoryRepository.Get();
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteCategoryById(Guid id)
         {
-            var category = unitOfWork.CategoryRepository.GetByID(id);
+            var category = _unitOfWork.CategoryRepository.GetByID(id);
             if (category != null)
             {
-                unitOfWork.CategoryRepository.Delete(category);
-                unitOfWork.Save();
+                _unitOfWork.CategoryRepository.Delete(category);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -51,10 +51,10 @@ namespace Sirius.Services
         {
             category.Id = Guid.NewGuid();
 
-            unitOfWork.CategoryRepository.Insert(category);
-            unitOfWork.Save();
+            _unitOfWork.CategoryRepository.Insert(category);
+            _unitOfWork.Save();
 
-            return unitOfWork.CategoryRepository.GetByID(category.Id) ?? null;
+            return _unitOfWork.CategoryRepository.GetByID(category.Id) ?? null;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Sirius.Services
         {
             if (categoryId == category.Id)
             {
-                unitOfWork.CategoryRepository.Update(category);
-                unitOfWork.Save();
-                return unitOfWork.CategoryRepository.GetByID(categoryId);
+                _unitOfWork.CategoryRepository.Update(category);
+                _unitOfWork.Save();
+                return _unitOfWork.CategoryRepository.GetByID(categoryId);
             }
             return null;
         }

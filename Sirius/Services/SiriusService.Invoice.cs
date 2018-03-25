@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Sirius.Models.Dtos;
+using Sirius.Helpers;
 
 namespace Sirius.Services
 {
@@ -14,7 +15,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public InvoiceDetailDto GetInvoiceById(Guid id)
         {
-            return unitOfWork.InvoiceRepository.GetByID(id);
+            return _unitOfWork.InvoiceRepository.GetByID(id);
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<InvoiceListDto> GetAllInvoices()
         {
-            return unitOfWork.InvoiceRepository.GetAll();
+            return _unitOfWork.InvoiceRepository.GetAll();
         }
 
         /// <summary>
@@ -33,11 +34,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteInvoiceById(Guid id)
         {
-            var invoice = unitOfWork.InvoiceRepository.GetByID(id);
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(id);
             if (invoice != null)
             {
-                unitOfWork.InvoiceRepository.Delete(invoice);
-                unitOfWork.Save();
+                _unitOfWork.InvoiceRepository.Delete(invoice);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -50,21 +51,38 @@ namespace Sirius.Services
         /// <returns></returns>
         public InvoiceDetailDto AddInvoice(Invoice invoice)
         {
+            var newInvoiceId = Guid.NewGuid();
             var newInvoice = new Invoice()
             {
-                Id = Guid.NewGuid(),
-                Name = "Test",
-                UserId = Guid.Parse("c5efcdc4-cc97-481f-89ed-7614da4e6541"),
-                VendorId = Guid.Parse("7c32414b-665d-4241-8bf1-0239ad7344fa"),
+                Id = newInvoiceId,
+                Name = "",
+                UserId = invoice.UserId,
+                VendorId = DefaultValues.Vendor.Primary.Id,
                 CreateDate = DateTime.Now,
                 IsTemporary = true,
                 IsRecorded = false
             };
 
-            unitOfWork.InvoiceRepository.Insert(newInvoice);
-            unitOfWork.Save();
+            _unitOfWork.InvoiceRepository.Insert(newInvoice);
+            _unitOfWork.Save();
 
-            return unitOfWork.InvoiceRepository.GetByID(invoice.Id) ?? null;
+            var addedInvoice = _unitOfWork.InvoiceRepository.GetInvoiceByID(newInvoiceId) ?? null;
+
+            if(addedInvoice != null)
+            {
+                // Здесь должен быть запрос префикса для накладной из таблицы Settings
+                var prefix = "Пн";
+                var year = DateTime.Now.ToString("yy");
+                var number = addedInvoice.CreateDate.ToString("hhmmss");
+
+                addedInvoice.Name = $"{prefix}-{year}/{number}";
+
+                _unitOfWork.InvoiceRepository.Update(addedInvoice);
+                _unitOfWork.Save();
+
+                return _unitOfWork.InvoiceRepository.GetByID(newInvoiceId) ?? null;
+            }
+            return null;
         }
 
         /// <summary>
@@ -77,9 +95,9 @@ namespace Sirius.Services
         {
             if (invoiceId == invoice.Id)
             {
-                unitOfWork.InvoiceRepository.Update(invoice);
-                unitOfWork.Save();
-                return unitOfWork.InvoiceRepository.GetByID(invoiceId);
+                _unitOfWork.InvoiceRepository.Update(invoice);
+                _unitOfWork.Save();
+                return _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             }
             return null;
         }

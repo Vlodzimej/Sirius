@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NomenclatureComponent } from './components/nomenclature/nomenclature.component';
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
+import { SettingsComponent } from './components/settings';
 
 import { AlertComponent, ModalComponent, PageHeaderComponent } from './components/_directives/';
 import {
@@ -54,6 +55,7 @@ import {
         NomenclatureComponent,
         LoginComponent,
         RegisterComponent,
+        SettingsComponent,
         UserDictionaryComponent,
         DimensionDictionaryComponent,
         CategoryDictionaryComponent,
@@ -74,6 +76,7 @@ import {
             { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
             { path: 'login', component: LoginComponent },
             { path: 'register', component: RegisterComponent },
+            { path: 'settings', component: SettingsComponent },
             { path: 'nomenclature', component: NomenclatureComponent, canActivate: [AuthGuard] },
             { path: 'users', component: UserDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'dimensions', component: DimensionDictionaryComponent, canActivate: [AuthGuard] },

@@ -18,6 +18,6 @@ export class InvoiceListItem
 {
     id: string;
     name: string;
-    author: string;
+    userFullName: string;
     createDate: string;
 }

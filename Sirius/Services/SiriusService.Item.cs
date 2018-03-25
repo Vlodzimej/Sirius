@@ -16,7 +16,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public ItemDetailDto GetItemById(Guid id)
         {
-            var item = unitOfWork.ItemRepository.GetByID(id);
+            var item = _unitOfWork.ItemRepository.GetByID(id);
             return item;
         }
 
@@ -26,7 +26,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<ItemDto> GetAllItems()
         {
-            var items = unitOfWork.ItemRepository.GetAll();
+            var items = _unitOfWork.ItemRepository.GetAll();
             return items;
         }
 
@@ -37,11 +37,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteItemById(Guid id)
         {
-            var item = unitOfWork.ItemRepository.GetByID(id);
+            var item = _unitOfWork.ItemRepository.GetByID(id);
             if (item != null)
             {
-                unitOfWork.ItemRepository.Delete(item);
-                unitOfWork.Save();
+                _unitOfWork.ItemRepository.Delete(item);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -62,10 +62,10 @@ namespace Sirius.Services
                 CategoryId = savingItem.CategoryId,
             };
 
-            unitOfWork.ItemRepository.Insert(item);
-            unitOfWork.Save();
+            _unitOfWork.ItemRepository.Insert(item);
+            _unitOfWork.Save();
 
-            return unitOfWork.ItemRepository.GetByID(item.Id) ?? null;
+            return _unitOfWork.ItemRepository.GetByID(item.Id) ?? null;
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace Sirius.Services
         {
             if (itemId == item.Id)
             {
-                unitOfWork.ItemRepository.Update(item);
-                unitOfWork.Save();
-                return unitOfWork.ItemRepository.GetByID(itemId);
+                _unitOfWork.ItemRepository.Update(item);
+                _unitOfWork.Save();
+                return _unitOfWork.ItemRepository.GetByID(itemId);
             }
             return null;
         }

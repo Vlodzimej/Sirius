@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,8 @@ namespace Sirius.Models
     /// </summary>
     public class Invoice
     {
-        // Идентификатор
+        // Уникальный идентификатор
+        [Key]
         public Guid Id { get; set; }
         // Заголовок
         public string Name { get;set; }

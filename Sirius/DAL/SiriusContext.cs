@@ -16,6 +16,7 @@ namespace Sirius.DAL
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Register> Register {get;set;}
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

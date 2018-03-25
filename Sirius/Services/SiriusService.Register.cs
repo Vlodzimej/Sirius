@@ -13,7 +13,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public Register GetRegisterById(Guid id)
         {
-            return unitOfWork.RegisterRepository.GetByID(id);
+            return _unitOfWork.RegisterRepository.GetByID(id);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Register> GetAllRegisters()
         {
-            return unitOfWork.RegisterRepository.Get();
+            return _unitOfWork.RegisterRepository.Get();
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteRegisterById(Guid id)
         {
-            var register = unitOfWork.RegisterRepository.GetByID(id);
+            var register = _unitOfWork.RegisterRepository.GetByID(id);
             if (register != null)
             {
-                unitOfWork.RegisterRepository.Delete(register);
-                unitOfWork.Save();
+                _unitOfWork.RegisterRepository.Delete(register);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -51,10 +51,10 @@ namespace Sirius.Services
         {
             register.Id = Guid.NewGuid();
 
-            unitOfWork.RegisterRepository.Insert(register);
-            unitOfWork.Save();
+            _unitOfWork.RegisterRepository.Insert(register);
+            _unitOfWork.Save();
 
-            return unitOfWork.RegisterRepository.GetByID(register.Id) ?? null;
+            return _unitOfWork.RegisterRepository.GetByID(register.Id) ?? null;
         }
 
         /// <summary>
@@ -67,9 +67,9 @@ namespace Sirius.Services
         {
             if (registerId == register.Id)
             {
-                unitOfWork.RegisterRepository.Update(register);
-                unitOfWork.Save();
-                return unitOfWork.RegisterRepository.GetByID(registerId);
+                _unitOfWork.RegisterRepository.Update(register);
+                _unitOfWork.Save();
+                return _unitOfWork.RegisterRepository.GetByID(registerId);
             }
             return null;
         }

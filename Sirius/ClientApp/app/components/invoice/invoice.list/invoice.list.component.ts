@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Invoice, InvoiceListItem } from '../../_models';
-import { ApiService, AlertService, ModalService, PageHeaderService } from '../../_services';
+
+import {
+    AuthenticationService,
+    ApiService,
+    AlertService,
+    ModalService,
+    PageHeaderService
+} from '../../_services';
+
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -18,6 +26,7 @@ export class InvoiceListComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private authenticationService: AuthenticationService,
         private apiService: ApiService,
         private alertService: AlertService,
         private modalService: ModalService,
@@ -37,6 +46,24 @@ export class InvoiceListComponent implements OnInit {
                 this.alertService.error('Ошибка загрузки', true);
                 this.loading = false;
             });
+    }
+
+    createNewInvoice() {
+        var newInvoice: Invoice = new Invoice();
+        newInvoice.userId  = this.authenticationService.getUserId();
+        this.apiService.create<Invoice>('invoice', newInvoice).subscribe(
+            data => {
+                this.invoice = data;
+                this.router.navigateByUrl('/invoice/' + this.invoice.id);
+                //this.tempInvoice = data;
+                //const i = this.invoices.indexOf(newInvoice);
+                //this.invoices.unshift(this.tempInvoice);
+                //this.users.splice(i, 1); - удаление
+            },
+            error => {
+                console.log(error);
+            }
+        )
     }
 
     invoiceListItemClick(invoiceId: string) {

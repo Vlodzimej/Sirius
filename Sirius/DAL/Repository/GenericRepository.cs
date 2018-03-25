@@ -9,13 +9,13 @@ namespace Sirius.DAL
 {
     public class GenericRepository<TEntity> where TEntity : class
     {
-        internal SiriusContext context;
+        internal SiriusContext _siriusContext;
         internal DbSet<TEntity> dbSet;
 
-        public GenericRepository(SiriusContext context)
+        public GenericRepository(SiriusContext siriusContext)
         {
-            this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            _siriusContext = siriusContext;
+            dbSet = _siriusContext.Set<TEntity>();
         }
 
         public virtual IEnumerable<TEntity> Get(
@@ -64,7 +64,7 @@ namespace Sirius.DAL
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            if (_siriusContext.Entry(entityToDelete).State == EntityState.Detached)
             {
                 dbSet.Attach(entityToDelete);
             }
@@ -74,7 +74,7 @@ namespace Sirius.DAL
         public virtual void Update(TEntity entityToUpdate)
         {
             dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+            _siriusContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

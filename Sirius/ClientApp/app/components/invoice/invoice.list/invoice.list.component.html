@@ -22,10 +22,20 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <a class="btn btn-default btn-block" [routerLink]="['/newitem']">Новый</a>
-                <a class="btn btn-default btn-block" (click)="createTestInvoice()">Создать1</a>
+        <div class="panel-group" id="invoice-accordion-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#action-panel">
+                        Действия
+                    </a>
+                </div>
+                <div id="info-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Создать</a>
+                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Перейти</a>
+                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Удалить</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -42,35 +52,10 @@
                 <tr *ngFor="let invoice of invoices; let n = index" class="select-block" (click)="invoiceListItemClick(invoice.id)">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{invoice.name}}</td>
-                    <td>{{invoice.author}}</td>
+                    <td>{{invoice.userFullName}}</td>
                     <td>{{invoice.createDate}}</td>
                 </tr>
             </table>
-            <div class="panel-footer">
-                <ul class="pagination">
-                    <li>
-                        <a href="#">&laquo;</a>
-                    </li>
-                    <li>
-                        <a href="#">1</a>
-                    </li>
-                    <li>
-                        <a href="#">2</a>
-                    </li>
-                    <li>
-                        <a href="#">3</a>
-                    </li>
-                    <li>
-                        <a href="#">4</a>
-                    </li>
-                    <li>
-                        <a href="#">5</a>
-                    </li>
-                    <li>
-                        <a href="#">&raquo;</a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>

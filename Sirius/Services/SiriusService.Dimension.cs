@@ -13,7 +13,7 @@ namespace Sirius.Services
         /// <returns>Единица измерения (Dimension)</returns>
         public Dimension GetDimensionById(Guid id)
         {
-            return unitOfWork.DimensionRepository.GetByID(id);
+            return _unitOfWork.DimensionRepository.GetByID(id);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Sirius.Services
         /// <returns>Cписок всех пользователей</returns>
         public IEnumerable<Dimension> GetAllDimension()
         {
-            return unitOfWork.DimensionRepository.Get();
+            return _unitOfWork.DimensionRepository.Get();
         }
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace Sirius.Services
         /// <param name="id">идентификатор единицы измерения</param>
         public void DeleteDimensionById(Guid id)
         {
-            var dimension = unitOfWork.DimensionRepository.GetByID(id);
+            var dimension = _unitOfWork.DimensionRepository.GetByID(id);
             if (dimension != null)
             {
-                unitOfWork.DimensionRepository.Delete(dimension);
-                unitOfWork.Save();
+                _unitOfWork.DimensionRepository.Delete(dimension);
+                _unitOfWork.Save();
             }
         }
 
@@ -47,10 +47,10 @@ namespace Sirius.Services
         {
             dimension.Id = Guid.NewGuid();
 
-            unitOfWork.DimensionRepository.Insert(dimension);
-            unitOfWork.Save();
+            _unitOfWork.DimensionRepository.Insert(dimension);
+            _unitOfWork.Save();
 
-            return unitOfWork.DimensionRepository.GetByID(dimension.Id) ?? null;
+            return _unitOfWork.DimensionRepository.GetByID(dimension.Id) ?? null;
         }
 
         /// <summary>
@@ -63,9 +63,9 @@ namespace Sirius.Services
         {
             if (dimensionId == dimension.Id)
             {
-                unitOfWork.DimensionRepository.Update(dimension);
-                unitOfWork.Save();
-                return unitOfWork.DimensionRepository.GetByID(dimensionId);
+                _unitOfWork.DimensionRepository.Update(dimension);
+                _unitOfWork.Save();
+                return _unitOfWork.DimensionRepository.GetByID(dimensionId);
             }
             return null;
         }

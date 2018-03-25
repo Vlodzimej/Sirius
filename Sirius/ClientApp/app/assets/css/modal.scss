@@ -13,7 +13,7 @@ modal {
         left: 0;
 
         /* z-index must be higher than .modal-background */
-        z-index: 1000;
+        z-index: 65535;
         
         /* enables scrolling for tall modals */
         overflow: auto;
