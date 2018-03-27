@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Item, ItemDetail, Dimension, Category /*Vendor*/ } from '../../_models';
-import { ApiService, AlertService } from '../../_services'
+import { ApiService, AlertService, PageHeaderService } from '../../_services'
 import { ModalService } from '../../_services';
 import { ItemFilter } from './item.filter';
 
@@ -24,12 +24,15 @@ export class ItemDictionaryComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
-        private modalService: ModalService) { }
+        private modalService: ModalService,
+        private pageHeaderService: PageHeaderService) { }
 
     /**Инициализация
      * 
      */
     ngOnInit() {
+        this.pageHeaderService.changeText("Справочник: Наименования");
+
         if (this.loading) {
             this.loadDictionaries();
         }

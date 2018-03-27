@@ -36,4 +36,8 @@ export class AlertService {
     getMessage(): Observable<any> {
         return this.subject.asObservable();
     }
+
+    serverError(error: Response) {
+        this.error('Ошибка сервера: ('+error.status+') '+error.statusText);
+    }
 }

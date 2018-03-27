@@ -1,11 +1,12 @@
-import { Item, Invoice } from ".";
+import { Item, Invoice, Dimension } from ".";
 
 export class Register 
 {
-    id: string = "";
-    cost: number = 0;
-    amount: number = 1;
-    itemId: string = "";
-    itemName: string = "";
-    dimension: string = "";
+    id: string;
+    cost: number;
+    amount: number;
+    itemId: string;
+    item: Item;
+    invoiceId: string;
+    invoice: Invoice;
 }

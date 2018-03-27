@@ -42,8 +42,8 @@ namespace Sirius.DAL
         /// <summary>
         /// Репозиторий "Регистр"
         /// </summary>
-        public GenericRepository<Register> RegisterRepository => registerRepository ?? new GenericRepository<Register>(_siriusContext);
-        private GenericRepository<Register> registerRepository;
+        public RegisterRepository RegisterRepository => registerRepository ?? new RegisterRepository(_siriusContext);
+        private RegisterRepository registerRepository;
 
         /// <summary>
         /// Репозиторий "Накладная"

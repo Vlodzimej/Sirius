@@ -26,8 +26,8 @@
                 </div>
                 <div id="edit-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block" (click)="addRegister()">Добавить</button>
-                        <button class="btn btn-default btn-block" [routerLink]="['/newitem']">Удалить</button>
+                        <button class="btn btn-default btn-block" (click)="onCreate()">Добавить</button>
+                        <button class="btn btn-default btn-block" (click)="onDelete()">Удалить</button>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div id="control-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block">Сохранить</button>
+                        <button class="btn btn-default btn-block" (click)="onSave()">Сохранить</button>
                         <button class="btn btn-default btn-block">Сохранить и закрыть</button>
                         <button class="btn btn-default btn-block">Закрыть</button>
                         <button class="btn btn-default btn-block">Пометить на удаление</button>
@@ -50,9 +50,6 @@
     </div>
 
     <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
-
-
-
         <div class="panel panel-default">
             <table class="table table-hover table-striped table-bordered">
                 <tr>
@@ -60,14 +57,60 @@
                     <th>Наименование</th>
                     <th>Кол-во</th>
                     <th>Ед. изм.</th>
+                    <th>Цена</th>
+                    <th>Сумма</th>
                 </tr>
-                <tr *ngFor="let register of registers; let n = index" class="select-block" (click)="invoiceListItemClick(invoice.id)">
+                <tr *ngFor="let register of registers; let n = index" (dblclick)="onOpen(invoice.id)">
                     <td class="text-center">{{n+1}}</td>
-                    <td>{{register.itemName}}</td>
+                    <td>{{register.item.name}}</td>
                     <td>{{register.amount}}</td>
-                    <td>{{register.dimension}}</td>
+                    <td>{{register.item.dimension.name}}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </table>
         </div>
+        <div *ngIf="registers.length == 0">
+            <h3>Список пуст</h3>
+        </div>
     </div>
 </div>
+
+<modal id="modal-new-register">
+    <div id="modal-1" class="modal show" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="onCloseModal('modal-new-register')">&times;</button>
+                    <h4 class="modal-title">Новая позиция</h4>
+                </div>
+                <form name="form1" (ngSubmit)="f.form.valid && addRegister()" #f="ngForm" novalidate>
+                    <div class="modal-body">
+
+                        <div>
+                            <label for="register-item">Наименование</label>
+                            <select class="form-control" name="register-item" [(ngModel)]="register.itemId" #category="ngModel" required>
+                                <option *ngFor="let item of items" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+                            <label for="register-amount">Количество</label>
+                            <input type="number" class="form-control" name="register-amount" [(ngModel)]="register.amount" #name="ngModel" required
+                            />
+                            <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button [disabled]="loading" class="btn btn-primary">Создать</button>
+                            <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
+                            <a (click)="onCloseModal('modal-new-register')" class="btn btn-link">Отмена</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</modal>

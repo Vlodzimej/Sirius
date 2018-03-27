@@ -14,7 +14,7 @@ namespace Sirius.DAL
         public DbSet<Category> Categories { get; set; }
         public DbSet<Dimension> Dimensions { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<Register> Register {get;set;}
+        public DbSet<Register> Registers {get;set;}
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Setting> Settings { get; set; }
 

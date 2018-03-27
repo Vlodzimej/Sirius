@@ -16,11 +16,13 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-invoice-list',
     templateUrl: './invoice.list.component.html',
+    styleUrls: ['../../../assets/css/accordion.css']
 })
 export class InvoiceListComponent implements OnInit {
     public loading: boolean = true;
     public invoices: InvoiceListItem[] = [];
     public invoice: Invoice = new Invoice();
+    public selectedInvoice: Invoice;
     private routeSubscription: Subscription;
 
     constructor(
@@ -48,17 +50,13 @@ export class InvoiceListComponent implements OnInit {
             });
     }
 
-    createNewInvoice() {
+    onCreate() {
         var newInvoice: Invoice = new Invoice();
-        newInvoice.userId  = this.authenticationService.getUserId();
+        newInvoice.userId = this.authenticationService.getUserId();
         this.apiService.create<Invoice>('invoice', newInvoice).subscribe(
             data => {
                 this.invoice = data;
                 this.router.navigateByUrl('/invoice/' + this.invoice.id);
-                //this.tempInvoice = data;
-                //const i = this.invoices.indexOf(newInvoice);
-                //this.invoices.unshift(this.tempInvoice);
-                //this.users.splice(i, 1); - удаление
             },
             error => {
                 console.log(error);
@@ -66,8 +64,33 @@ export class InvoiceListComponent implements OnInit {
         )
     }
 
-    invoiceListItemClick(invoiceId: string) {
+    onOpen(invoiceId: string) {
         this.router.navigateByUrl('/invoice/' + invoiceId);
     };
+
+    onSelect(invoiceId: string) {
+        this.selectedInvoice = this.invoices.find(i => i.id == invoiceId) as Invoice;
+    }
+
+    onDelete(invoiceId: string) {
+
+        this.apiService.delete('invoice', invoiceId).subscribe(
+            data => {
+                var deletedInvoice = this.invoices.find(i => i.id == invoiceId) as Invoice;
+                if(deletedInvoice.isRecorded) {
+                    this.alertService.error('Документ проведён. Удаление невозможно.');
+                } else {
+                    const i = this.invoices.indexOf(deletedInvoice);
+                    this.invoices.splice(i, 1);
+                    delete(this.selectedInvoice);
+                }
+            },  
+            error => {
+                var e = error as Response;
+                this.alertService.serverError(error);
+            }
+        )
+
+    }
 
 }

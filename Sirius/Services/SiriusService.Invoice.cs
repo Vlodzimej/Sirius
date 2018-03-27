@@ -34,7 +34,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteInvoiceById(Guid id)
         {
-            var invoice = _unitOfWork.InvoiceRepository.GetByID(id);
+            var invoice = _unitOfWork.InvoiceRepository.GetOriginByID(id);
             if (invoice != null)
             {
                 _unitOfWork.InvoiceRepository.Delete(invoice);
@@ -66,9 +66,9 @@ namespace Sirius.Services
             _unitOfWork.InvoiceRepository.Insert(newInvoice);
             _unitOfWork.Save();
 
-            var addedInvoice = _unitOfWork.InvoiceRepository.GetInvoiceByID(newInvoiceId) ?? null;
+            var addedInvoice = _unitOfWork.InvoiceRepository.GetOriginByID(newInvoiceId) ?? null;
 
-            if(addedInvoice != null)
+            if (addedInvoice != null)
             {
                 // Здесь должен быть запрос префикса для накладной из таблицы Settings
                 var prefix = "Пн";
@@ -93,11 +93,12 @@ namespace Sirius.Services
         /// <returns></returns>
         public InvoiceDetailDto UpdateInvoice(Guid invoiceId, Invoice invoice)
         {
-            if (invoiceId == invoice.Id)
+            if (invoiceId != null && invoice != null && invoiceId == invoice.Id)
             {
                 _unitOfWork.InvoiceRepository.Update(invoice);
                 _unitOfWork.Save();
                 return _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+
             }
             return null;
         }

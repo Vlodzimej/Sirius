@@ -5,35 +5,41 @@
     </div>
 
     <div *ngIf="!loading" class="col-xs-12 col-sm-4 col-sm-push-8">
-        <div class="panel panel-default">
-            <div class="panel-heading">Фильтр</div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Наименование">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Цена">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Остаток">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Единицы измерения">
-                </div>
-            </div>
-        </div>
         <div class="panel-group" id="invoice-accordion-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#action-panel">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#filter-panel">
+                        Фильтр
+                    </a>
+                </div>
+                <div id="filter-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Наименование">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Цена">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Остаток">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Единицы измерения">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#info-panel">
                         Действия
                     </a>
                 </div>
                 <div id="info-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Создать</a>
-                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Перейти</a>
-                        <a class="btn btn-default btn-block" (click)="createNewInvoice()">Удалить</a>
+                        <a class="btn btn-default btn-block" (click)="onCreate()">Создать</a>
+                        <a class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedInvoice}" (click)="onOpen(selectedInvoice.id)">Перейти</a>
+                        <a class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedInvoice}" (click)="onDelete(selectedInvoice.id)">Удалить</a>
                     </div>
                 </div>
             </div>
@@ -42,14 +48,15 @@
 
     <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
         <div class="panel panel-default">
-            <table class="table table-hover table-striped table-bordered">
+            <table class="table table-hover table-striped table-bordered table-condensed">
                 <tr>
                     <th class="text-center">№</th>
                     <th>Название</th>
                     <th>Автор</th>
                     <th>Дата</th>
                 </tr>
-                <tr *ngFor="let invoice of invoices; let n = index" class="select-block" (click)="invoiceListItemClick(invoice.id)">
+                <tr *ngFor="let invoice of invoices; let n = index" (click)="onSelect(invoice.id)" (dblclick)="onOpen(selectedInvoice.id)" [class.info]="invoice == selectedInvoice"
+                    [ngStyle]="{'cursor': 'pointer'}">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{invoice.name}}</td>
                     <td>{{invoice.userFullName}}</td>

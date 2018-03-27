@@ -1,6 +1,7 @@
 ﻿using Sirius.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sirius.Services
 {
@@ -14,6 +15,16 @@ namespace Sirius.Services
         public Register GetRegisterById(Guid id)
         {
             return _unitOfWork.RegisterRepository.GetByID(id);
+        }
+        /// <summary>
+        /// Получить запись регистра по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<Register> GetRegistersByInvoiceId(Guid invoiceId)
+        {
+            var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
+            return registers;
         }
 
         /// <summary>
@@ -49,29 +60,35 @@ namespace Sirius.Services
         /// <returns></returns>
         public Register AddRegister(Register register)
         {
-            register.Id = Guid.NewGuid();
-
-            _unitOfWork.RegisterRepository.Insert(register);
-            _unitOfWork.Save();
-
-            return _unitOfWork.RegisterRepository.GetByID(register.Id) ?? null;
-        }
-
-        /// <summary>
-        /// Обновить запись регистра
-        /// </summary>
-        /// <param name="registerId"></param>
-        /// <param name="register"></param>
-        /// <returns></returns>
-        public Register UpdateRegister(Guid registerId, Register register)
-        {
-            if (registerId == register.Id)
+            if (register != null)
             {
-                _unitOfWork.RegisterRepository.Update(register);
+                register.Id = Guid.NewGuid();
+                register.Item = null;
+
+                _unitOfWork.RegisterRepository.Insert(register);
+
                 _unitOfWork.Save();
-                return _unitOfWork.RegisterRepository.GetByID(registerId);
+
+                return _unitOfWork.RegisterRepository.GetByID(register.Id) ?? null;
             }
             return null;
         }
+
+    /// <summary>
+    /// Обновить запись регистра
+    /// </summary>
+    /// <param name="registerId"></param>
+    /// <param name="register"></param>
+    /// <returns></returns>
+    public Register UpdateRegister(Guid registerId, Register register)
+    {
+        if (registerId == register.Id)
+        {
+            _unitOfWork.RegisterRepository.Update(register);
+            _unitOfWork.Save();
+            return _unitOfWork.RegisterRepository.GetByID(registerId);
+        }
+        return null;
     }
+}
 }

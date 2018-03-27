@@ -25,7 +25,7 @@ namespace Sirius.Models
         // Пользователь-автор
         public User User { get; set; }
         // Список регистров
-        public List<Register> Registers { get; set; }
+        public IEnumerable<Register> Registers { get; set; }
         // Признак проведённой накладной
         public bool IsRecorded { get; set; }
         // Признак временной накладной

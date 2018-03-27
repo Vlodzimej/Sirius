@@ -52,7 +52,7 @@ namespace Sirius.Models
 
         public InvoiceDetailDto GetByID(Guid invoiceId)
         {
-            var invoice = GetInvoiceByID(invoiceId);
+            var invoice = GetOriginByID(invoiceId);
 
             var result = new InvoiceDetailDto()
             {
@@ -70,12 +70,17 @@ namespace Sirius.Models
             return result;
         }
 
-        public Invoice GetInvoiceByID(Guid invoiceId)
+        public Invoice GetOriginByID(Guid invoiceId)
         {
             var invoice = _siriusContext.Invoices
                 .Include(i => i.User)
                 .Include(i => i.Vendor)
                 .Include(i => i.Registers)
+                    .ThenInclude(r => r.Item)
+                    .ThenInclude(i => i.Dimension)
+                .Include(i => i.Registers)
+                    .ThenInclude(r => r.Item)
+                    .ThenInclude(i => i.Category)
                 .SingleOrDefault(i => i.Id == invoiceId);
 
             return invoice;
