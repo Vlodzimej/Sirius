@@ -51,7 +51,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var invoice = _siriusService.GetInvoiceById(id);
+            var invoice = _siriusService.GetInvoiceDetailDtoById(id);
             if (invoice != null)
             {
                 return Ok(invoice);
@@ -101,6 +101,23 @@ namespace Sirius.Controllers
             if (_siriusService.DeleteInvoiceById(id))
             {
                 return Ok();
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// POST: api/invoice/fix/id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="invoice"></param>
+        /// <returns></returns>
+        [HttpPut("fix/{id}")]
+        public IActionResult Fix(Guid id)
+        {
+            var result = _siriusService.FixInvoice(id);
+            if (result != null)
+            {
+                return Ok(result);
             }
             return new BadRequestResult();
         }

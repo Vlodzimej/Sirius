@@ -74,6 +74,21 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
+        /// POST: api/register
+        /// </summary>
+        /// <param name="register"></param>
+        [HttpPost("registers")]
+        public IActionResult PostArray([FromBody]Register[] registers)
+        {
+            var result = _siriusService.AddRegisters(registers);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
         /// PUT: api/register/5
         /// </summary>
         /// <param name="id"></param>

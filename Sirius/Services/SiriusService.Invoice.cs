@@ -9,14 +9,25 @@ namespace Sirius.Services
     public partial class SiriusService : ISiriusService
     {
         /// <summary>
+        /// Получить накладную dto по Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public InvoiceDetailDto GetInvoiceDetailDtoById(Guid id)
+        {
+            return _unitOfWork.InvoiceRepository.GetDetailDtoByID(id);
+        }
+
+        /// <summary>
         /// Получить накладную по Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public InvoiceDetailDto GetInvoiceById(Guid id)
+        public Invoice GetInvoiceById(Guid id)
         {
             return _unitOfWork.InvoiceRepository.GetByID(id);
         }
+
 
         /// <summary>
         /// Получить список всех накладных
@@ -34,7 +45,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public bool DeleteInvoiceById(Guid id)
         {
-            var invoice = _unitOfWork.InvoiceRepository.GetOriginByID(id);
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(id);
             if (invoice != null)
             {
                 _unitOfWork.InvoiceRepository.Delete(invoice);
@@ -60,13 +71,13 @@ namespace Sirius.Services
                 VendorId = DefaultValues.Vendor.Primary.Id,
                 CreateDate = DateTime.Now,
                 IsTemporary = true,
-                IsRecorded = false
+                IsFixed = false
             };
 
             _unitOfWork.InvoiceRepository.Insert(newInvoice);
             _unitOfWork.Save();
 
-            var addedInvoice = _unitOfWork.InvoiceRepository.GetOriginByID(newInvoiceId) ?? null;
+            var addedInvoice = _unitOfWork.InvoiceRepository.GetByID(newInvoiceId) ?? null;
 
             if (addedInvoice != null)
             {
@@ -80,7 +91,7 @@ namespace Sirius.Services
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
 
-                return _unitOfWork.InvoiceRepository.GetByID(newInvoiceId) ?? null;
+                return _unitOfWork.InvoiceRepository.GetDetailDtoByID(newInvoiceId) ?? null;
             }
             return null;
         }
@@ -97,10 +108,38 @@ namespace Sirius.Services
             {
                 _unitOfWork.InvoiceRepository.Update(invoice);
                 _unitOfWork.Save();
-                return _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+                return _unitOfWork.InvoiceRepository.GetDetailDtoByID(invoiceId);
 
             }
             return null;
+        }
+
+        /// <summary>
+        /// Проведение накладной
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
+        public string FixInvoice(Guid invoiceId)
+        {
+            string result;
+
+            // Изменение свойств существующей накладной
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            invoice.IsTemporary = false;
+            invoice.IsFixed = true;
+            UpdateInvoice(invoiceId, invoice);
+
+            // Проверка сохраненных изменений
+            invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            if (invoice != null && invoice.IsFixed == true)
+            {
+                result = "Накладная " + invoice.Name + " успешно проведена!";
+            }
+            else
+            {
+                result = "Накладная не проведена.";
+            }
+            return result;
         }
     }
 }

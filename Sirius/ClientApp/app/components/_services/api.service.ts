@@ -28,15 +28,21 @@ export class ApiService {
         return this.http.post(this.baseUrl + 'api/'+controller, object, this.authenticationService.jwt()).map((response: Response) => response.json() as T);
     }
 
-    update<T>(controller: string, id: string, object: T) {
-        return this.http.put(this.baseUrl + 'api/'+controller+'/' + id, object, this.authenticationService.jwt());
+    update<T>(controller: string, id: string, object?: T) {
+        return this.http.put(this.baseUrl + 'api/'+controller+'/' + id, object, this.authenticationService.jwt()).map((response: Response) => response.json() as T);
     }
 
     delete(controller: string, id: any) {
         return this.http.delete(this.baseUrl + 'api/'+controller+'/' + id, this.authenticationService.jwt());
     }
 
+    deleteIds(controller: string, ids: string[]) {
+        return this.http.post(this.baseUrl + 'api/'+controller+'/ids', ids, this.authenticationService.jwt());
+    }
+
     dbReset(){
         return this.http.post(this.baseUrl + 'api/settings/dbreset', { }, this.authenticationService.jwt());       
     }
+
+    
 }

@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
     styleUrls: ['../../../assets/css/accordion.css']
 })
 export class InvoiceListComponent implements OnInit {
+    public type: string;
     public loading: boolean = true;
     public invoices: InvoiceListItem[] = [];
     public invoice: Invoice = new Invoice();
@@ -37,7 +38,25 @@ export class InvoiceListComponent implements OnInit {
         this.routeSubscription = route.params.subscribe(params => this.invoice = params['id']);
     }
     ngOnInit() {
-        this.pageHeaderService.changeText("Накладные");
+        var headerText: string = "";
+        this.type = this.route.snapshot.params['type'];
+
+        switch (this.type) {
+            case 'arrival':
+                headerText = "Приход";
+
+                break;
+            case 'consumption':
+                headerText = "Расход";
+                break;
+
+            case 'writeoff':
+                headerText = "Списание";
+                break;
+        }
+
+        this.pageHeaderService.changeText(headerText);
+
         this.apiService.getAll<InvoiceListItem>('invoice').subscribe(
             data => {
                 this.invoices = data;
@@ -77,14 +96,14 @@ export class InvoiceListComponent implements OnInit {
         this.apiService.delete('invoice', invoiceId).subscribe(
             data => {
                 var deletedInvoice = this.invoices.find(i => i.id == invoiceId) as Invoice;
-                if(deletedInvoice.isRecorded) {
+                if (deletedInvoice.isFixed) {
                     this.alertService.error('Документ проведён. Удаление невозможно.');
                 } else {
                     const i = this.invoices.indexOf(deletedInvoice);
                     this.invoices.splice(i, 1);
-                    delete(this.selectedInvoice);
+                    delete (this.selectedInvoice);
                 }
-            },  
+            },
             error => {
                 var e = error as Response;
                 this.alertService.serverError(error);

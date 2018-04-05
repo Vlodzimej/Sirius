@@ -37,22 +37,23 @@ namespace Sirius.Models
 
             if (invoices != null)
             {
-
                 var result = invoices.Select(i => new InvoiceListDto()
                 {
                     Id = i.Id,
                     Name = i.Name,
                     UserFullName = i.User.FirstName + " " + i.User.LastName,
-                    CreateDate = DateConverter.ConvertToStandardString(i.CreateDate)
+                    CreateDate = DateConverter.ConvertToStandardString(i.CreateDate),
+                    IsFixed = i.IsFixed,
+                    IsTemporary = i.IsTemporary
                 });
                 return result;
             }
             return null;
         }
 
-        public InvoiceDetailDto GetByID(Guid invoiceId)
+        public InvoiceDetailDto GetDetailDtoByID(Guid invoiceId)
         {
-            var invoice = GetOriginByID(invoiceId);
+            var invoice = GetByID(invoiceId);
 
             var result = new InvoiceDetailDto()
             {
@@ -65,12 +66,12 @@ namespace Sirius.Models
                 Registers = invoice.Registers,
                 CreateDate = DateConverter.ConvertToStandardString(invoice.CreateDate),
                 IsTemporary = invoice.IsTemporary,
-                IsFixed = invoice.IsRecorded
+                IsFixed = invoice.IsFixed
             };
             return result;
         }
 
-        public Invoice GetOriginByID(Guid invoiceId)
+        public Invoice GetByID(Guid invoiceId)
         {
             var invoice = _siriusContext.Invoices
                 .Include(i => i.User)

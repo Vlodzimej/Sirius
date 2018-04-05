@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Invoice, Register, Item, ItemDetail } from '../../_models';
+import { Invoice, InvoiceUpdate, Register, Item, ItemDetail } from '../../_models';
 import { View } from '../../_interfaces';
 import { AlertService, ApiService, PageHeaderService, ModalService } from '../../_services';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-invoice-detail',
@@ -11,13 +12,25 @@ import { AlertService, ApiService, PageHeaderService, ModalService } from '../..
 })
 export class InvoiceDetailComponent implements OnInit, View {
     loading = true;
+    // Список существующих наименований
     public items: Item[] = [];
+    // Текущая накладная
     public invoice: Invoice = new Invoice;
+    // Массив индектификаторов удаленных регистров
+    public deletedRegisterIds: string[] = [];
+    // Массив добавленных регистров
     public addedRegisters: Register[] = [];
+    // Массив изменённых регистров
+    public changedRegisters: Register[] = [];
+    // Добавляемый регистр
     public register: Register = new Register();
+    // Выбранный регистр
     public selectedRegister: Register;
+    // Массив регистров текущей накладной
     public registers: Register[] = [];
+
     constructor(
+        private router: Router,
         private route: ActivatedRoute,
         private apiService: ApiService,
         private alertService: AlertService,
@@ -61,14 +74,44 @@ export class InvoiceDetailComponent implements OnInit, View {
     onCloseModal(id: string) {
         this.modalService.close(id);
     }
-    // Нажатие кнопки добавления нового регистра
+
+    /** Нажатие кнопки добавления нового регистра */
     onCreate() {
         this.register = new Register();
         this.modalService.open('modal-new-register');
     }
 
-    addRegister() {
+    /** Выбор регистра в списке */
+    onSelect(registerId: string) {
+        this.selectedRegister = this.registers.find(i => i.id == registerId) as Register;
+        console.log(this.selectedRegister);
+    }
 
+    /** Открытие регистра для редактирования */
+    onOpen() {
+        if (this.selectedRegister != null) {
+            this.register = this.selectedRegister;
+            this.modalService.open('modal-edit-register');
+        }
+    }
+
+    /** Удаление регистра */
+    onDelete() {
+        console.log("Удаление ID: " + this.selectedRegister.id);
+        this.apiService.delete("register", this.selectedRegister.id).subscribe(
+            data => {
+                // Удаляем регист из массива для отображения
+                var deletedRegister = this.registers.find(i => i.id == this.selectedRegister.id) as Register;
+                const i = this.registers.indexOf(deletedRegister);
+                this.registers.splice(i, 1);
+            },
+            error => {
+                this.alertService.serverError(error);
+            });
+    }
+
+    /** Добавление регистра */
+    onAdd() {
         this.apiService.getById<Item>('item', this.register.itemId).subscribe(
             data => {
                 var item = data as Item;
@@ -76,12 +119,11 @@ export class InvoiceDetailComponent implements OnInit, View {
                 this.register.invoiceId = this.invoice.id;
                 this.apiService.create<Register>('register', this.register).subscribe(
                     data => {
-                        // Добавление регистра в список для отображения
+                        var addedRegister: Register = data;
+                        this.register.id = addedRegister.id;
+                        // Добавление нового регистра в массив отображения */
                         this.registers.push(this.register);
-                        // Добавление регистра в список новых регистров для добавления в базу данных
-                        this.addedRegisters.push(this.register);
                         this.modalService.close('modal-new-register');
-                        console.log(data);
                     },
                     error => {
                         this.alertService.serverError(error);
@@ -89,31 +131,41 @@ export class InvoiceDetailComponent implements OnInit, View {
             },
             error => {
                 this.alertService.serverError(error);
-            }
-        );
-
+            });
     }
 
-    onSave() {
-        /*
-        this.apiService.create<Register[]>('register', this.addedRegisters).subscribe(
+    /** Изменение регистра */
+    onChange() {
+        this.apiService.update<Register>('register', this.register.id, this.register).subscribe(
             data => {
-                console.log(data);
+                this.apiService.getById<Item>('item', this.register.itemId).subscribe(
+                    data => {
+                        var item: Item = data;
+                        var changedRegister = this.registers.find(i => i.id == this.register.id) as Register;
+                        const i = this.addedRegisters.indexOf(changedRegister);
+                        this.register.item = item;
+                        this.registers[i] = this.register;
+                        this.modalService.close('modal-edit-register');
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    });
             },
             error => {
-                console.log(error);
-            }
-        );*/
-        this.invoice.registers = this.registers;
-        console.log(this.invoice);
-        this.apiService.update<Invoice>('invoice', this.invoice.id, this.invoice).subscribe(
-            data => {
-                console.log(data);
-            },
-            error => {
-                console.log(error);
-            }
-        );
+                this.alertService.serverError(error);
+            });
     }
 
+    /** Проведение документа */
+    onFix() {
+        this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
+            data => {
+                this.invoice.isFixed = true;
+                this.alertService.success(data);
+            },
+            error => {
+                this.alertService.serverError(error);
+            }
+        )
+    }
 }

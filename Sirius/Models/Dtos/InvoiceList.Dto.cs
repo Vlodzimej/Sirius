@@ -8,5 +8,7 @@ namespace Sirius.Models.Dtos
         public string Name { get; set; }
         public string UserFullName { get; set; }
         public string CreateDate { get; set; }
+        public bool IsFixed { get; set; }
+        public bool IsTemporary { get; set; }
     }
 }
