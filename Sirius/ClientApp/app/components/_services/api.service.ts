@@ -15,6 +15,9 @@ export class ApiService {
         });
         this.options = new RequestOptions({ headers: this.headers });
     }
+    get<T>(controller: string, params: any) {
+        return this.http.get(this.baseUrl + 'api/'+controller+'/' + params, this.authenticationService.jwt()).map((response: Response) => response.json() as T);
+    }
 
     getAll<T>(controller: string) {
         return this.http.get(this.baseUrl + 'api/'+controller, this.authenticationService.jwt()).map((response: Response) => response.json() as T[]);

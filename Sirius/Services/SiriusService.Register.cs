@@ -28,6 +28,16 @@ namespace Sirius.Services
         }
 
         /// <summary>
+        /// Получить запись регистра по Id наименования
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<object> GetRegisterByItemId(Guid id)
+        {
+            return _unitOfWork.RegisterRepository.GetByItemId(id);
+        }
+
+        /// <summary>
         /// Получить список всех записей регистра
         /// </summary>
         /// <returns></returns>

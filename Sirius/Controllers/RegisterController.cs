@@ -59,6 +59,22 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
+        /// GET: api/register/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("item/{itemId}")]  
+        public IActionResult GetByItemId(Guid itemId)
+        {
+            var registers = _siriusService.GetRegisterByItemId(itemId);
+            if (registers != null)
+            {
+                return Ok(registers);
+            }
+            return NotFound();
+        }
+        
+        /// <summary>
         /// POST: api/register
         /// </summary>
         /// <param name="register"></param>

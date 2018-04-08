@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sirius.Models
 {
@@ -15,11 +13,16 @@ namespace Sirius.Models
         /// <summary>
         /// Фактор накладной
         /// </summary>
-        public short Factor { get; set; }
+        public int Factor { get; set; }
 
         /// <summary>
         /// Название
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Алиас
+        /// </summary>
+        public string Alias { get; set; }
     }
 }

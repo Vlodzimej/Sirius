@@ -40,7 +40,7 @@
                 </div>
                 <div id="control-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onFix()">Провести</button>                        
+                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onFix()">Провести</button>
                         <button class="btn btn-default btn-block">Закрыть</button>
                         <button class="btn btn-default btn-block">Пометить на удаление</button>
                     </div>
@@ -51,7 +51,7 @@
 
     <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
         <div class="panel panel-default">
-            <table class="table table-hover table-striped table-bordered">
+            <table class="table table-striped table-bordered" [ngClass]="{'table-hover': !invoice.isFixed}">
                 <tr>
                     <th class="text-center">№</th>
                     <th>Наименование</th>
@@ -60,14 +60,14 @@
                     <th>Цена</th>
                     <th>Сумма</th>
                 </tr>
-                <tr *ngFor="let register of registers; let n = index" (click)="onSelect(register.id)" (dblclick)="onOpen(selectedRegister.id)" [class.info]="register == selectedRegister"
-                    [ngStyle]="{'cursor': 'pointer'}">
+                <tr *ngFor="let register of registers; let n = index" (click)="onSelect(register.id)" (dblclick)="onOpen(selectedRegister.id)"
+                    [class.info]="register == selectedRegister" class="invoice-list-item" [style.cursor]="invoice.isFixed ? 'default' : 'pointer'">
                     <td class="text-center">{{n+1}}</td>
-                    <td>{{register.item.name}}</td>
+                    <td>{{register.name}}</td>
                     <td>{{register.amount}}</td>
-                    <td>{{register.item.dimension.name}}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{register.dimension}}</td>
+                    <td>{{register.cost}} {{currency}}</td>
+                    <td>{{register.sum}} {{currency}}</td>
                 </tr>
             </table>
         </div>
@@ -86,25 +86,45 @@
                     <button type="button" class="close" (click)="onCloseModal('modal-new-register')">&times;</button>
                     <h4 class="modal-title">Новая позиция</h4>
                 </div>
-                <form name="form1" (ngSubmit)="f.form.valid && onAdd()" #f="ngForm" novalidate>
+                <form name="form1" (ngSubmit)="f1.form.valid && onAdd()" #f1="ngForm">
                     <div class="modal-body">
-
-                        <div>
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !item.valid }">
                             <label for="register-item">Наименование</label>
-                            <select class="form-control" name="register-item" [(ngModel)]="register.itemId" #category="ngModel" required>
+                            <select class="form-control" name="register-item" [(ngModel)]="register.itemId" #item="ngModel" (change)="getBatchesByItem()"
+                                required>
                                 <option *ngFor="let item of items" value="{{item.id}}">{{item.name}}</option>
                             </select>
+                            <div *ngIf="f1.submitted && !item.valid" class="help-block">Требуется выбрать наименование</div>
                         </div>
 
-                        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !amount.valid }">
                             <label for="register-amount">Количество</label>
-                            <input type="number" class="form-control" name="register-amount" [(ngModel)]="register.amount" #name="ngModel" required />
-                            <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
+                            <input type="number" class="form-control" name="register-amount" [(ngModel)]="register.amount" #amount="ngModel" required/>
+                            <div *ngIf="f1.submitted && !amount.valid" class="help-block">Требуется указать количество</div>
                         </div>
+
+                        <!--- Поля для приходных накладных-->
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !cost.valid }" *ngIf="invoiceType.alias == 'arrival'">
+                            <label for="register-cost">Цена (за шт.)</label>
+                            <input type="number" class="form-control" name="register-cost" [(ngModel)]="register.cost" #cost="ngModel" required />
+                            <div *ngIf="f1.submitted && !cost.valid" class="help-block">Требуется ввести цену за единицу</div>
+                        </div>
+                        <!---->
+
+                        <!--- Поля для расходных накладных-->
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !batch.valid }" *ngIf="invoiceType.alias == 'consumption'">
+                            <label for="register-batch">Остатки</label>
+                            <select class="form-control" name="register-batch" [(ngModel)]="register.cost" #batch="ngModel" required>
+                                <option *ngFor="let batch of batches" value="{{batch.cost}}">{{batch.amount}} шт. по цене {{batch.cost}} {{currency}}</option>
+                            </select>
+                            <div *ngIf="f1.submitted && !batch.valid" class="help-block">Требуется указать источник расхода</div>
+                        </div>
+                        <!---->
+
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">
-                            <button [disabled]="loading" class="btn btn-primary">Создать</button>
+                            <button [disabled]="loading" class="btn btn-primary">Добавить</button>
                             <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
                             <a (click)="onCloseModal('modal-new-register')" class="btn btn-link">Отмена</a>
                         </div>
@@ -124,25 +144,46 @@
                     <button type="button" class="close" (click)="onCloseModal('modal-edit-register')">&times;</button>
                     <h4 class="modal-title">Редактирование позиции</h4>
                 </div>
-                <form name="form1" (ngSubmit)="f.form.valid && onChange()" #f="ngForm" novalidate>
+                <form name="form1" (ngSubmit)="f2.form.valid && onChange()" #f2="ngForm" novalidate>
                     <div class="modal-body">
 
-                        <div>
+                        <div class="form-group" [ngClass]="{ 'has-error': f2.submitted && !item.valid }">
                             <label for="register-item">Наименование</label>
-                            <select class="form-control" name="register-item" [(ngModel)]="register.itemId" #category="ngModel" required>
+                            <select class="form-control" name="register-item" [(ngModel)]="register.itemId" #category="ngModel" (change)="getBatchesByItem()"
+                                required>
                                 <option *ngFor="let item of items" value="{{item.id}}">{{item.name}}</option>
                             </select>
+                            <div *ngIf="f2.submitted && !item.valid" class="help-block">Требуется выбрать наименование</div>
                         </div>
 
-                        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+                        <div class="form-group" [ngClass]="{ 'has-error': f2.submitted && !name.valid }">
                             <label for="register-amount">Количество</label>
                             <input type="number" class="form-control" name="register-amount" [(ngModel)]="register.amount" #name="ngModel" required />
-                            <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
+                            <div *ngIf="f2.submitted && !name.valid" class="help-block">Требуется ввести название</div>
                         </div>
+
+                        <!--- Поля для приходных накладных-->
+                        <div class="form-group" [ngClass]="{ 'has-error': f2.submitted && !cost.valid }" *ngIf="invoiceType.alias == 'arrival'">
+                            <label for="register-cost">Цена (за шт.)</label>
+                            <input type="number" class="form-control" name="register-cost" [(ngModel)]="register.cost" #cost="ngModel" required />
+                            <div *ngIf="f2.submitted && !cost.valid" class="help-block">Требуется ввести цену за единицу</div>
+                        </div>
+                        <!---->
+
+                        <!--- Поля для расходных накладных-->
+                        <div class="form-group" [ngClass]="{ 'has-error': f2.submitted && !batch.valid }" *ngIf="invoiceType.alias == 'consumption'">
+                            <label for="register-batch">Остатки</label>
+                            <select class="form-control" name="register-batch" [(ngModel)]="register.cost" #batch="ngModel" required>
+                                <option *ngFor="let batch of batches" value="{{batch.cost}}">{{batch.amount}} шт. по цене {{batch.cost}} {{currency}}</option>
+                            </select>
+                            <div *ngIf="f2.submitted && !batch.valid" class="help-block">Требуется указать источник расхода</div>
+                        </div>
+                        <!---->
+
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">
-                            <button [disabled]="loading" class="btn btn-primary">Создать</button>
+                            <button [disabled]="loading" class="btn btn-primary">Изменить</button>
                             <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
                             <a (click)="onCloseModal('modal-edit-register')" class="btn btn-link">Отмена</a>
                         </div>

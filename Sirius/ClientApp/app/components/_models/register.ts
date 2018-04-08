@@ -5,8 +5,10 @@ export class Register
     id: string;
     cost: number;
     amount: number;
+    sum: number;
+    name: string;
+    dimension: string;
     itemId: string;
-    item: Item;
+    createDate: string;
     invoiceId: string;
-    invoice: Invoice;
 }

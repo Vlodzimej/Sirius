@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Invoice, InvoiceListItem } from '../../_models';
+import { Invoice, InvoiceListItem, InvoiceType } from '../../_models';
 
 import {
     AuthenticationService,
@@ -16,10 +16,11 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-invoice-list',
     templateUrl: './invoice.list.component.html',
-    styleUrls: ['../../../assets/css/accordion.css']
+    styleUrls: ['../../../assets/css/accordion.css', '../../../assets/css/invoice/style.css']
 })
 export class InvoiceListComponent implements OnInit {
-    public type: string;
+    public typeAlias: string;
+    public type: InvoiceType;
     public loading: boolean = true;
     public invoices: InvoiceListItem[] = [];
     public invoice: Invoice = new Invoice();
@@ -38,47 +39,49 @@ export class InvoiceListComponent implements OnInit {
         this.routeSubscription = route.params.subscribe(params => this.invoice = params['id']);
     }
     ngOnInit() {
-        var headerText: string = "";
-        this.type = this.route.snapshot.params['type'];
 
-        switch (this.type) {
-            case 'arrival':
-                headerText = "Приход";
 
-                break;
-            case 'consumption':
-                headerText = "Расход";
-                break;
+        this.route.params.subscribe(params => {
+            this.typeAlias = this.route.snapshot.params['typealias'];
 
-            case 'writeoff':
-                headerText = "Списание";
-                break;
-        }
-
-        this.pageHeaderService.changeText(headerText);
-
-        this.apiService.getAll<InvoiceListItem>('invoice').subscribe(
+        this.apiService.getById<InvoiceType>('invoice/type/alias', this.typeAlias).subscribe(
             data => {
-                this.invoices = data;
-                console.log(this.invoices);
-                this.loading = false;
+                this.type = data;
+                this.pageHeaderService.changeText(this.type.name);
+
+                this.apiService.getById<InvoiceListItem[]>('invoice/type', this.type.id).subscribe(
+                    data => {
+                        this.invoices = data;
+                        this.loading = false;
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                        this.loading = false;
+                    });
+
             },
             error => {
-                this.alertService.error('Ошибка загрузки', true);
-                this.loading = false;
+                this.alertService.serverError(error);
             });
+        });
+
     }
 
     onCreate() {
+
         var newInvoice: Invoice = new Invoice();
+
+        newInvoice.typeId = this.type.id;
         newInvoice.userId = this.authenticationService.getUserId();
+        newInvoice.factor = this.type.factor;
+
         this.apiService.create<Invoice>('invoice', newInvoice).subscribe(
             data => {
                 this.invoice = data;
                 this.router.navigateByUrl('/invoice/' + this.invoice.id);
             },
             error => {
-                console.log(error);
+                this.alertService.serverError(error);
             }
         )
     }
@@ -105,7 +108,6 @@ export class InvoiceListComponent implements OnInit {
                 }
             },
             error => {
-                var e = error as Response;
                 this.alertService.serverError(error);
             }
         )

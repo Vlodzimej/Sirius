@@ -11,6 +11,8 @@ export class Invoice {
     createDate: string;
     isFixed: boolean;
     isTemporary: boolean;
+    typeId: string;
+    factor: number;
 }
 
 export class InvoiceListItem {
@@ -30,4 +32,11 @@ export class InvoiceUpdate {
     isrecorderd: boolean;
     istemporary: boolean;
     createDate: string;
+}
+
+export class InvoiceType {
+    id: string;
+    name: string;
+    factor: number;
+    alias: string;
 }

@@ -60,6 +60,21 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
+        /// GET: api/invoice
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("type/{id}")]
+        public IActionResult GetByTypeId(Guid id)
+        {
+            var invoices = _siriusService.GetByTypeId(id);
+            if (invoices != null)
+            {
+                return Ok(invoices);
+            }
+            return NotFound();
+        }
+
+        /// <summary>
         /// POST: api/invoice
         /// </summary>
         /// <param name="register"></param>
@@ -121,5 +136,56 @@ namespace Sirius.Controllers
             }
             return new BadRequestResult();
         }
+
+        /// <summary>
+        /// GET: api/typebyid/4C070178-29FB-40A0-ACF9-10DD83641C51
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("type/id/{id}")]
+        public IActionResult GetTypes(Guid id)
+        {
+            var type = _siriusService.GetInvoiceTypeByTypeId(id);
+            if (type != null)
+            {
+                return Ok(type);
+            }
+            return NotFound();
+        }
+
+        /// <summary>
+        /// GET: api/typebyalias/arrival
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        [HttpGet("type/alias/{alias}")]
+        public IActionResult GetTypeByAlias(string alias)
+        {
+            var type = _siriusService.GetInvoiceTypeByAlias(alias);
+            if (type != null)
+            {
+                return Ok(type);
+            }
+            return NotFound();
+        }
+
+        /// <summary>
+        /// GET:api/alltypes
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("alltypes")]
+        public IActionResult GetType(Guid id)
+        {
+            var type = _siriusService.GetInvoiceTypes();
+            if (type != null)
+            {
+                return Ok(type);
+            }
+            return NotFound();
+        }
+
+
+
     }
 }

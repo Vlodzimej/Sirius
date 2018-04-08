@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Invoice, InvoiceUpdate, Register, Item, ItemDetail } from '../../_models';
+import { Invoice, InvoiceUpdate, Register, Item, ItemDetail, InvoiceType, Batch } from '../../_models';
 import { View } from '../../_interfaces';
 import { AlertService, ApiService, PageHeaderService, ModalService } from '../../_services';
 import { Router } from '@angular/router';
@@ -8,7 +8,11 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-invoice-detail',
     templateUrl: './invoice.detail.component.html',
-    styleUrls: ['../../../assets/css/accordion.css', '../../../assets/css/modal.css']
+    styleUrls: [
+        '../../../assets/css/accordion.css',
+        '../../../assets/css/modal.css',
+        '../../../assets/css/invoice/style.css'
+    ]
 })
 export class InvoiceDetailComponent implements OnInit, View {
     loading = true;
@@ -25,9 +29,15 @@ export class InvoiceDetailComponent implements OnInit, View {
     // Добавляемый регистр
     public register: Register = new Register();
     // Выбранный регистр
-    public selectedRegister: Register;
+    public selectedRegister: Register = new Register();
     // Массив регистров текущей накладной
     public registers: Register[] = [];
+    // Тип накладной
+    public invoiceType: InvoiceType = new InvoiceType();
+    // Денежная единица
+    public currency: string;
+    // Остатки наименования
+    public batches: Batch[] = [];
 
     constructor(
         private router: Router,
@@ -39,6 +49,8 @@ export class InvoiceDetailComponent implements OnInit, View {
     ) { }
 
     ngOnInit() {
+        this.currency = "руб.";
+
         var invoiceId = this.route.snapshot.params['id'];
         this.apiService.getById<Invoice>('invoice', invoiceId).subscribe(
             data => {
@@ -48,6 +60,20 @@ export class InvoiceDetailComponent implements OnInit, View {
                 this.loading = false;
                 var headerText = this.invoice.name + " от " + this.invoice.createDate;
                 this.pageHeaderService.changeText(headerText);
+
+                //Вычисление суммы для каждого регистра
+                this.registers.map(r => {
+                    r.sum = r.amount * r.cost
+                });
+
+                this.apiService.getById<InvoiceType>('invoice/type/id', this.invoice.typeId).subscribe(
+                    data => {
+                        this.invoiceType = data;
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    });
+
             },
             error => {
                 this.alertService.error('Ошибка загрузки', true);
@@ -77,95 +103,134 @@ export class InvoiceDetailComponent implements OnInit, View {
 
     /** Нажатие кнопки добавления нового регистра */
     onCreate() {
-        this.register = new Register();
-        this.modalService.open('modal-new-register');
+        if (!this.invoice.isFixed) {
+            this.register = new Register();
+            this.modalService.open('modal-new-register');
+        }
     }
 
     /** Выбор регистра в списке */
     onSelect(registerId: string) {
-        this.selectedRegister = this.registers.find(i => i.id == registerId) as Register;
-        console.log(this.selectedRegister);
+        if (!this.invoice.isFixed) {
+            this.selectedRegister = this.registers.find(i => i.id == registerId) as Register;
+        }
     }
 
     /** Открытие регистра для редактирования */
     onOpen() {
-        if (this.selectedRegister != null) {
+        if (!this.invoice.isFixed && this.selectedRegister != null) {
             this.register = this.selectedRegister;
+            this.getBatchesByItem();
+
             this.modalService.open('modal-edit-register');
         }
     }
 
     /** Удаление регистра */
     onDelete() {
-        console.log("Удаление ID: " + this.selectedRegister.id);
-        this.apiService.delete("register", this.selectedRegister.id).subscribe(
-            data => {
-                // Удаляем регист из массива для отображения
-                var deletedRegister = this.registers.find(i => i.id == this.selectedRegister.id) as Register;
-                const i = this.registers.indexOf(deletedRegister);
-                this.registers.splice(i, 1);
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
+        if (!this.invoice.isFixed) {
+            console.log("Удаление ID: " + this.selectedRegister.id);
+            this.apiService.delete("register", this.selectedRegister.id).subscribe(
+                data => {
+                    // Удаляем регист из массива для отображения
+                    var deletedRegister = this.registers.find(i => i.id == this.selectedRegister.id) as Register;
+                    const i = this.registers.indexOf(deletedRegister);
+                    this.registers.splice(i, 1);
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }
     }
 
     /** Добавление регистра */
     onAdd() {
-        this.apiService.getById<Item>('item', this.register.itemId).subscribe(
-            data => {
-                var item = data as Item;
-                this.register.item = item;
-                this.register.invoiceId = this.invoice.id;
-                this.apiService.create<Register>('register', this.register).subscribe(
-                    data => {
-                        var addedRegister: Register = data;
-                        this.register.id = addedRegister.id;
-                        // Добавление нового регистра в массив отображения */
-                        this.registers.push(this.register);
-                        this.modalService.close('modal-new-register');
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
+        if (!this.invoice.isFixed) {
+            this.apiService.getById<Item>('item', this.register.itemId).subscribe(
+                data => {
+                    var item = data as Item;
+                    this.register.name = item.name;
+                    this.register.dimension = item.dimension.name;
+                    this.register.invoiceId = this.invoice.id;
+                    this.apiService.create<Register>('register', this.register).subscribe(
+                        data => {
+                            var addedRegister: Register = data;
+                            // Присваиваем id созданного регистра взятый из базы данных
+                            this.register.id = addedRegister.id;
+                            // Вычисление суммы для отображения
+                            this.register.sum = this.register.cost * this.register.amount;
+                            // Добавление нового регистра в массив отображения 
+                            this.registers.push(this.register);
+                            this.modalService.close('modal-new-register');
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        });
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }
     }
 
     /** Изменение регистра */
     onChange() {
-        this.apiService.update<Register>('register', this.register.id, this.register).subscribe(
-            data => {
-                this.apiService.getById<Item>('item', this.register.itemId).subscribe(
-                    data => {
-                        var item: Item = data;
-                        var changedRegister = this.registers.find(i => i.id == this.register.id) as Register;
-                        const i = this.addedRegisters.indexOf(changedRegister);
-                        this.register.item = item;
-                        this.registers[i] = this.register;
-                        this.modalService.close('modal-edit-register');
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
+        if (!this.invoice.isFixed) {
+            this.register.invoiceId = this.invoice.id;
+            this.apiService.update<Register>('register', this.register.id, this.register).subscribe(
+                data => {
+                    this.apiService.getById<Item>('item', this.register.itemId).subscribe(
+                        data => {
+                            // Получаем наименование (возможно, изменённое)
+                            var item: Item = data;
+                            // Находим регист по id в масстве отображения
+                            var changedRegister = this.registers.find(i => i.id == this.register.id) as Register;
+                            // Вычисляем его индекс в масстве
+                            const i = this.addedRegisters.indexOf(changedRegister);
+                            // Присваиваем id накладной
+                            // Присваиваем название наименования
+                            this.register.name = item.name;
+                            // Присваиваем название ед. измерения
+                            this.register.dimension = item.dimension.name;
+                            // Вычисление суммы для отображения
+                            this.register.sum = this.register.cost * this.register.amount;
+                            // Обновляем объект регистра в массиве
+                            this.registers[i] = this.register;
+                            // Закрываем модаль
+                            this.modalService.close('modal-edit-register');
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        });
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }
     }
 
     /** Проведение документа */
     onFix() {
-        this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
+        if (!this.invoice.isFixed) {
+            this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
+                data => {
+                    this.invoice.isFixed = true;
+                    this.alertService.success(data);
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }
+    }
+
+    getBatchesByItem() {
+        this.apiService.getById<Batch[]>('register/item', this.register.itemId).subscribe(
             data => {
-                this.invoice.isFixed = true;
-                this.alertService.success(data);
+                this.batches = data;
             },
             error => {
                 this.alertService.serverError(error);
-            }
-        )
+            });
+
     }
 }

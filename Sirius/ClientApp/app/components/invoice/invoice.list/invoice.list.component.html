@@ -62,8 +62,12 @@
                     <td>{{invoice.userFullName}}</td>
                     <td>{{invoice.createDate}}</td>
                     <td>
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary"></span>
-                        <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed"></span>
+                        <div [style.color] = "invoice.isFixed ? 'green' : 'red'">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary" data-toggle="tooltip"
+                            title="Не проведено"></span>
+                        <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed" data-toggle="tooltip"
+                            title="Проведено"></span>
+                            </div>
                     </td>
                 </tr>
             </table>

@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Sirius.DAL;
 using System;
 
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180406204014_AddInvoiceTypeModel")]
+    partial class AddInvoiceTypeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,15 +56,13 @@ namespace Sirius.Migrations
 
                     b.Property<DateTime>("CreateDate");
 
-                    b.Property<double>("Factor");
+                    b.Property<Guid>("InvoiceTypeId");
 
                     b.Property<bool>("IsFixed");
 
                     b.Property<bool>("IsTemporary");
 
                     b.Property<string>("Name");
-
-                    b.Property<Guid>("TypeId");
 
                     b.Property<Guid>("UserId");
 
@@ -81,9 +82,7 @@ namespace Sirius.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Alias");
-
-                    b.Property<int>("Factor");
+                    b.Property<double>("Factor");
 
                     b.Property<string>("Name");
 

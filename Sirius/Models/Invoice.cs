@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Sirius.Models
 {
@@ -9,32 +8,69 @@ namespace Sirius.Models
     /// </summary>
     public class Invoice
     {
-        // Уникальный идентификатор
-        [Key]
+        /// <summary>
+        /// Уникальный идентификатор
+        /// </summary>
         public Guid Id { get; set; }
-        // Заголовок
+
+        /// <summary>
+        /// Заголовок
+        /// </summary>
         public string Name { get;set; }
-        // Идентификатор поставщика
+
+        /// <summary>
+        /// Идентификатор поставщика
+        /// </summary>
         public Guid VendorId { get; set; }
-        // Поставщик
+
+        /// <summary>
+        /// Поставщик
+        /// </summary>
         public Vendor Vendor { get; set; }
-        // Идентификатор пользователя-автора
+
+        /// <summary>
+        /// Идентификатор пользователя-автора
+        /// </summary>
         public Guid UserId { get; set; }
-        // Пользователь-автор
+
+        /// <summary>
+        /// Пользователь-автор
+        /// </summary>
         public User User { get; set; }
-        // Список регистров
+
+        /// <summary>
+        /// Список регистров
+        /// </summary>
         public IEnumerable<Register> Registers { get; set; }
-        // Признак проведённой накладной
+
+        /// <summary>
+        /// Признак проведённой накладной
+        /// </summary>
         public bool IsFixed { get; set; }
-        // Признак временной накладной
+
+        /// <summary>
+        /// Признак временной накладной
+        /// </summary>
         public bool IsTemporary { get; set; }
-        // Дата создания 
+
+        /// <summary>
+        /// Дата создания 
+        /// </summary>
         public DateTime CreateDate { get; set; }
-        // Идентификатор типа накладной
-        public Guid InvoiceTypeId { get; set; }
-        // Тип накладной
-        public InvoiceType InvoiceType { get; set; }
-        // Комментарий
+
+        /// <summary>
+        /// Идентификатор типа накладной
+        /// </summary>
+        public Guid TypeId { get; set; }
+
+        /// <summary>
+        /// Комментарий
+        /// </summary>
         public string Comment { get; set; }
+
+        /// <summary>
+        /// Фактор
+        /// </summary>
+        public double Factor { get; set; }
     }
 }

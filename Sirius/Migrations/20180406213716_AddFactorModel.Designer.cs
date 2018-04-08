@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Sirius.DAL;
 using System;
 
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20180406213716_AddFactorModel")]
+    partial class AddFactorModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,6 +47,18 @@ namespace Sirius.Migrations
                     b.ToTable("Dimensions");
                 });
 
+            modelBuilder.Entity("Sirius.Models.Domain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Domains");
+                });
+
             modelBuilder.Entity("Sirius.Models.Invoice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -52,8 +67,6 @@ namespace Sirius.Migrations
                     b.Property<string>("Comment");
 
                     b.Property<DateTime>("CreateDate");
-
-                    b.Property<double>("Factor");
 
                     b.Property<bool>("IsFixed");
 
@@ -81,9 +94,7 @@ namespace Sirius.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Alias");
-
-                    b.Property<int>("Factor");
+                    b.Property<double>("Factor");
 
                     b.Property<string>("Name");
 
@@ -139,11 +150,15 @@ namespace Sirius.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("DomainId");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DomainId");
 
                     b.ToTable("Settings");
                 });
@@ -224,6 +239,14 @@ namespace Sirius.Migrations
                     b.HasOne("Sirius.Models.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Sirius.Models.Setting", b =>
+                {
+                    b.HasOne("Sirius.Models.Domain", "Domain")
+                        .WithMany()
+                        .HasForeignKey("DomainId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

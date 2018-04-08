@@ -35,11 +35,6 @@ import {
 
 // Импорт компонентов относящихся к накладным
 import {
-    ArrivalInvoiceListComponent,
-    ArrivalInvoiceComponent
-} from './components/invoices';
-
-import {
     InvoiceComponent, InvoiceListComponent, InvoiceDetailComponent
 } from './components/invoice';
 
@@ -63,9 +58,7 @@ import {
         ItemDictionaryComponent,
         InvoiceComponent,
         InvoiceDetailComponent,
-        InvoiceListComponent,
-        ArrivalInvoiceComponent,
-        ArrivalInvoiceListComponent
+        InvoiceListComponent
     ],
     imports: [
         CommonModule,
@@ -83,7 +76,7 @@ import {
             { path: 'categories', component: CategoryDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'vendors', component: VendorDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'items', component: ItemDictionaryComponent, canActivate: [AuthGuard] },
-            { path: 'invoice/:type', component: InvoiceListComponent, canActivate: [AuthGuard] },
+            { path: 'invoices/:typealias', component: InvoiceListComponent, canActivate: [AuthGuard] },
             { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])

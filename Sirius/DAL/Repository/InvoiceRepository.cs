@@ -33,7 +33,8 @@ namespace Sirius.Models
         {
             var invoices = _siriusContext.Invoices
             .Include(i => i.User)
-            .Include(i => i.Vendor);
+            .Include(i => i.Vendor)
+            .Where(filter);
 
             if (invoices != null)
             {
@@ -51,11 +52,23 @@ namespace Sirius.Models
             return null;
         }
 
-        public InvoiceDetailDto GetDetailDtoByID(Guid invoiceId)
+
+        public object GetById(Guid invoiceId)
         {
             var invoice = GetByID(invoiceId);
 
-            var result = new InvoiceDetailDto()
+            var registers = invoice.Registers.Select(r => new
+            {
+                r.Id,
+                r.Cost,
+                r.Amount,
+                r.ItemId,
+                CreateDate = r.Invoice.CreateDate.ToString("hhmmss"),
+                r.Item.Name,
+                Dimension = r.Item.Dimension.Name
+            });
+
+            var result = new 
             {
                 Id = invoice.Id,
                 Name = invoice.Name,
@@ -63,10 +76,12 @@ namespace Sirius.Models
                 UserFullName = invoice.User.FirstName+" "+invoice.User.LastName,
                 VendorId = invoice.Vendor.Id,
                 VendorName = invoice.Vendor.Name,
-                Registers = invoice.Registers,
+                Registers = registers,
                 CreateDate = DateConverter.ConvertToStandardString(invoice.CreateDate),
                 IsTemporary = invoice.IsTemporary,
-                IsFixed = invoice.IsFixed
+                IsFixed = invoice.IsFixed,
+                TypeId = invoice.TypeId
+                
             };
             return result;
         }
@@ -86,5 +101,22 @@ namespace Sirius.Models
 
             return invoice;
         }
+
+        public InvoiceType GetTypeById(Guid invoiceTypeId)
+        {
+            return _siriusContext.InvoiceTypes.Find(invoiceTypeId);
+        }
+
+        public InvoiceType GetTypeByAlias(string alias)
+        {
+            return _siriusContext.InvoiceTypes.Where(it => it.Alias == alias).FirstOrDefault();
+        }
+
+        public IEnumerable<InvoiceType> GetTypes()
+        {
+            return _siriusContext.InvoiceTypes;
+        }
+
+       
     }
 }

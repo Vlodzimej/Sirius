@@ -13,9 +13,9 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public InvoiceDetailDto GetInvoiceDetailDtoById(Guid id)
+        public object GetInvoiceDetailDtoById(Guid invoiceId)
         {
-            return _unitOfWork.InvoiceRepository.GetDetailDtoByID(id);
+            return _unitOfWork.InvoiceRepository.GetById(invoiceId);
         }
 
         /// <summary>
@@ -23,11 +23,19 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Invoice GetInvoiceById(Guid id)
+        public Invoice GetInvoiceById(Guid invoiceId)
         {
-            return _unitOfWork.InvoiceRepository.GetByID(id);
+            return _unitOfWork.InvoiceRepository.GetByID(invoiceId);
         }
 
+        /// <summary>
+        /// Получить список  накладных определённого типа
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<InvoiceListDto> GetByTypeId(Guid typeId)
+        {
+            return _unitOfWork.InvoiceRepository.GetAll(x => x.TypeId == typeId);
+        }
 
         /// <summary>
         /// Получить список всех накладных
@@ -43,9 +51,9 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteInvoiceById(Guid id)
+        public bool DeleteInvoiceById(Guid invoiceId)
         {
-            var invoice = _unitOfWork.InvoiceRepository.GetByID(id);
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             if (invoice != null)
             {
                 _unitOfWork.InvoiceRepository.Delete(invoice);
@@ -60,7 +68,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public InvoiceDetailDto AddInvoice(Invoice invoice)
+        public object AddInvoice(Invoice invoice)
         {
             var newInvoiceId = Guid.NewGuid();
             var newInvoice = new Invoice()
@@ -71,7 +79,10 @@ namespace Sirius.Services
                 VendorId = DefaultValues.Vendor.Primary.Id,
                 CreateDate = DateTime.Now,
                 IsTemporary = true,
-                IsFixed = false
+                IsFixed = false,
+                TypeId = invoice.TypeId,
+                Comment = invoice.Comment,
+                Factor = invoice.Factor
             };
 
             _unitOfWork.InvoiceRepository.Insert(newInvoice);
@@ -91,7 +102,7 @@ namespace Sirius.Services
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
 
-                return _unitOfWork.InvoiceRepository.GetDetailDtoByID(newInvoiceId) ?? null;
+                return _unitOfWork.InvoiceRepository.GetById(newInvoiceId) ?? null;
             }
             return null;
         }
@@ -102,13 +113,13 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public InvoiceDetailDto UpdateInvoice(Guid invoiceId, Invoice invoice)
+        public object UpdateInvoice(Guid invoiceId, Invoice invoice)
         {
             if (invoiceId != null && invoice != null && invoiceId == invoice.Id)
             {
                 _unitOfWork.InvoiceRepository.Update(invoice);
                 _unitOfWork.Save();
-                return _unitOfWork.InvoiceRepository.GetDetailDtoByID(invoiceId);
+                return _unitOfWork.InvoiceRepository.GetById(invoiceId);
 
             }
             return null;
@@ -140,6 +151,35 @@ namespace Sirius.Services
                 result = "Накладная не проведена.";
             }
             return result;
+        }
+
+        /// <summary>
+        /// Получение типа накладной по её идентификатору
+        /// </summary>
+        /// <param name="invoiceTypeId"></param>
+        /// <returns></returns>
+        public InvoiceType GetInvoiceTypeByTypeId(Guid invoiceTypeId)
+        {
+            return _unitOfWork.InvoiceRepository.GetTypeById(invoiceTypeId);
+        }
+        
+        /// <summary>
+        /// Получение типа накладной по её алиасу
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        public InvoiceType GetInvoiceTypeByAlias(string alias)
+        {
+            return _unitOfWork.InvoiceRepository.GetTypeByAlias(alias);
+        }
+
+        /// <summary>
+        /// Получение списка типов накладных
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<InvoiceType> GetInvoiceTypes()
+        {
+            return _unitOfWork.InvoiceRepository.GetTypes();
         }
     }
 }

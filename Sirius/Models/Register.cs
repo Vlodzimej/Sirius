@@ -22,5 +22,7 @@ namespace Sirius.Models
         public Item Item { get; set; }
         // Идентификатор накладной
         public Guid InvoiceId { get; set; }
+        //
+        public Invoice Invoice { get; set; }
     }
 }
