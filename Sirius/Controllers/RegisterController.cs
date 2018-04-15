@@ -66,14 +66,47 @@ namespace Sirius.Controllers
         [HttpGet("item/{itemId}")]  
         public IActionResult GetByItemId(Guid itemId)
         {
-            var registers = _siriusService.GetRegisterByItemId(itemId);
+            var response = _siriusService.GetRegisterByItemId(itemId);
+            if (response != null)
+            {
+                return Ok(response.Result);
+            }
+            return NotFound();
+        }
+
+        /// <summary>
+        /// GET: api/register/type/arrive
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("type/{typeAlias}")]
+        public IActionResult GetByItemId(string typeAlias)
+        {
+            var registers = _siriusService.GetRegisterByTypeAlias(typeAlias);
             if (registers != null)
             {
                 return Ok(registers);
             }
             return NotFound();
         }
-        
+
+        /// <summary>
+        /// GET: api/register/type/arrive
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("batches")]
+        public IActionResult GetAllBatches()
+        {
+            var registers = _siriusService.GetAllBatches();
+            if (registers != null)
+            {
+                return Ok(registers);
+            }
+            return NotFound();
+        }
+
+
         /// <summary>
         /// POST: api/register
         /// </summary>

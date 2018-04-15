@@ -1,5 +1,13 @@
 export class Batch 
 {
-    cost: string;
-    amount: string;
+    name: string;
+    cost: number;
+    amount: number;
+    sum: number;
+}
+
+export class BatchGroup
+{
+    name: string;
+    batches: Batch[];
 }

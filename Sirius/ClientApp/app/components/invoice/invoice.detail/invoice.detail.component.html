@@ -13,8 +13,9 @@
                 </div>
                 <div id="info-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <p>Дата создания: </p>
-
+                        <p>Дата создания: {{invoice.createDate | fulldate}}</p>
+                        <p *ngIf="invoice.isFixed">Статус: проведён</p>
+                        <p *ngIf="!invoice.isFixed">Статус: не проведён</p>
                     </div>
                 </div>
             </div>
@@ -26,23 +27,23 @@
                 </div>
                 <div id="edit-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block" (click)="onCreate()">Добавить</button>
-                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedRegister}" (click)="onOpen(selectedRegister.id)">Изменить</button>
-                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedRegister}" (click)="onDelete()">Удалить</button>
+                        <button class="btn btn-default btn-block" (click)="onCreate()">Добавить услугу</button>
+                        <button class="btn btn-default btn-block" (click)="onCreate()">Добавить позицию</button>
+                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedRegister}" (click)="onOpen(selectedRegister.id)">Изменить позицию</button>
+                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedRegister}" (click)="onDelete()">Удалить позицию</button>
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#control-panel">
-                        Управление
+                        Действия
                     </a>
                 </div>
                 <div id="control-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onFix()">Провести</button>
-                        <button class="btn btn-default btn-block">Закрыть</button>
-                        <button class="btn btn-default btn-block">Пометить на удаление</button>
+                        <button class="btn btn-default btn-block" (click)="toBack()">Назад</button>
                     </div>
                 </div>
             </div>

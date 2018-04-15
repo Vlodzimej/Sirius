@@ -1,7 +1,9 @@
-﻿using Sirius.Models;
+﻿using Sirius.Helpers;
+using Sirius.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sirius.Services
 {
@@ -32,11 +34,25 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IEnumerable<object> GetRegisterByItemId(Guid id)
+        public Task<IEnumerable<Batch>> GetRegisterByItemId(Guid id)
         {
             return _unitOfWork.RegisterRepository.GetByItemId(id);
         }
 
+        /// <summary>
+        /// Получить регистры по алиасу типа накладной (arrival/ )
+        /// </summary>
+        /// <param name="typeAlias"></param>
+        /// <returns></returns>
+        public IEnumerable<object> GetRegisterByTypeAlias(string typeAlias)
+        {
+            return _unitOfWork.RegisterRepository.GetByTypeAlias(typeAlias);
+        }
+
+        public IEnumerable<object> GetAllBatches()
+        {
+            return _unitOfWork.RegisterRepository.GetAllBatches();
+        }
         /// <summary>
         /// Получить список всех записей регистра
         /// </summary>

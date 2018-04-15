@@ -12,7 +12,13 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
 import { SettingsComponent } from './components/settings';
 
-import { AlertComponent, ModalComponent, PageHeaderComponent } from './components/_directives/';
+import { 
+    AlertComponent, 
+    ModalComponent, 
+    PageHeaderComponent,
+    LoadingIconComponent
+} from './components/_directives/';
+
 import {
     ApiService,
     UserService,
@@ -35,8 +41,20 @@ import {
 
 // Импорт компонентов относящихся к накладным
 import {
-    InvoiceComponent, InvoiceListComponent, InvoiceDetailComponent
+    InvoiceListComponent, InvoiceDetailComponent
 } from './components/invoice';
+
+// Импорт компонентов отчетов
+import {
+    ReportComponent,
+    BatchesComponent
+} from './components/report'
+
+// Импорт пайпов
+import {
+    FullDatePipe, 
+    CurrencyPipe
+} from './components/_pipes';
 
 
 @NgModule({
@@ -44,6 +62,7 @@ import {
         AppComponent,
         AlertComponent,
         ModalComponent,
+        LoadingIconComponent,
         NavMenuComponent,
         HomeComponent,
         PageHeaderComponent,
@@ -56,9 +75,12 @@ import {
         CategoryDictionaryComponent,
         VendorDictionaryComponent,
         ItemDictionaryComponent,
-        InvoiceComponent,
         InvoiceDetailComponent,
-        InvoiceListComponent
+        InvoiceListComponent,
+        ReportComponent,
+        BatchesComponent,
+        FullDatePipe,
+        CurrencyPipe
     ],
     imports: [
         CommonModule,
@@ -78,10 +100,13 @@ import {
             { path: 'items', component: ItemDictionaryComponent, canActivate: [AuthGuard] },
             { path: 'invoices/:typealias', component: InvoiceListComponent, canActivate: [AuthGuard] },
             { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
+            { path: 'report/:typealias', component: ReportComponent, canActivate: [AuthGuard] },
+            { path: 'batches', component: BatchesComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService, PageHeaderService]
+    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService, PageHeaderService],
+    exports: [FullDatePipe, CurrencyPipe]
 })
 export class AppModuleShared {
 }

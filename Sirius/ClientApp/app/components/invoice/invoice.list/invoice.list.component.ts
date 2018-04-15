@@ -10,8 +10,7 @@ import {
 } from '../../_services';
 
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-invoice-list',
@@ -40,29 +39,30 @@ export class InvoiceListComponent implements OnInit {
     }
     ngOnInit() {
 
-
+        // Подписка на изменения значения параметра в URL указывающего на тип отображаемых накладных
         this.route.params.subscribe(params => {
             this.typeAlias = this.route.snapshot.params['typealias'];
 
-        this.apiService.getById<InvoiceType>('invoice/type/alias', this.typeAlias).subscribe(
-            data => {
-                this.type = data;
-                this.pageHeaderService.changeText(this.type.name);
+            // Получение данных о текущем типе накладной
+            this.apiService.getById<InvoiceType>('invoice/type/alias', this.typeAlias).subscribe(
+                data => {
+                    this.type = data;
+                    this.pageHeaderService.changeText(this.type.name);
 
-                this.apiService.getById<InvoiceListItem[]>('invoice/type', this.type.id).subscribe(
-                    data => {
-                        this.invoices = data;
-                        this.loading = false;
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                        this.loading = false;
-                    });
+                    this.apiService.getById<InvoiceListItem[]>('invoice/type', this.type.id).subscribe(
+                        data => {
+                            this.invoices = data;
+                            this.loading = false;
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                            this.loading = false;
+                        });
 
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
         });
 
     }

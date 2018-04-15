@@ -4,6 +4,8 @@ import { Invoice, InvoiceUpdate, Register, Item, ItemDetail, InvoiceType, Batch 
 import { View } from '../../_interfaces';
 import { AlertService, ApiService, PageHeaderService, ModalService } from '../../_services';
 import { Router } from '@angular/router';
+import { FullDatePipe } from '../../_pipes';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-invoice-detail',
@@ -45,7 +47,8 @@ export class InvoiceDetailComponent implements OnInit, View {
         private apiService: ApiService,
         private alertService: AlertService,
         private pageHeaderService: PageHeaderService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private location: Location
     ) { }
 
     ngOnInit() {
@@ -207,6 +210,10 @@ export class InvoiceDetailComponent implements OnInit, View {
                     this.alertService.serverError(error);
                 });
         }
+    }
+
+    toBack() {
+        this.location.back();
     }
 
     /** Проведение документа */

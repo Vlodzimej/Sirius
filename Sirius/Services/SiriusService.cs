@@ -8,12 +8,12 @@ namespace Sirius.Services
     {
 
         private UnitOfWork _unitOfWork;
-        private SiriusContext _siriusContext;
+        //private SiriusContext _siriusContext;
         private User currentUser;
 
         public SiriusService(UnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
             //_siriusContext = new SiriusContext();
         }
 
