@@ -96,9 +96,9 @@ namespace Sirius.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("batches")]
-        public IActionResult GetAllBatches()
+        public IActionResult GetAllBatches(Filter filter)
         {
-            var registers = _siriusService.GetAllBatches();
+            var registers = _siriusService.GetAllBatches(filter);
             if (registers != null)
             {
                 return Ok(registers);

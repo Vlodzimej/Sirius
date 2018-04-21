@@ -49,7 +49,7 @@ namespace Sirius.Models
             return null;
         }
 
-        public async Task<IEnumerable<Batch>> GetByItemId(Guid itemId)
+        public async Task<IEnumerable<Batch>> GetByFilter(Filter filter)
         {
             List<Batch> result = new List<Batch>();
 
@@ -58,11 +58,20 @@ namespace Sirius.Models
                 .Include(r => r.Invoice)
                 .ToListAsync();
 
+            var t1 = Guid.Empty;
+            var t2 = DateTime.MinValue;
+
             // Получаем регистры прихода
             var registers = await _siriusContext.Registers
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
-                .Where(r => (r.ItemId == itemId) && (r.Invoice.IsFixed == true) && (r.Invoice.Factor > 0))
+                .Where(r => 
+                    (r.ItemId == filter.itemId) &&
+                    (r.Invoice.IsFixed == true) &&
+                    (r.Invoice.Factor > 0) &&
+                    (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
+                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true)
+                    )
                 .ToListAsync();
 
             List<Batch> batches = new List<Batch>();
@@ -85,27 +94,6 @@ namespace Sirius.Models
                 });
             });
 
-            //foreach (var register1 in registers)
-            //{
-            //    decimal cost = register1.Cost;
-            //    double amount = register1.Amount;
-            //    foreach (var register2 in registers)
-            //    {
-            //        if (register1.Id != register2.Id)
-            //        {
-            //            if (register1.Cost == register2.Cost)
-            //            {
-            //                amount += register2.Amount;
-            //            }
-            //        }
-            //    }
-            //    batches.Add(new Batch()
-            //    {
-            //        Amount = amount,
-            //        Cost = cost
-            //    });
-            //}
-
             IEnumerable<Batch> arrivalBatch = batches.Distinct();
 
             // Получаем регистры расхода
@@ -115,7 +103,14 @@ namespace Sirius.Models
             registers = await _siriusContext.Registers
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
-                .Where(r => (r.ItemId == itemId) && (r.Invoice.IsFixed == true) && (r.Invoice.Factor < 0))
+                .Where(r => 
+                    (r.ItemId == filter.itemId) &&
+                    (r.Invoice.IsFixed == true) &&
+                    (r.Invoice.Factor < 0) &&
+                    (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
+                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true)
+
+                    )
                 .ToListAsync();
 
             registers.ForEach(reg1 =>
@@ -136,27 +131,6 @@ namespace Sirius.Models
                 });
             });
 
-            //foreach (var register1 in registers)
-            //{
-            //    decimal cost = register1.Cost;
-            //    double amount = register1.Amount;
-            //    foreach (var register2 in registers)
-            //    {
-            //        if (register1.Id != register2.Id)
-            //        {
-            //            if (register1.Cost == register2.Cost)
-            //            {
-            //                amount += register2.Amount;
-            //            }
-            //        }
-            //    }
-            //    batches.Add(new Batch()
-            //    {
-            //        Name = register1.Item.Name,
-            //        Amount = amount,
-            //        Cost = cost
-            //    });
-            //}
             IEnumerable<Batch> writeOffBatch = batches.Distinct();
 
             // Вычисляем остатки путём вычитания расходных значений из приходных
@@ -175,37 +149,29 @@ namespace Sirius.Models
                 }
             });
 
-            //foreach (var register1 in arrivalBatch)
-            //{
-            //    var batch = register1;
-            //    foreach (var register2 in writeOffBatch)
-            //    {
-            //        if (register1.Cost == register2.Cost)
-            //        {
-            //            batch.Amount = batch.Amount - register2.Amount;
-            //        }
-            //    }
-            //    if (batch.Amount > 0)
-            //    {
-            //        result.Add(batch);
-            //    }
-            //}
             result = result.Distinct().ToList();
             return result;
         }
 
-        public IEnumerable<object> GetAllBatches()
+        public IEnumerable<object> GetAllBatches(Filter filter)
         {
             List<BatchGroup> batchGroups = new List<BatchGroup>();
+            Guid itemId = filter.itemId;
+
             // Получаем все ids всех наименований
-            var items = _siriusContext.Items.Select(i => new { i.Id, i.Name }).ToList();
+            var itemList = _siriusContext.Items.Select(i => new { i.Id, i.Name });
+
+            // Если в фильтре указан itemId, то производим отбор 
+            var items = itemId != Guid.Empty ? itemList.Where(i => i.Id == filter.itemId).ToList() : itemList.ToList();
+
             // Получаем остатки по каждому наименованию
             items.ForEach(i =>
             {
+                filter.itemId = itemId != Guid.Empty ? filter.itemId : i.Id;
                 BatchGroup batchGroup = new BatchGroup()
                 {
                     Name = i.Name,
-                    Batches = GetByItemId(i.Id).Result.ToList()
+                    Batches = GetByFilter(filter).Result.ToList()
                 };
                 batchGroups.Add(batchGroup);
 

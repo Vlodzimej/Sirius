@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { SelectModule } from 'ng-select';
 
 import { AppComponent } from './components/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -12,11 +13,12 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
 import { SettingsComponent } from './components/settings';
 
-import { 
-    AlertComponent, 
-    ModalComponent, 
+import {
+    AlertComponent,
+    ModalComponent,
     PageHeaderComponent,
-    LoadingIconComponent
+    LoadingIconComponent,
+    FilterComponent
 } from './components/_directives/';
 
 import {
@@ -25,7 +27,9 @@ import {
     AuthenticationService,
     AlertService,
     ModalService,
-    PageHeaderService
+    PageHeaderService,
+    LoadingService,
+    FilterService
 } from './components/_services';
 
 import { AuthGuard } from './components/_guards/auth.guard';
@@ -52,7 +56,7 @@ import {
 
 // Импорт пайпов
 import {
-    FullDatePipe, 
+    FullDatePipe,
     CurrencyPipe
 } from './components/_pipes';
 
@@ -63,6 +67,7 @@ import {
         AlertComponent,
         ModalComponent,
         LoadingIconComponent,
+        FilterComponent,
         NavMenuComponent,
         HomeComponent,
         PageHeaderComponent,
@@ -86,6 +91,7 @@ import {
         CommonModule,
         HttpModule,
         FormsModule,
+        SelectModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full', canActivate: [AuthGuard] },
             { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -105,8 +111,21 @@ import {
             { path: '**', redirectTo: 'home' }
         ])
     ],
-    providers: [ApiService, UserService, AuthenticationService, AlertService, AuthGuard, ModalService, PageHeaderService],
-    exports: [FullDatePipe, CurrencyPipe]
+    providers: [
+        ApiService, 
+        UserService, 
+        AuthenticationService, 
+        AlertService, 
+        AuthGuard, 
+        ModalService, 
+        PageHeaderService, 
+        LoadingService, 
+        FilterService
+    ],
+    exports: [
+        FullDatePipe, 
+        CurrencyPipe
+    ]
 })
 export class AppModuleShared {
 }

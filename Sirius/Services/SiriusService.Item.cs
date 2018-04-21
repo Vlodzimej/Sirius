@@ -3,7 +3,9 @@ using Sirius.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Sirius.Helpers;
 
 namespace Sirius.Services
 {
@@ -29,6 +31,22 @@ namespace Sirius.Services
             var items = _unitOfWork.ItemRepository.GetAll();
             return items;
         }
+
+        /// <summary>
+        /// Получить список всех предметов
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ItemDto> GetItemsByFilter(Filter filter)
+        {
+            if (filter != null)
+            {
+                var items = _unitOfWork.ItemRepository.GetAll(x => x.CategoryId == filter.categoryId);
+                return items;
+            }
+            return null;
+        }
+
+
 
         /// <summary>
         /// Удалить предмет

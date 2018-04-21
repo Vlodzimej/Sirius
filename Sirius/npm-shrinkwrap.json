@@ -164,13 +164,13 @@
     "@types/jquery": {
       "version": "3.3.1",
       "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-3.3.1.tgz",
-      "integrity": "sha512-N3h+rzN518yl2xKrW0o6KKdNmWZ+OwG6SoM5TBEQFF0tTv5wXPEsoOuYQ2Kt3/89XbcSZUJLdjiT/2c3BR/ApQ==",
+      "integrity": "sha1-VXWNRNQidW1jKcv1Tm1Bkx17oo8=",
       "dev": true
     },
     "@types/underscore": {
       "version": "1.8.8",
       "resolved": "https://registry.npmjs.org/@types/underscore/-/underscore-1.8.8.tgz",
-      "integrity": "sha512-EquzRwzAAs04anQ8/6MYXFKvHoD+MIlF+gu87EDda7dN9zrKvQYHsc9VFAPB1xY4tUHQVvBMtjsHrvof2EE1Mg==",
+      "integrity": "sha1-UQ/hyl5/qH/M1AW5qLVm1CC8PRs=",
       "dev": true
     },
     "@types/webpack-env": {
@@ -4342,6 +4342,11 @@
       "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.6.1.tgz",
       "integrity": "sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=",
       "dev": true
+    },
+    "ng-select": {
+      "version": "1.0.0-rc.5",
+      "resolved": "https://registry.npmjs.org/ng-select/-/ng-select-1.0.0-rc.5.tgz",
+      "integrity": "sha512-zUIvaLrHBuFgLVooRhY8y3w5Zqahsw2gbvYvIDn0MhK5kBoOebioYY3zIqufIqCMqsJPIvf31LP4QQ8aCMP7Ng=="
     },
     "no-case": {
       "version": "2.3.1",

@@ -113,9 +113,10 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if (_siriusService.DeleteInvoiceById(id))
+            var result = _siriusService.DeleteInvoiceById(id);
+            if(result != "")
             {
-                return Ok();
+                return Ok(result);
             }
             return new BadRequestResult();
         }
@@ -136,6 +137,22 @@ namespace Sirius.Controllers
             }
             return new BadRequestResult();
         }
+
+        [HttpPut("vendor/{invoiceId}")]
+        public IActionResult SetVendor(Guid invoiceId, [FromBody]dynamic obj)
+        {
+            Guid vendorId = Guid.Parse((string)obj.vendorId);
+            if (invoiceId != null && vendorId != null)
+            {
+                var result = _siriusService.SetVendor(invoiceId, vendorId);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+            }
+            return new BadRequestResult();
+        }
+
 
         /// <summary>
         /// GET: api/typebyid/4C070178-29FB-40A0-ACF9-10DD83641C51

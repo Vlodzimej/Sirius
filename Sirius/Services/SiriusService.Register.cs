@@ -16,7 +16,10 @@ namespace Sirius.Services
         /// <returns></returns>
         public Register GetRegisterById(Guid id)
         {
-            return _unitOfWork.RegisterRepository.GetByID(id);
+            using (var unitOfWork = new DAL.UnitOfWork())
+            {
+                return unitOfWork.RegisterRepository.GetByID(id);
+            }
         }
         /// <summary>
         /// Получить запись регистра по Id
@@ -25,8 +28,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Register> GetRegistersByInvoiceId(Guid invoiceId)
         {
-            var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
-            return registers;
+            using (var unitOfWork = new DAL.UnitOfWork())
+            { 
+                var registers = unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
+                return registers;
+            }
         }
 
         /// <summary>
@@ -36,7 +42,13 @@ namespace Sirius.Services
         /// <returns></returns>
         public Task<IEnumerable<Batch>> GetRegisterByItemId(Guid id)
         {
-            return _unitOfWork.RegisterRepository.GetByItemId(id);
+            var filter = new Filter() { itemId = id };
+            return _unitOfWork.RegisterRepository.GetByFilter(filter);
+        }
+
+        public Task<IEnumerable<Batch>> GetBatchesByFilter(Filter filter)
+        {
+            return _unitOfWork.RegisterRepository.GetByFilter(filter);
         }
 
         /// <summary>
@@ -49,9 +61,9 @@ namespace Sirius.Services
             return _unitOfWork.RegisterRepository.GetByTypeAlias(typeAlias);
         }
 
-        public IEnumerable<object> GetAllBatches()
+        public IEnumerable<object> GetAllBatches(Filter filter)
         {
-            return _unitOfWork.RegisterRepository.GetAllBatches();
+            return _unitOfWork.RegisterRepository.GetAllBatches(filter);
         }
         /// <summary>
         /// Получить список всех записей регистра

@@ -6,7 +6,8 @@ import {
     ApiService,
     AlertService,
     ModalService,
-    PageHeaderService
+    PageHeaderService,
+    LoadingService
 } from '../../_services';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -15,12 +16,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
     selector: 'app-invoice-list',
     templateUrl: './invoice.list.component.html',
-    styleUrls: ['../../../assets/css/accordion.css', '../../../assets/css/invoice/style.css']
+    styleUrls:
+        [
+            '../../../assets/css/accordion.css',
+            '../../../assets/css/invoice/style.css'
+        ]
 })
 export class InvoiceListComponent implements OnInit {
     public typeAlias: string;
     public type: InvoiceType;
-    public loading: boolean = true;
     public invoices: InvoiceListItem[] = [];
     public invoice: Invoice = new Invoice();
     public selectedInvoice: Invoice;
@@ -33,32 +37,34 @@ export class InvoiceListComponent implements OnInit {
         private apiService: ApiService,
         private alertService: AlertService,
         private modalService: ModalService,
-        private pageHeaderService: PageHeaderService) {
+        private pageHeaderService: PageHeaderService,
+        private loadingService: LoadingService
+    ) {
 
         this.routeSubscription = route.params.subscribe(params => this.invoice = params['id']);
     }
     ngOnInit() {
-
+        // Включаем визуализацию загрузки
+        this.loadingService.showLoadingIcon();
         // Подписка на изменения значения параметра в URL указывающего на тип отображаемых накладных
         this.route.params.subscribe(params => {
+            // Тип накладной (алиас)
             this.typeAlias = this.route.snapshot.params['typealias'];
-
             // Получение данных о текущем типе накладной
             this.apiService.getById<InvoiceType>('invoice/type/alias', this.typeAlias).subscribe(
                 data => {
                     this.type = data;
                     this.pageHeaderService.changeText(this.type.name);
-
+                    // Загрузка списка накладных
                     this.apiService.getById<InvoiceListItem[]>('invoice/type', this.type.id).subscribe(
                         data => {
+                            // Отключаем визуализацию загрузки
+                            this.loadingService.hideLoadingIcon();
                             this.invoices = data;
-                            this.loading = false;
                         },
                         error => {
                             this.alertService.serverError(error);
-                            this.loading = false;
                         });
-
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -68,9 +74,7 @@ export class InvoiceListComponent implements OnInit {
     }
 
     onCreate() {
-
         var newInvoice: Invoice = new Invoice();
-
         newInvoice.typeId = this.type.id;
         newInvoice.userId = this.authenticationService.getUserId();
         newInvoice.factor = this.type.factor;
@@ -99,6 +103,7 @@ export class InvoiceListComponent implements OnInit {
         this.apiService.delete('invoice', invoiceId).subscribe(
             data => {
                 var deletedInvoice = this.invoices.find(i => i.id == invoiceId) as Invoice;
+                console.log(deletedInvoice);
                 if (deletedInvoice.isFixed) {
                     this.alertService.error('Документ проведён. Удаление невозможно.');
                 } else {

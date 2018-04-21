@@ -1,44 +1,44 @@
-<div class="row">
-    <div class="col-xs-12" *ngIf="loading">
-        <img class="center-block" src="../../../assets/images/loading.gif">
-    </div>
-
-    <div *ngIf="!loading" class="col-xs-12 col-sm-4 col-sm-push-8">
-        <div class="panel-group" id="invoice-accordion-1">
+<div class="row" *ngIf="!loadingService.isProgress">
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="batch-accordion-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#info-panel">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#batch-accordion" data-target="#filter-panel">
                         Фильтр
                     </a>
                 </div>
-                <div id="info-panel" class="panel-collapse collapse in">
+                <div id="filter-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <p>Дата создания: </p>
+                        <app-filter></app-filter>
+                        <button class="btn btn-default" (click)="getBatchesByFilter()">Применить</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
-
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
         <div class="panel panel-default">
             <table class="table table-bordered table-responsive">
                 <tr class="active">
-                    <th>Количество</th>
-                    <th>Цена</th>
-                    <th>Сумма</th>
+                    <th class="text-center">Количество</th>
+                    <th class="text-center">Цена</th>
+                    <th class="text-center">Сумма</th>
                 </tr>
-                <tr *ngFor="let batch of batches; let n = index">
-                    <td *ngIf="batch.name != ''" colspan="3" class="text-center">{{batch.name}}</td>
-                    <td *ngIf="batch.name == ''">{{batch.amount}}</td>
-                    <td *ngIf="batch.name == ''">{{batch.cost | currency}}</td>
-                    <td *ngIf="batch.name == ''">{{batch.sum | currency}}</td>
+                <tr *ngFor="let item of listItems; let n = index">
+                    <td *ngIf="item.type == 0" colspan="3" class="text-center">
+                        <b>{{item.text}}</b>
+                    </td>
+                    <td *ngIf="item.type == 1">{{item.amount}}</td>
+                    <td *ngIf="item.type == 1">{{item.cost | currency}}</td>
+                    <td *ngIf="item.type == 1">{{item.sum | currency}}</td>
+                    <td *ngIf="item.type == 2" class="text-center info">{{item.text}}</td>
+                    <td *ngIf="item.type == 2" colspan="3" class="text-center info">Общая сумма: {{item.sum | currency}}</td>
                 </tr>
             </table>
         </div>
-        <div *ngIf="batchGroups.length == 0">
-            <h3>Список пуст</h3>
+        <div *ngIf="listItems.length == 0">
+            <h4>Остатки не найдены</h4>
         </div>
     </div>
 </div>

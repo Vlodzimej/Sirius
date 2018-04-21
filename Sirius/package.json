@@ -61,5 +61,8 @@
     "@types/jquery": "^3.3.1",
     "@types/underscore": "^1.8.8",
     "underscore": "^1.8.3"
+  },
+  "dependencies": {
+    "ng-select": "^1.0.0-rc.5"
   }
 }

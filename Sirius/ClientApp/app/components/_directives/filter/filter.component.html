@@ -1,0 +1,14 @@
+<div class="form-group">
+        <ng-select [options]="optionCategories" [(ngModel)]="filterService.filter.categoryId" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска" (selected)="onCategoryChanged($event)" (deselected)="getAllItems()">
+        </ng-select>
+    </div>
+
+    <div class="form-group">
+        <ng-select [options]="optionItems" [(ngModel)]="filterService.filter.itemId" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска" (selected)="onItemChanged($event)">
+        </ng-select>
+    </div>
+
+    <div class="form-group">
+        <ng-select [options]="optionVendors" [(ngModel)]="filterService.filter.vendorId" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска" (selected)="onVendorChanged($event)">
+        </ng-select>
+    </div>

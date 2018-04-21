@@ -1,9 +1,5 @@
-<div class="row">
-    <div class="col-xs-12" *ngIf="loading">
-        <img class="center-block" src="../../../assets/images/loading.gif">
-    </div>
-
-    <div *ngIf="!loading" class="col-xs-12 col-sm-4 col-sm-push-8">
+<div class="row" *ngIf="!loadingService.getLoadingStatus()">
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
         <div class="panel-group" id="invoice-accordion-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -45,15 +41,15 @@
         </div>
     </div>
 
-    <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
         <div class="panel panel-default">
             <table class="table table-hover table-striped table-bordered table-condensed">
                 <tr>
                     <th class="text-center">№</th>
-                    <th>Название</th>
-                    <th>Автор</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
+                    <th class="text-center">Название</th>
+                    <th class="text-center">Автор</th>
+                    <th class="text-center">Дата</th>
+                    <th class="text-center">Статус</th>
                 </tr>
                 <tr *ngFor="let invoice of invoices; let n = index" (click)="onSelect(invoice.id)" (dblclick)="onOpen(selectedInvoice.id)"
                     [class.info]="invoice == selectedInvoice" [ngStyle]="{'cursor': 'pointer'}">
@@ -62,12 +58,10 @@
                     <td>{{invoice.userFullName}}</td>
                     <td>{{invoice.createDate}}</td>
                     <td>
-                        <div [style.color] = "invoice.isFixed ? 'green' : 'red'">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary" data-toggle="tooltip"
-                            title="Не проведено"></span>
-                        <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed" data-toggle="tooltip"
-                            title="Проведено"></span>
-                            </div>
+                        <div [style.color]="invoice.isFixed ? 'green' : 'red'">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary" data-toggle="tooltip" title="Не проведено"></span>
+                            <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed" data-toggle="tooltip" title="Проведено"></span>
+                        </div>
                     </td>
                 </tr>
             </table>

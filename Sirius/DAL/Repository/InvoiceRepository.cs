@@ -116,7 +116,6 @@ namespace Sirius.Models
         {
             return _siriusContext.InvoiceTypes;
         }
-
-       
+               
     }
 }

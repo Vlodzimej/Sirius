@@ -44,6 +44,21 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
+        /// GET: api/item/filter
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("filter")]
+        public IActionResult Get([FromQuery] Filter filter)
+        {
+            var items = _siriusService.GetItemsByFilter(filter);
+            if (items != null)
+            {
+                return Ok(items);
+            }
+            return NotFound();
+        }
+
+        /// <summary>
         /// GET: api/item/5
         /// </summary>
         /// <param name="id"></param>

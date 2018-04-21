@@ -51,16 +51,21 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteInvoiceById(Guid invoiceId)
+        public string DeleteInvoiceById(Guid invoiceId)
         {
+            string result = "";
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
-            if (invoice != null)
+            if (invoice != null && !invoice.IsFixed)
             {
                 _unitOfWork.InvoiceRepository.Delete(invoice);
                 _unitOfWork.Save();
-                return true;
+                result = "Накладная удалена.";
             }
-            return false;
+            if (invoice.IsFixed)
+            {
+                result = "Накладная проведена. Удаление невозможно.";
+            }
+            return result;
         }
 
         /// <summary>
@@ -153,6 +158,28 @@ namespace Sirius.Services
             return result;
         }
 
+        public string SetVendor(Guid invoiceId, Guid vendorId)
+        {
+            string result;
+
+            // Изменение свойств существующей накладной
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            invoice.VendorId = vendorId;
+            UpdateInvoice(invoiceId, invoice);
+
+            // Проверка сохраненных изменений
+            invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            if (invoice != null && invoice.VendorId == vendorId)
+            {
+                result = "Накладная " + invoice.Name + " успешно обновлена!";
+            }
+            else
+            {
+                result = "Накладная не обновлена.";
+            }
+            return result;
+        }
+
         /// <summary>
         /// Получение типа накладной по её идентификатору
         /// </summary>
@@ -162,7 +189,7 @@ namespace Sirius.Services
         {
             return _unitOfWork.InvoiceRepository.GetTypeById(invoiceTypeId);
         }
-        
+
         /// <summary>
         /// Получение типа накладной по её алиасу
         /// </summary>
