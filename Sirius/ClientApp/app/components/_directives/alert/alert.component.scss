@@ -2,3 +2,7 @@ alert {
     display: inline-block;
     vertical-align: middle; 
 }
+
+.alert-up-modal {
+    z-index: 65535;
+}

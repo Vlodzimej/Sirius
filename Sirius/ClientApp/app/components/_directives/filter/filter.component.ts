@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Filter } from '../../_extends';
-import {
-    ApiService,
-    AlertService
-} from '../../_services';
-import {
-    Item,
-    Category,
-    Vendor
-} from '../../_models';
+import { ApiService, AlertService } from '../../_services';
+import { Item, Category, Vendor } from '../../_models';
 import { IOption } from 'ng-select';
 import { Converter } from '../../_helpers';
 import { FilterService} from '../../_services';
+
 @Component({
     selector: 'app-filter',
     templateUrl: './filter.component.html'

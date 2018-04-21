@@ -1,3 +1,11 @@
+.invoice-status-temporary {
+  color: red;
+}
+
+.invoice-status-fixed {
+  color: green;
+}
+
 .invoice-list-item {
   cursor: pointer;
 }

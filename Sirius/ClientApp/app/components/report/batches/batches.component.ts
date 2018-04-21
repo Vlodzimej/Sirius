@@ -50,6 +50,8 @@ export class BatchesComponent implements OnInit {
     public optionCategories: Array<IOption> = [];
     public optionVendors: Array<IOption> = [];
     public filter: Filter = new Filter();
+    // Признак сформированного очета
+    public isReport: boolean = false;
 
     constructor(
         private router: Router,
@@ -63,96 +65,16 @@ export class BatchesComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // Включаем визуализацию загрузки
-        this.loadingService.showLoadingIcon();
+        // На всякий случай отключаем визуализацию загрузки, так как загрузка будет происходить после нажатия на кнопку "Сформировать"
+        this.loadingService.hideLoadingIcon();
 
-        //this.filter = new Filter();
+        // Задаём текст заголовка
         this.pageHeaderService.changeText("Остатки");
-
-        // Предварительная загрузка списка категорий из справочника
-        this.getAllCategories();
-
-        // Предварительная загрузка наименований из справочника
-        this.getAllItems();
-
-        // Предварительная загрузка списка поставщиков из справочника
-        this.getAllVendors();
-
-        this.getBatchesByFilter();
-    }
-
-    /*
-    * Загрузка всех категорий из справочника
-    */
-    getAllCategories() {
-
-        this.apiService.getAll<Category>('category').subscribe(
-            data => {
-                this.optionCategories = Converter.ConvertToOptionArray(data);
-                console.log(this.optionItems);
-            },
-            error => {
-                this.alertService.serverError(error);
-            }
-        );
-    }
-
-    /*
-    * Загрузка всех наименований из справочника
-    */
-    getAllItems() {
-
-        this.apiService.getAll<Item>('item').subscribe(
-            data => {
-                this.optionItems = Converter.ConvertToOptionArray(data);
-                console.log(this.optionItems);
-            },
-            error => {
-                this.alertService.serverError(error);
-            }
-        );
-    }
-
-    /*
-    * Загрузка наименований из справочника согласно категории
-    */
-    getItemsByCategory() {
-
-        this.apiService.getAll<Item>('item/filter?categoryId=' + this.filter.categoryId).subscribe(
-            data => {
-                this.optionItems = Converter.ConvertToOptionArray(data);
-                console.log(this.optionItems);
-            },
-            error => {
-                this.alertService.serverError(error);
-            }
-        );
-    }
-
-    /*
-    * Загрузка списка поставщиков из справочника
-    */
-    getAllVendors() {
-
-        this.apiService.getAll<Vendor>('vendor').subscribe(
-            data => {
-                this.optionVendors = Converter.ConvertToOptionArray(data);
-                console.log(this.optionItems);
-            },
-            error => {
-                this.alertService.serverError(error);
-            }
-        );
-    }
-
-    onCategoryChanged() {
-
-        this.getItemsByCategory();
-
     }
 
     getBatchesByFilter() {
-
+        this.loadingService.showLoadingIcon();
+        this.isReport = true;
         this.listItems = [];
         var filterString: string = "";
         var filter = this.filterService.getFilter();

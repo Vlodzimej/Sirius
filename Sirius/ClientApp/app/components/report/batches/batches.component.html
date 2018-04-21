@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!loadingService.isProgress">
+<div class="row">
     <div class="col-xs-12 col-sm-4 col-sm-push-8">
         <div class="panel-group" id="batch-accordion-1">
             <div class="panel panel-default">
@@ -18,27 +18,33 @@
     </div>
 
     <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
-        <div class="panel panel-default">
-            <table class="table table-bordered table-responsive">
+        <app-loading-icon></app-loading-icon>
+        <div class="panel panel-default" *ngIf="!loadingService.isProgress">
+            <table class="table table-bordered table-responsive table-condensed">
                 <tr class="active">
                     <th class="text-center">Количество</th>
                     <th class="text-center">Цена</th>
                     <th class="text-center">Сумма</th>
                 </tr>
                 <tr *ngFor="let item of listItems; let n = index">
-                    <td *ngIf="item.type == 0" colspan="3" class="text-center">
+                    <td *ngIf="item.type == 0" colspan="3" class="success text-center">
                         <b>{{item.text}}</b>
                     </td>
                     <td *ngIf="item.type == 1">{{item.amount}}</td>
                     <td *ngIf="item.type == 1">{{item.cost | currency}}</td>
                     <td *ngIf="item.type == 1">{{item.sum | currency}}</td>
-                    <td *ngIf="item.type == 2" class="text-center info">{{item.text}}</td>
-                    <td *ngIf="item.type == 2" colspan="3" class="text-center info">Общая сумма: {{item.sum | currency}}</td>
+                    <td *ngIf="item.type == 2" class="text-center"><strong>{{item.text}}</strong></td>
+                    <td *ngIf="item.type == 2" colspan="3" class="text-center"><strong>Общая сумма: {{item.sum | currency}}</strong></td>
                 </tr>
             </table>
         </div>
-        <div *ngIf="listItems.length == 0">
+        <div *ngIf="listItems.length == 0 && isReport && !loadingService.isProgress">
             <h4>Остатки не найдены</h4>
+            <p>Измените критерии фильтра.</p>
+        </div>
+        <div *ngIf="!isReport">
+            <h4>Отчет не сформирован!</h4>
+            <p>Пожалуйста, укажите критерии отбора на панели фильтра и нажмите "Сформировать".</p>
         </div>
     </div>
 </div>

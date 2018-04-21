@@ -1,4 +1,5 @@
 import { IOption } from 'ng-select';
+import { Batch } from '../_models';
 
 export class Converter {
     /**
@@ -14,6 +15,17 @@ export class Converter {
         });
         return optionEntries;
     }
+
+    public static BatchToOptionArray(objectArray: any[]) : IOption[] {
+        var obj = objectArray as Batch[];
+        var optionEntries: IOption[] = [];
+        obj.forEach(x => {
+            var label = x.amount + ' шт. по цене ' + x.cost + ' руб.';
+            var optionEntry: IOption = { label: label, value: x.cost.toString() };
+            optionEntries.push(optionEntry);
+        });
+        return optionEntries;
+    } 
 }
 
 export class MetaObject {
