@@ -28,11 +28,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Register> GetRegistersByInvoiceId(Guid invoiceId)
         {
-            using (var unitOfWork = new DAL.UnitOfWork())
-            { 
-                var registers = unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
-                return registers;
-            }
+            //using (var unitOfWork = new DAL.UnitOfWork())
+            //{
+            var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
+            return registers;
+            //}
         }
 
         /// <summary>
@@ -42,12 +42,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public Task<IEnumerable<Batch>> GetRegisterByItemId(Guid id)
         {
-            var filter = new Filter() { itemId = id };
-            return _unitOfWork.RegisterRepository.GetByFilter(filter);
-        }
-
-        public Task<IEnumerable<Batch>> GetBatchesByFilter(Filter filter)
-        {
+            var filter = new MetaFilter() { itemId = id };
             return _unitOfWork.RegisterRepository.GetByFilter(filter);
         }
 
@@ -61,9 +56,14 @@ namespace Sirius.Services
             return _unitOfWork.RegisterRepository.GetByTypeAlias(typeAlias);
         }
 
-        public IEnumerable<object> GetAllBatches(Filter filter)
+        /// <summary>
+        /// Получить остатки согласно критериям фильтрации
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public IEnumerable<object> GetBatches(MetaFilter filter)
         {
-            return _unitOfWork.RegisterRepository.GetAllBatches(filter);
+            return _unitOfWork.RegisterRepository.GetBatches(filter);
         }
         /// <summary>
         /// Получить список всех записей регистра
@@ -137,11 +137,11 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Добавить массив регистров
+        /// Добавление массива регистров
         /// </summary>
         /// <param name="register"></param>
         /// <returns></returns>
-        public dynamic AddRegisters(Register[] registers)
+        public IEnumerable<Register> AddRegisters(Register[] registers)
         {
             int count = 0;
             if (registers != null)
@@ -149,6 +149,7 @@ namespace Sirius.Services
                 foreach (var register in registers)
                 {
                     register.Id = Guid.NewGuid();
+                    register.Invoice = null;
                     register.Item = null;
                     _unitOfWork.RegisterRepository.Insert(register);
                     count++;
@@ -156,13 +157,13 @@ namespace Sirius.Services
 
                 _unitOfWork.Save();
 
-                return count;
+                return registers;
             }
             return null;
         }
 
         /// <summary>
-        /// Обновить запись регистра
+        /// Обновление записи регистра
         /// </summary>
         /// <param name="registerId"></param>
         /// <param name="register"></param>
@@ -176,6 +177,48 @@ namespace Sirius.Services
                 return _unitOfWork.RegisterRepository.GetByID(registerId);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Копирование регистров в целевую накладную
+        /// </summary>
+        /// <param name="sourceInvoiceId"></param>
+        /// <param name="destinationInvoiceId"></param>
+        /// <returns></returns>
+        public IEnumerable<Register> CopyRegisters(Guid sourceInvoiceId, Guid destinationInvoiceId)
+        {
+            var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(sourceInvoiceId);
+            var newRegisters = new List<Register>();
+
+            registers.ToList().ForEach(reg =>
+            {
+                var newRegister = new Register();
+                var filter = new MetaFilter() { itemId = reg.ItemId };
+
+                newRegister.Id = Guid.NewGuid();
+                newRegister.InvoiceId = destinationInvoiceId;
+                newRegister.ItemId = reg.ItemId;
+                newRegister.Amount = reg.Amount;
+
+                var batch = _unitOfWork.RegisterRepository.GetByFilter(filter).GetAwaiter().GetResult();
+                if (batch.Count() > 0)
+                {
+                    newRegister.Cost = batch.FirstOrDefault().Cost;
+                }
+                else
+                {
+                    newRegister.Cost = 0;
+                }
+
+                _unitOfWork.RegisterRepository.Insert(newRegister);
+            });
+
+            _unitOfWork.Save();
+
+            var result = GetRegistersByInvoiceId(destinationInvoiceId)
+                .Select(r => new Register() { Id = r.Id, InvoiceId = r.InvoiceId, ItemId = r.ItemId, Amount = r.Amount, Cost = r.Cost});
+            return result;
+
         }
     }
 }

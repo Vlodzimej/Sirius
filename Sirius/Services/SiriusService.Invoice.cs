@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Sirius.Models.Dtos;
 using Sirius.Helpers;
+using System.Linq.Expressions;
 
 namespace Sirius.Services
 {
@@ -26,15 +27,6 @@ namespace Sirius.Services
         public Invoice GetInvoiceById(Guid invoiceId)
         {
             return _unitOfWork.InvoiceRepository.GetByID(invoiceId);
-        }
-
-        /// <summary>
-        /// Получить список  накладных определённого типа
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<InvoiceListDto> GetByTypeId(Guid typeId)
-        {
-            return _unitOfWork.InvoiceRepository.GetAll(x => x.TypeId == typeId);
         }
 
         /// <summary>
@@ -158,7 +150,7 @@ namespace Sirius.Services
             return result;
         }
 
-        public string SetVendor(Guid invoiceId, Guid vendorId)
+        public string ChangeVendor(Guid invoiceId, Guid vendorId)
         {
             string result;
 
@@ -171,11 +163,33 @@ namespace Sirius.Services
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             if (invoice != null && invoice.VendorId == vendorId)
             {
-                result = "Накладная " + invoice.Name + " успешно обновлена!";
+                result = "Изменён поставщик у накладной " + invoice.Name + ".";
             }
             else
             {
-                result = "Накладная не обновлена.";
+                result = "Поставщик не изменён.";
+            }
+            return result;
+        }
+
+        public string ChangeName(Guid invoiceId, string name)
+        {
+            string result;
+
+            // Изменение свойств существующей накладной
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            invoice.Name = name;
+            UpdateInvoice(invoiceId, invoice);
+
+            // Проверка сохраненных изменений
+            invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            if (invoice != null && invoice.Name == name)
+            {
+                result = "Новое имя накладной: " + invoice.Name + ".";
+            }
+            else
+            {
+                result = "Имя накладной не изменено.";
             }
             return result;
         }
@@ -207,6 +221,19 @@ namespace Sirius.Services
         public IEnumerable<InvoiceType> GetInvoiceTypes()
         {
             return _unitOfWork.InvoiceRepository.GetTypes();
+        }
+
+        public IEnumerable<InvoiceListDto> GetInvoices(InvoiceFilter filter)
+        {
+            Expression<Func<Invoice, bool>> f = x =>
+               (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
+               (filter.Name != null ? x.Name == filter.Name : true) &&
+               (filter.VendorId != Guid.Empty ? x.VendorId == filter.VendorId : true) &&
+               (filter.UserId != Guid.Empty ? x.UserId == filter.UserId : true) &&
+               (filter.TypeId != Guid.Empty ? x.TypeId == filter.TypeId : true) &&
+               (filter.StartDate != DateTime.MinValue ? x.CreateDate >= filter.StartDate : true) &&
+               (filter.FinishDate != DateTime.MinValue ? x.CreateDate >= filter.FinishDate : true);
+            return _unitOfWork.InvoiceRepository.GetAll(f);
         }
     }
 }

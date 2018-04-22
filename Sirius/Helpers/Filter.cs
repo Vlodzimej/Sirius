@@ -2,7 +2,7 @@
 
 namespace Sirius.Helpers
 {
-    public class Filter
+    public class MetaFilter
     {
         public Guid categoryId { get; set; }
         public Guid itemId { get; set; }

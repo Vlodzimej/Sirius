@@ -33,9 +33,9 @@ namespace Sirius.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(InvoiceFilter filter)
         {
-            var invoices = _siriusService.GetAllInvoices();
+            var invoices = _siriusService.GetInvoices(filter);
             if (invoices != null)
             {
                 return Ok(invoices);
@@ -55,21 +55,6 @@ namespace Sirius.Controllers
             if (invoice != null)
             {
                 return Ok(invoice);
-            }
-            return NotFound();
-        }
-
-        /// <summary>
-        /// GET: api/invoice
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("type/{id}")]
-        public IActionResult GetByTypeId(Guid id)
-        {
-            var invoices = _siriusService.GetByTypeId(id);
-            if (invoices != null)
-            {
-                return Ok(invoices);
             }
             return NotFound();
         }
@@ -138,13 +123,12 @@ namespace Sirius.Controllers
             return new BadRequestResult();
         }
 
-        [HttpPut("vendor/{invoiceId}")]
-        public IActionResult SetVendor(Guid invoiceId, [FromBody]dynamic obj)
+        [HttpPut("{invoiceId}/vendor")]
+        public IActionResult ChangeVendor(Guid invoiceId, [FromQuery]Guid value)
         {
-            Guid vendorId = Guid.Parse((string)obj.vendorId);
-            if (invoiceId != null && vendorId != null)
+            if (invoiceId != null && value != null)
             {
-                var result = _siriusService.SetVendor(invoiceId, vendorId);
+                var result = _siriusService.ChangeVendor(invoiceId, value);
                 if (result != null)
                 {
                     return Ok(result);
@@ -153,6 +137,19 @@ namespace Sirius.Controllers
             return new BadRequestResult();
         }
 
+        [HttpPut("{invoiceId}/name")]
+        public IActionResult ChangeName(Guid invoiceId, [FromQuery]string value)
+        {
+            if (value != null && value != "")
+            {
+                var result = _siriusService.ChangeName(invoiceId, value);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+            }
+            return new BadRequestResult();
+        }
 
         /// <summary>
         /// GET: api/typebyid/4C070178-29FB-40A0-ACF9-10DD83641C51

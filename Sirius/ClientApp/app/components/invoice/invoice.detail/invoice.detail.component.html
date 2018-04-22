@@ -24,14 +24,25 @@
                         <p>Общая сумма:
                             <strong>{{sum | currency}}</strong>
                         </p>
+
                         <p *ngIf="invoice.isFixed">Поставщик:
                             <strong>{{invoice.vendorName}}</strong>
                         </p>
 
-                        <div class="form-group" *ngIf="invoiceType.alias == 'arrival' && !invoice.isFixed">
+                        <div class="input-group" *ngIf="invoiceType.alias == 'template' && !invoice.isFixed">
+                            <div class="input-group-addon">Имя</div>
+                            <input type="text" class="form-control" name="template-name" [(ngModel)]="invoice.name" placeholder="Название" #name="ngModel"
+                                required>
+                            <div class="input-group-addon">
+                                <a [routerLink]="" (click)="onNameChanged()">Изменить</a>
+                            </div>
+                            <div *ngIf="!name.valid" class="help-block">Имя не может быть пустым</div>
+                        </div>
+
+                        <div class="form-group inline" *ngIf="invoiceType.alias == 'arrival' && !invoice.isFixed">
                             <label for="vendor-select">Поставщик</label>
-                            <select class="form-control" name="vendor-select" [(ngModel)]="vendorId" #vendor="ngModel" [ngClass]="{'disabled' : invoice.isFixed}"
-                                (change)="onChangeVendor()">
+                            <select class="form-control" name="vendor-select" [(ngModel)]="invoice.vendorId" #vendor="ngModel" [ngClass]="{'disabled' : invoice.isFixed}"
+                                (change)="onVendorChanged()">
                                 <option *ngFor="let vendor of vendors" value="{{vendor.id}}">{{vendor.name}}</option>
                             </select>
                         </div>
@@ -48,7 +59,7 @@
                 </div>
                 <div id="edit-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onCreate()">Добавить услугу</button>
+                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onOpenTemplates()" *ngIf="invoiceType.alias == 'consumption'">Добавить услугу</button>
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onCreate()">Добавить позицию</button>
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : selectedRegister == null || invoice.isFixed}" (click)="onOpen()">Изменить позицию</button>
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : selectedRegister == null || invoice.isFixed}" (click)="onDelete()">Удалить позицию</button>
@@ -168,6 +179,36 @@
                             <button [disabled]="loading" class="btn btn-primary">{{modal.submit}}</button>
                             <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
                             <a (click)="onCloseModal('modal-register')" class="btn btn-link">Отмена</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</modal>
+
+<modal id="modal-template">
+    <div id="modal-2" class="modal show" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="onCloseModal('modal-template')">&times;</button>
+                    <h4 class="modal-title">{{modal.title}}</h4>
+                </div>
+                <form name="form2" (ngSubmit)="f2.form.valid && addRegistersFromTemplate()" #f2="ngForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <ng-select [options]="optionTemplates" [allowClear]="true" placeholder="Шаблон" filterPlaceholder="Выберите шаблон услуги"
+                                [(ngModel)]="templateInvoiceId" name="template">
+                            </ng-select>
+                            <div *ngIf="f2.submitted && templateInvoiceId == ''" class="help-block">Требуется выбрать шаблон</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button class="btn btn-primary">{{modal.submit}}</button>
+                            <a (click)="onCloseModal('modal-template')" class="btn btn-link">Отмена</a>
                         </div>
                     </div>
                 </form>

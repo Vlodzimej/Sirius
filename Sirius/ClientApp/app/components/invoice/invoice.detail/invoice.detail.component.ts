@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
-import { Invoice, InvoiceUpdate, Register, Item, InvoiceType, Batch, Vendor, Category } from '../../_models';
+import { Invoice, InvoiceUpdate, Register, Item, InvoiceType, Batch, Vendor, Category, InvoiceListItem } from '../../_models';
 import { AlertService, ApiService, PageHeaderService, ModalService, LoadingService } from '../../_services';
 import { Router } from '@angular/router';
 import { FullDatePipe } from '../../_pipes';
@@ -50,18 +50,20 @@ export class InvoiceDetailComponent implements OnInit {
     public batches: Batch[] = [];
     // Список поставщиков
     public vendors: Vendor[] = [];
-    // Поставщик
-    public vendorId: string = "";
 
     public optionItems: Array<IOption> = [];
     public optionCategories: Array<IOption> = [];
     public optionBatches: Array<IOption> = [];
+    public optionTemplates: Array<IOption> = [];
 
     public form: FormGroup;
-    
+
     // Категория добавляемой/изменяемой позиции
     public categoryId: string = "";
-    
+
+    // Идентификатор шаблона накладной. Используется при добавлении регистров из выбранного шаблона
+    public templateInvoiceId: string = "";
+
     /**
      *  Костыль для привязки значения цены регистра (для определения остатка) к списку ng-select, так как number принимать мы не хотим, приходится перед
      * открытием регистра на редактирование переводить значение цены в строку и назначать переменной registerCost
@@ -71,6 +73,7 @@ export class InvoiceDetailComponent implements OnInit {
     public modal: ModalType = new ModalType();
     private newRegisterModal: ModalType;
     private editRegisterModal: ModalType;
+    private templateModal: ModalType;
 
     constructor(
         private router: Router,
@@ -93,11 +96,19 @@ export class InvoiceDetailComponent implements OnInit {
             title: 'Редактирование позиции',
             submit: 'Изменить'
         }
+
+        this.templateModal = {
+            type: 'template',
+            title: 'Шаблон услуги',
+            submit: 'Вставить'
+        }
+
         // Устанавливаем значения переменных до загрузки накладной, что бы у парсера не возникало вопросов
         this.invoice.userFullName = "";
         this.invoice.createDate = "";
         this.invoice.isFixed = true;
         this.invoice.vendorName = "";
+        this.invoice.vendorId = "";
     }
 
     ngOnInit() {
@@ -117,11 +128,9 @@ export class InvoiceDetailComponent implements OnInit {
                 this.loadingService.hideLoadingIcon();
                 this.invoice = data;
 
-                this.vendorId = this.invoice.vendorId;
-
                 this.registers = this.invoice.registers;
-                var headerText = this.invoice.name + " от " + this.invoice.createDate;
-                this.pageHeaderService.changeText(headerText);
+
+                this.generatePageHeader()
 
                 //Вычисление суммы для каждого регистра
                 this.registers.map(r => {
@@ -188,7 +197,7 @@ export class InvoiceDetailComponent implements OnInit {
             this.categoryId = "";
             // Загрузка списка категорий
             this.getAllCategories();
-            delete(this.register);
+            delete (this.register);
             this.register = new Register();
             this.modal = this.newRegisterModal;
             this.modalService.open('modal-register');
@@ -208,7 +217,7 @@ export class InvoiceDetailComponent implements OnInit {
      * Событие: Открытие регистра для редактирования
      */
     onOpen() {
-        
+
         if (!this.invoice.isFixed && this.selectedRegister != null) {
             this.categoryId = "";
             this.register = this.selectedRegister;
@@ -217,7 +226,7 @@ export class InvoiceDetailComponent implements OnInit {
             this.getAllCategories();
             this.getAllItems();
             this.getBatchesByItem();
-            
+
             this.modal = this.editRegisterModal;
             this.modalService.open('modal-register');
         }
@@ -373,13 +382,27 @@ export class InvoiceDetailComponent implements OnInit {
     /**
      * Изменение поставщика
      */
-    onChangeVendor() {
-        var vendor = { vendorId: this.vendorId };
-        if (this.vendorId != "") {
-            var vendor = { vendorId: this.vendorId };
-            this.apiService.update('invoice/vendor', this.invoice.id, vendor).subscribe(
+    onVendorChanged() {
+        if (this.invoice.vendorId != "") {
+            this.apiService.update<string>('invoice', this.invoice.id + '/vendor?value=' + this.invoice.vendorId, "").subscribe(
                 data => {
-                    // this.alertService.success(data.vendorId);
+                    this.alertService.success(data);
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }
+    }
+
+    /**
+     * Изменение названия накладной
+     */
+    onNameChanged() {
+        this.generatePageHeader();
+        if (this.invoice.name != "") {
+            this.apiService.update<string>('invoice', this.invoice.id + '/name?value=' + this.invoice.name, "").subscribe(
+                data => {
+                    this.alertService.success(data);
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -452,7 +475,7 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     onFormSubmit() {
-        if (this.register.itemId != null && this.register.amount > 0 && this.register.cost >= 0) {
+        if (this.register.itemId != null && this.register.amount > 0) {
             switch (this.modal.type) {
                 case 'new': this.onAdd(); break;
                 case 'edit': this.onChange(); break;
@@ -464,6 +487,52 @@ export class InvoiceDetailComponent implements OnInit {
 
     onBatchChanged(option: IOption) {
         this.register.cost = parseInt(option.value);
+    }
+
+    generatePageHeader() {
+        var headerText = this.invoice.name + " от " + this.invoice.createDate;
+        this.pageHeaderService.changeText(headerText);
+    }
+
+    onOpenTemplates() {
+        // Загрузка списка накладных-шаблонов
+        // Получение данных о типе 'Шаблон'
+        this.apiService.getById<InvoiceType>('invoice/type/alias', 'template').subscribe(
+            data => {
+                var type = data;
+                // Параметр для отбора по типу накладной
+                var params = "typeid=" + type.id;
+                // Получение списка накладных
+                this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
+                    data => {
+                        // Конвертация полученного списка в массив для выпадающего списка ng-select
+                        this.optionTemplates = Converter.ConvertToOptionArray(data);
+                        // Назначение свойств модали 'Шаблон' для модального окна
+                        this.modal = this.templateModal;
+                        // Открытие модального окна
+                        this.modalService.open('modal-template');
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    });
+            },
+            error => {
+                this.alertService.serverError(error);
+            });
+    }
+
+    addRegistersFromTemplate() {
+        var object = { sourceId: this.templateInvoiceId, destinationId: this.invoice.id };
+        var params = 'sourceId=' + this.templateInvoiceId + '&destinationId=' + this.invoice.id;
+        this.apiService.create<Register[]>('register/copy?' + params, new Array<Register>()).subscribe(
+            data => {
+                this.ngOnInit();
+                this.modalService.close('modal-template');
+            },
+            error => {
+                this.alertService.serverError(error);
+            }
+        );
     }
 
 }

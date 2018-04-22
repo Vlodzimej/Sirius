@@ -50,16 +50,18 @@ export class BatchesComponent implements OnInit {
         this.loadingService.showLoadingIcon();
         this.isReport = true;
         this.listItems = [];
-        var filterString: string = "";
+        var params: string = "";
+
+        // Получение критериев фильтрации 
         var filter = this.filterService.getFilter();
 
-        filterString += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
-        filterString += filter.itemId != null ? "&itemId=" + filter.itemId : "";
-        filterString += filter.vendorId != null ? "&vendorId=" + filter.vendorId : "";
-        filterString += filter.startDate != null ? "&startDate=" + filter.startDate : "";
-        filterString += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
+        params += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
+        params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
+        params += filter.vendorId != null ? "&vendorId=" + filter.vendorId : "";
+        params += filter.startDate != null ? "&startDate=" + filter.startDate : "";
+        params += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
 
-        this.apiService.getAll<BatchGroup>('register/batches?' + filterString).subscribe(
+        this.apiService.get<BatchGroup[]>('register/batches', params).subscribe(
             data => {
                 // Отключаем визуализацию загрузки
                 this.loadingService.hideLoadingIcon();

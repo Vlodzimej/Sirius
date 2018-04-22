@@ -48,7 +48,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("filter")]
-        public IActionResult Get([FromQuery] Filter filter)
+        public IActionResult Get([FromQuery] MetaFilter filter)
         {
             var items = _siriusService.GetItemsByFilter(filter);
             if (items != null)

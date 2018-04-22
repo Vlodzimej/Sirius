@@ -96,12 +96,12 @@ namespace Sirius.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("batches")]
-        public IActionResult GetAllBatches(Filter filter)
+        public IActionResult GetBatches(MetaFilter filter)
         {
-            var registers = _siriusService.GetAllBatches(filter);
-            if (registers != null)
+            var batches = _siriusService.GetBatches(filter);
+            if (batches != null)
             {
-                return Ok(registers);
+                return Ok(batches);
             }
             return NotFound();
         }
@@ -123,13 +123,28 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// POST: api/register
+        /// POST: api/register   ??????????? ПРОВЕРИТЬ ИСПОЛЬЗОВАНИЕ. НУЖЕН ЛИ ЭТОТ МЕТОД?
         /// </summary>
         /// <param name="register"></param>
         [HttpPost("registers")]
         public IActionResult PostArray([FromBody]Register[] registers)
         {
             var result = _siriusService.AddRegisters(registers);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
+        }
+
+        /// <summary>
+        /// POST: api/register/copy?sourceId=null&destinationId=null
+        /// </summary>
+        /// <param name="register"></param>
+        [HttpPost("copy")]
+        public IActionResult CopyRegisterArray([FromQuery]Guid sourceId,[FromQuery]Guid destinationId)
+        {
+            var result = _siriusService.CopyRegisters(sourceId, destinationId);
             if (result != null)
             {
                 return Ok(result);
@@ -169,3 +184,4 @@ namespace Sirius.Controllers
         }
     }
 }
+

@@ -46,8 +46,10 @@ export class InvoiceListComponent implements OnInit {
                 data => {
                     this.type = data;
                     this.pageHeaderService.changeText(this.type.name);
+                    // Параметры для отбора накладных соответствующего типа
+                    var params = "typeid="+this.type.id;
                     // Загрузка списка накладных
-                    this.apiService.getById<InvoiceListItem[]>('invoice/type', this.type.id).subscribe(
+                    this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
                         data => {
                             // Отключаем визуализацию загрузки
                             this.loadingService.hideLoadingIcon();

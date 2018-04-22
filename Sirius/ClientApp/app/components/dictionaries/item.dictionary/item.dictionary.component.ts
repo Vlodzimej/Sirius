@@ -17,7 +17,6 @@ export class ItemDictionaryComponent implements OnInit {
 
     public dimensions: Dimension[] = [];
     public categories: Category[] = [];
-    //public vendors: Vendor[] = [];
 
     public itemFilter: ItemFilter = new ItemFilter();
 
@@ -40,32 +39,38 @@ export class ItemDictionaryComponent implements OnInit {
         this.apiService.getAll<Item>('item').subscribe(
             data => {
                 this.items = data;
-                console.log(this.items);
                 this.loading = false;
             },
             error => {
-                this.alertService.error('Ошибка вызова', true);
-                this.loading = false;
+                this.alertService.serverError(error);
             });
     }
 
-    /**Открытие модального окна  */
+    /**
+     * Открытие модального окна 
+    */
     openModal(id: string) {
         this.modalService.open(id);
     }
 
-    /**Закрытие модального окна */
+    /**
+     * Закрытие модального окна 
+    */
     closeModal(id: string) {
         this.modalService.close(id);
     }
 
-    /**Открытие модального окна с формой добавления нового наименования */
+    /**
+     * Открытие модального окна с формой добавления нового наименования 
+    */
     openNewItem() {
         this.item = new Item();
         this.modalService.open('modal-new-item');
     }
 
-    /**Открытие модального окна с информацией о наименовании и возможностью редактирования */
+    /**
+     * Открытие модального окна с информацией о наименовании и возможностью редактирования 
+    */
     openItem(id: string) {
         this.apiService.getById<ItemDetail>('item', id).subscribe(
             data => {
@@ -77,12 +82,13 @@ export class ItemDictionaryComponent implements OnInit {
             });
     }
 
-    /**Добавление нового наименования */
+    /**
+     * Добавление нового наименования 
+     */
     addItem() {
-        console.log(this.item);
         this.apiService.create<Item>('item', this.item).subscribe(
             data => {
-                this.modalService.close('modal-edit-item');
+                this.modalService.close('modal-new-item');
                 this.ngOnInit();
             },
             error => {
@@ -90,22 +96,19 @@ export class ItemDictionaryComponent implements OnInit {
             });
     }
 
-    Test() {
-        console.log(this.item);
-    }
-
-    /**Обновление данных наименования */
+    /**
+     * Обновление данных наименования 
+     */
     updateItem() {
         if (this.itemDetail.id != null || this.itemDetail.id != "") {
-
             var newItem: Item = new Item();
             newItem.id = this.itemDetail.id;
             newItem.name = this.itemDetail.name;
             newItem.dimensionId = this.itemDetail.dimension.id;
             newItem.categoryId = this.itemDetail.category.id;
             newItem.isCountless = this.itemDetail.isCountless;
-            delete(newItem.category);
-            delete(newItem.dimension);
+            delete (newItem.category);
+            delete (newItem.dimension);
 
             this.apiService.update<Item>('item', newItem.id, newItem).subscribe(
                 data => {
@@ -120,7 +123,9 @@ export class ItemDictionaryComponent implements OnInit {
         }
     }
 
-    /**Загрузка необходимых справичников*/
+    /**
+     * Загрузка необходимых справичников
+     */
     loadDictionaries() {
         this.apiService.getAll<Dimension>('dimension').subscribe(
             data => {
@@ -139,15 +144,5 @@ export class ItemDictionaryComponent implements OnInit {
                 this.alertService.error('Ошибка загрузки списка категорий', true);
                 this.loading = false;
             });
-        /*
-        this.apiService.getAll<Vendor>('vendor').subscribe(
-            data => {
-                this.vendors = data;
-            },
-            error => {
-                this.alertService.error('Ошибка загрузки списка поставщиков', true);
-                this.loading = false;
-            });
-        */
     }
 }

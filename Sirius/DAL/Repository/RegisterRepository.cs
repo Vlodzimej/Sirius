@@ -49,7 +49,12 @@ namespace Sirius.Models
             return null;
         }
 
-        public async Task<IEnumerable<Batch>> GetByFilter(Filter filter)
+        /// <summary>
+        /// Получение остатков по критериям фильтрации
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Batch>> GetByFilter(MetaFilter filter)
         {
             List<Batch> result = new List<Batch>();
 
@@ -65,13 +70,14 @@ namespace Sirius.Models
             var registers = await _siriusContext.Registers
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
-                .Where(r => 
+                .Where(r =>
                     (r.ItemId == filter.itemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor > 0) &&
                     (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
                     (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true)
                     )
+                .OrderBy(r => r.Invoice.CreateDate)
                 .ToListAsync();
 
             List<Batch> batches = new List<Batch>();
@@ -103,14 +109,13 @@ namespace Sirius.Models
             registers = await _siriusContext.Registers
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
-                .Where(r => 
+                .Where(r =>
                     (r.ItemId == filter.itemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor < 0) &&
                     (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
-                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true)
-
-                    )
+                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true))
+                .OrderBy(r => r.Invoice.CreateDate)
                 .ToListAsync();
 
             registers.ForEach(reg1 =>
@@ -153,7 +158,12 @@ namespace Sirius.Models
             return result;
         }
 
-        public IEnumerable<object> GetAllBatches(Filter filter)
+        /// <summary>
+        /// Получение сгруппированного по наименованиям списка остатков 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public IEnumerable<object> GetBatches(MetaFilter filter)
         {
             List<BatchGroup> batchGroups = new List<BatchGroup>();
             Guid itemId = filter.itemId;

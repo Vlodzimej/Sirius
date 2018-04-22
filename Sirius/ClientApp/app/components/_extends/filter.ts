@@ -1,4 +1,3 @@
-
 export class Filter {
     itemId: string;
     categoryId: string;
