@@ -33,6 +33,14 @@ namespace Sirius.Helpers
                 /// </summary>
                 public static Guid Id { get { return _id; } }
             }
+            public static class Template
+            {
+                private static Guid _id = new Guid("8E8FE3F6-3F03-46DD-95F5-4CE024FB8CFF");
+                /// <summary>
+                /// Идентификатор для шаблона (шаблоны используются для составления содержания услуг)
+                /// </summary>
+                public static Guid Id { get { return _id; } }
+            }
         }
     }
 }

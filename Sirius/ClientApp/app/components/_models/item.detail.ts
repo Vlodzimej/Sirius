@@ -8,4 +8,5 @@ export class ItemDetail
     categoryId: string;
     dimension: Dimension = new Dimension();
     category: Category = new Category();
+    isCountless: boolean;
 }

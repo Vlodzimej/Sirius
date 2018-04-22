@@ -40,6 +40,15 @@ namespace Sirius.Migrations
                 };
                 context.InvoiceTypes.Add(invoiceType);
 
+                invoiceType = new InvoiceType()
+                {
+                    Id = Types.InvoiceTypes.Template.Id,
+                    Factor = 0,
+                    Name = "Услуга",
+                    Alias = "template"
+                };
+                context.InvoiceTypes.Add(invoiceType);
+
                 context.SaveChanges();
             }
 

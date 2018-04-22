@@ -1,37 +1,11 @@
-import {
-    Component,
-    OnInit
-} from '@angular/core';
-
-import {
-    Batch,
-    BatchGroup,
-    BatchListElement,
-    BatchListElementType,
-    Item,
-    Category,
-    Vendor
-} from '../../_models';
-
+import { Component, OnInit } from '@angular/core';
+import { Batch, BatchGroup, BatchListElement, BatchListElementType, Item, Category, Vendor } from '../../_models';
 import { Filter } from '../../_extends';
-
-import {
-    Router,
-    ActivatedRoute
-} from '@angular/router';
-
+import { Router, ActivatedRoute } from '@angular/router';
 import { CurrencyPipe } from '../../_pipes';
 import { IOption } from 'ng-select';
 import { Converter } from '../../_helpers';
-
-import {
-    ApiService,
-    AlertService,
-    ModalService,
-    PageHeaderService,
-    LoadingService,
-    FilterService
-} from '../../_services';
+import { ApiService, AlertService, ModalService, PageHeaderService, LoadingService, FilterService } from '../../_services';
 
 @Component({
     selector: 'app-batches',
@@ -50,7 +24,7 @@ export class BatchesComponent implements OnInit {
     public optionCategories: Array<IOption> = [];
     public optionVendors: Array<IOption> = [];
     public filter: Filter = new Filter();
-    // Признак сформированного очета
+    // Признак первого сформированного очета
     public isReport: boolean = false;
 
     constructor(

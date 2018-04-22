@@ -20,5 +20,7 @@ namespace Sirius.Models
         public Guid CategoryId { get; set; }
         // Категория
         public Category Category { get; set; }
+        // Признак бесчисленности
+        public bool isCountless { get; set; }
     }
 }

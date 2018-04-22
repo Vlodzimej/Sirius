@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
-import { Invoice, InvoiceUpdate, Register, Item, ItemDetail, InvoiceType, Batch, Vendor, Category } from '../../_models';
+import { Invoice, InvoiceUpdate, Register, Item, InvoiceType, Batch, Vendor, Category } from '../../_models';
 import { AlertService, ApiService, PageHeaderService, ModalService, LoadingService } from '../../_services';
 import { Router } from '@angular/router';
 import { FullDatePipe } from '../../_pipes';
@@ -93,6 +93,11 @@ export class InvoiceDetailComponent implements OnInit {
             title: 'Редактирование позиции',
             submit: 'Изменить'
         }
+        // Устанавливаем значения переменных до загрузки накладной, что бы у парсера не возникало вопросов
+        this.invoice.userFullName = "";
+        this.invoice.createDate = "";
+        this.invoice.isFixed = true;
+        this.invoice.vendorName = "";
     }
 
     ngOnInit() {

@@ -48,7 +48,7 @@ export class ItemDictionaryComponent implements OnInit {
                 this.loading = false;
             });
     }
-    
+
     /**Открытие модального окна  */
     openModal(id: string) {
         this.modalService.open(id);
@@ -60,7 +60,7 @@ export class ItemDictionaryComponent implements OnInit {
     }
 
     /**Открытие модального окна с формой добавления нового наименования */
-    openNewItem(){
+    openNewItem() {
         this.item = new Item();
         this.modalService.open('modal-new-item');
     }
@@ -70,7 +70,6 @@ export class ItemDictionaryComponent implements OnInit {
         this.apiService.getById<ItemDetail>('item', id).subscribe(
             data => {
                 this.itemDetail = data;
-                console.log(this.itemDetail);
                 this.modalService.open('modal-edit-item');
             },
             error => {
@@ -83,6 +82,7 @@ export class ItemDictionaryComponent implements OnInit {
         console.log(this.item);
         this.apiService.create<Item>('item', this.item).subscribe(
             data => {
+                this.modalService.close('modal-edit-item');
                 this.ngOnInit();
             },
             error => {
@@ -90,7 +90,7 @@ export class ItemDictionaryComponent implements OnInit {
             });
     }
 
-    Test(){
+    Test() {
         console.log(this.item);
     }
 
@@ -103,9 +103,13 @@ export class ItemDictionaryComponent implements OnInit {
             newItem.name = this.itemDetail.name;
             newItem.dimensionId = this.itemDetail.dimension.id;
             newItem.categoryId = this.itemDetail.category.id;
+            newItem.isCountless = this.itemDetail.isCountless;
+            delete(newItem.category);
+            delete(newItem.dimension);
 
             this.apiService.update<Item>('item', newItem.id, newItem).subscribe(
                 data => {
+                    this.modalService.close('modal-edit-item');
                     this.ngOnInit();
                 },
                 error => {
@@ -144,6 +148,6 @@ export class ItemDictionaryComponent implements OnInit {
                 this.alertService.error('Ошибка загрузки списка поставщиков', true);
                 this.loading = false;
             });
-        */      
+        */
     }
 }

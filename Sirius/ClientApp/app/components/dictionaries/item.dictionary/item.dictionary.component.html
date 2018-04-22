@@ -82,6 +82,12 @@
                             </select>
                         </div>
 
+                        <div class="checkbox-inline">
+                                <label>
+                                    <input type="checkbox" name="item-countless" [(ngModel)]="itemDetail.isCountless">Невычисляемое
+                                </label>
+                            </div>
+
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">
@@ -113,20 +119,25 @@
                             <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
                         </div>
 
-                        <div>
+                        <div class="form-group">
                             <label for="item-edit-category">Категория</label>
                             <select class="form-control" name="item-edit-category" [(ngModel)]="itemDetail.category.id" #category="ngModel" required>
                                 <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
                             </select>
                         </div>
 
-                        <div>
+                        <div class="form-group">
                             <label for="item-edit-dimension">Единица измерения</label>
                             <select class="form-control" name="item-edit-dimension" [(ngModel)]="itemDetail.dimension.id" #dimension="ngModel" required>
                                 <option *ngFor="let dimension of dimensions" value="{{dimension.id}}">{{dimension.name}}</option>
                             </select>
                         </div>
 
+                        <div class="checkbox-inline">
+                            <label>
+                                <input type="checkbox" name="item-countless" [(ngModel)]="itemDetail.isCountless">Невычисляемое
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">

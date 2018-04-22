@@ -13,5 +13,7 @@ namespace Sirius.Models.Dtos
         public Guid CategoryId { get; set; }
 
         public Guid VendorId { get; set; }
+
+        public bool isCountless { get; set; }
     }
 }

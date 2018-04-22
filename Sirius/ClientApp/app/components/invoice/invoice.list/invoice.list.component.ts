@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Invoice, InvoiceListItem, InvoiceType } from '../../_models';
-
-import {
-    AuthenticationService,
-    ApiService,
-    AlertService,
-    ModalService,
-    PageHeaderService,
-    LoadingService
-} from '../../_services';
-
+import { AuthenticationService, ApiService, AlertService, ModalService, PageHeaderService, LoadingService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -70,7 +61,6 @@ export class InvoiceListComponent implements OnInit {
                     this.alertService.serverError(error);
                 });
         });
-
     }
 
     onCreate() {

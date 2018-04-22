@@ -40,6 +40,7 @@ namespace Sirius.Models
                 Name = i.Name,
                 Dimension = i.Dimension,
                 Category = i.Category,
+                isCountless = i.isCountless
             }).SingleOrDefault(i => i.Id == itemId);
             return item;
         }
