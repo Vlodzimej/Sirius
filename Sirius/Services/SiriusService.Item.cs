@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Sirius.Helpers;
+using Sirius.Extends.Filters;
 
 namespace Sirius.Services
 {

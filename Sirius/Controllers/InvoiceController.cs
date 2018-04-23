@@ -7,6 +7,7 @@ using Sirius.Models;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
+using Sirius.Extends.Filters;
 using System.Collections.Generic;
 using Sirius.Models.Dtos;
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sirius.DAL;
 using Sirius.Helpers;
+using Sirius.Extends.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace Sirius.Models
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Batch>> GetByFilter(MetaFilter filter)
+        public async Task<IEnumerable<Batch>> GetBatchesByFilter(BatchFilter filter)
         {
             List<Batch> result = new List<Batch>();
 
@@ -71,11 +72,11 @@ namespace Sirius.Models
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
                 .Where(r =>
-                    (r.ItemId == filter.itemId) &&
+                    (r.ItemId == filter.ItemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor > 0) &&
-                    (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
-                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true)
+                    (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
+                    (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true)
                     )
                 .OrderBy(r => r.Invoice.CreateDate)
                 .ToListAsync();
@@ -110,11 +111,11 @@ namespace Sirius.Models
                 .Include(r => r.Item)
                 .Include(r => r.Invoice)
                 .Where(r =>
-                    (r.ItemId == filter.itemId) &&
+                    (r.ItemId == filter.ItemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor < 0) &&
-                    (filter.categoryId != Guid.Empty ? r.Item.CategoryId == filter.categoryId : true) &&
-                    (filter.vendorId != Guid.Empty ? r.Invoice.VendorId == filter.vendorId : true))
+                    (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
+                    (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
                 .OrderBy(r => r.Invoice.CreateDate)
                 .ToListAsync();
 
@@ -148,13 +149,13 @@ namespace Sirius.Models
                         ab.Amount = ab.Amount - wb.Amount;
                     }
                 });
-                if (ab.Amount > 0)
+                if (ab.Amount != 0)
                 {
                     result.Add(ab);
                 }
             });
-
-            result = result.Distinct().ToList();
+            // Убираем совпадения, фильтруем по цене
+            result = result.Distinct().Where(b => (filter.Cost != 0 ? b.Cost == filter.Cost : true)).ToList();
             return result;
         }
 
@@ -163,25 +164,25 @@ namespace Sirius.Models
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<object> GetBatches(MetaFilter filter)
+        public IEnumerable<object> GetBatches(BatchFilter filter)
         {
             List<BatchGroup> batchGroups = new List<BatchGroup>();
-            Guid itemId = filter.itemId;
+            Guid itemId = filter.ItemId;
 
             // Получаем все ids всех наименований
             var itemList = _siriusContext.Items.Select(i => new { i.Id, i.Name });
 
             // Если в фильтре указан itemId, то производим отбор 
-            var items = itemId != Guid.Empty ? itemList.Where(i => i.Id == filter.itemId).ToList() : itemList.ToList();
+            var items = itemId != Guid.Empty ? itemList.Where(i => i.Id == filter.ItemId).ToList() : itemList.ToList();
 
             // Получаем остатки по каждому наименованию
             items.ForEach(i =>
             {
-                filter.itemId = itemId != Guid.Empty ? filter.itemId : i.Id;
+                filter.ItemId = itemId != Guid.Empty ? filter.ItemId : i.Id;
                 BatchGroup batchGroup = new BatchGroup()
                 {
                     Name = i.Name,
-                    Batches = GetByFilter(filter).Result.ToList()
+                    Batches = GetBatchesByFilter(filter).Result.ToList()
                 };
                 batchGroups.Add(batchGroup);
 

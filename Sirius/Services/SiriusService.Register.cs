@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sirius.Extends.Filters;
 
 namespace Sirius.Services
 {
@@ -40,10 +41,10 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<IEnumerable<Batch>> GetRegisterByItemId(Guid id)
+        public Task<IEnumerable<Batch>> GetBatchesByItemId(Guid id)
         {
-            var filter = new MetaFilter() { itemId = id };
-            return _unitOfWork.RegisterRepository.GetByFilter(filter);
+            var filter = new BatchFilter() { ItemId = id };
+            return _unitOfWork.RegisterRepository.GetBatchesByFilter(filter);
         }
 
         /// <summary>
@@ -61,10 +62,21 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<object> GetBatches(MetaFilter filter)
+        public IEnumerable<object> GetBatches(BatchFilter filter)
         {
             return _unitOfWork.RegisterRepository.GetBatches(filter);
         }
+
+        /// <summary>
+        /// Получить 1 остаток согласно критериям фильтрации
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public object GetBatch(BatchFilter filter)
+        {
+            return _unitOfWork.RegisterRepository.GetBatchesByFilter(filter).Result.FirstOrDefault();
+        }
+
         /// <summary>
         /// Получить список всех записей регистра
         /// </summary>
@@ -192,32 +204,71 @@ namespace Sirius.Services
 
             registers.ToList().ForEach(reg =>
             {
-                var newRegister = new Register();
-                var filter = new MetaFilter() { itemId = reg.ItemId };
 
-                newRegister.Id = Guid.NewGuid();
-                newRegister.InvoiceId = destinationInvoiceId;
-                newRegister.ItemId = reg.ItemId;
-                newRegister.Amount = reg.Amount;
-
-                var batch = _unitOfWork.RegisterRepository.GetByFilter(filter).GetAwaiter().GetResult();
-                if (batch.Count() > 0)
-                {
-                    newRegister.Cost = batch.FirstOrDefault().Cost;
-                }
-                else
-                {
-                    newRegister.Cost = 0;
-                }
-
-                _unitOfWork.RegisterRepository.Insert(newRegister);
+                var filter = new BatchFilter() { ItemId = reg.ItemId };
+                var batches = _unitOfWork.RegisterRepository.GetBatchesByFilter(filter).GetAwaiter().GetResult();
+                AddCopiedRegister(new Register() { InvoiceId = destinationInvoiceId, ItemId = reg.ItemId, Amount = reg.Amount }, batches);
             });
 
             _unitOfWork.Save();
 
             var result = GetRegistersByInvoiceId(destinationInvoiceId)
-                .Select(r => new Register() { Id = r.Id, InvoiceId = r.InvoiceId, ItemId = r.ItemId, Amount = r.Amount, Cost = r.Cost});
+                .Select(r => new Register() { Id = r.Id, InvoiceId = r.InvoiceId, ItemId = r.ItemId, Amount = r.Amount, Cost = r.Cost });
             return result;
+
+        }
+
+        private void AddCopiedRegister(Register register, IEnumerable<Batch> batches)
+        {
+            if (batches.Count() > 0)
+            {
+                register.Item = null;
+                foreach (var batch in batches)
+                {
+                    if (batch.Amount >= register.Amount)
+                    {
+                        var newRegister = new Register()
+                        {
+                            Id = Guid.NewGuid(),
+                            InvoiceId = register.InvoiceId,
+                            ItemId = register.ItemId,
+                            Amount = register.Amount,
+                            Cost = batch.Cost
+                        };
+                        _unitOfWork.RegisterRepository.Insert(newRegister);
+                        break;
+                    }
+                    else
+                    {
+                        var newRegister = new Register()
+                        {
+                            Id = Guid.NewGuid(),
+                            InvoiceId = register.InvoiceId,
+                            ItemId = register.ItemId,
+                            Amount = register.Amount,
+                            Cost = batch.Cost
+                        };
+                        register.Amount -= batch.Amount;
+                        _unitOfWork.RegisterRepository.Insert(register);
+                    }
+                }
+            }
+            else
+            {
+                var item = _unitOfWork.ItemRepository.GetByID(register.ItemId);
+                if (item.isCountless)
+                {
+                    var newRegister = new Register()
+                    {
+                        Id = Guid.NewGuid(),
+                        InvoiceId = register.InvoiceId,
+                        ItemId = register.ItemId,
+                        Amount = register.Amount,
+                    };
+                    _unitOfWork.RegisterRepository.Insert(newRegister);
+                }
+            }
+
 
         }
     }

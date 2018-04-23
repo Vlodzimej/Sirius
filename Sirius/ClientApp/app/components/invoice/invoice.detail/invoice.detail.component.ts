@@ -217,8 +217,8 @@ export class InvoiceDetailComponent implements OnInit {
      * Событие: Открытие регистра для редактирования
      */
     onOpen() {
-
         if (!this.invoice.isFixed && this.selectedRegister != null) {
+            this.optionBatches = [];
             this.categoryId = "";
             this.register = this.selectedRegister;
             this.registerCost = this.register.cost.toString();
@@ -263,33 +263,65 @@ export class InvoiceDetailComponent implements OnInit {
      */
     onAdd() {
         if (!this.invoice.isFixed) {
-            this.apiService.getById<Item>('item', this.register.itemId).subscribe(
+            var params = 'itemid=' + this.register.itemId + '&cost=' + this.register.cost;
+            this.apiService.get<Batch>('register/batch', params).subscribe(
                 data => {
-                    var item = data as Item;
-                    this.register.name = item.name;
-                    this.register.dimension = item.dimension.name;
-                    this.register.invoiceId = this.invoice.id;
-                    this.apiService.create<Register>('register', this.register).subscribe(
-                        data => {
-                            var addedRegister: Register = data;
-                            // Присваиваем id созданного регистра взятый из базы данных
-                            this.register.id = addedRegister.id;
-                            // Вычисление суммы для отображения
-                            this.register.sum = this.register.cost * this.register.amount;
-                            // Добавление нового регистра в массив отображения 
-                            this.registers.push(this.register);
-                            // Высчитываем общую сумму накладной для отображения
-                            this.calcSum();
-                            this.modalService.close('modal-register');
-                        },
-                        error => {
-                            this.alertService.serverError(error);
-                        });
+
+                    console.log(this.registerCost);
+                    // Производим сравнение остатка и предполагаемого расхода добавляемой позиции по накладной
+                    // Получение данных об остатке
+                    var relativeBatch: Batch = data;
+                    // Вычисление существующих позиций в накладной соответвующих выбранному остатку
+                    var sumAmount: number = 0;
+                    var existRegs = this.registers.filter(r => r.itemId == this.register.itemId && r.cost == this.register.cost);
+                    existRegs.forEach(r => { sumAmount += r.amount });
+                    // Прибавляем к вычисленному количеству расхода по выбранному остатку количество, которое указано в окне добавления позиции
+                    sumAmount+=this.register.amount;
+                    // Сравнения общего расхода накладной по конкретному остатку
+                    if (sumAmount <= relativeBatch.amount) {
+                        this.addRegister();
+                    } else {
+                        this.alertService.error('Расход превышает остаток! Расход: '+sumAmount+' ед., остаток: '+relativeBatch.amount+' ед.');
+                    }
                 },
                 error => {
                     this.alertService.serverError(error);
-                });
+                }
+            );
         }
+    }
+
+    addRegister() {
+        this.apiService.getById<Item>('item', this.register.itemId).subscribe(
+            data => {
+                var item = data as Item;
+                this.register.name = item.name;
+                this.register.dimension = item.dimension.name;
+                this.register.invoiceId = this.invoice.id;
+                this.apiService.create<Register>('register', this.register).subscribe(
+                    data => {
+                        var addedRegister: Register = data;
+                        // Присваиваем id созданного регистра взятый из базы данных
+                        this.register.id = addedRegister.id;
+                        // Вычисление суммы для отображения
+                        this.register.sum = this.register.cost * this.register.amount;
+                        // Добавление нового регистра в массив отображения 
+                        this.registers.push(this.register);
+                        // Высчитываем общую сумму накладной для отображения
+                        this.calcSum();
+
+                        delete(this.registerCost);
+                        delete(this.optionBatches);
+
+                        this.modalService.close('modal-register');
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    });
+            },
+            error => {
+                this.alertService.serverError(error);
+            });
     }
 
     calcSum() {
@@ -486,7 +518,7 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     onBatchChanged(option: IOption) {
-        this.register.cost = parseInt(option.value);
+        this.register.cost = parseFloat(option.value);
     }
 
     generatePageHeader() {

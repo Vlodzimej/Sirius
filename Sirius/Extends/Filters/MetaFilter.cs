@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sirius.Helpers
+namespace Sirius.Extends.Filters
 {
     public class MetaFilter
     {

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Sirius.Models.Dtos;
 using Sirius.Helpers;
 using System.Linq.Expressions;
+using System.Linq;
+using Sirius.Extends.Filters;
 
 namespace Sirius.Services
 {
@@ -130,7 +132,13 @@ namespace Sirius.Services
         public string FixInvoice(Guid invoiceId)
         {
             string result;
+            /*
+            var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
 
+            registers.ToList().ForEach(r => {
+                var batch
+            });
+            */
             // Изменение свойств существующей накладной
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             invoice.IsTemporary = false;

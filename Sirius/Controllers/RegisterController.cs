@@ -8,6 +8,7 @@ using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
 using System.Collections.Generic;
+using Sirius.Extends.Filters;
 
 namespace Sirius.Controllers
 {
@@ -66,7 +67,7 @@ namespace Sirius.Controllers
         [HttpGet("item/{itemId}")]  
         public IActionResult GetByItemId(Guid itemId)
         {
-            var response = _siriusService.GetRegisterByItemId(itemId);
+            var response = _siriusService.GetBatchesByItemId(itemId);
             if (response != null)
             {
                 return Ok(response.Result);
@@ -91,12 +92,12 @@ namespace Sirius.Controllers
         }
 
         /// <summary>
-        /// GET: api/register/type/arrive
+        /// GET: api/register/batches
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("batches")]
-        public IActionResult GetBatches(MetaFilter filter)
+        public IActionResult GetBatches(BatchFilter filter)
         {
             var batches = _siriusService.GetBatches(filter);
             if (batches != null)
@@ -106,6 +107,21 @@ namespace Sirius.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// GET: api/register/batches
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("batch")]
+        public IActionResult GetBatch(BatchFilter filter)
+        {
+            var batches = _siriusService.GetBatch(filter);
+            if (batches != null)
+            {
+                return Ok(batches);
+            }
+            return NotFound();
+        }
 
         /// <summary>
         /// POST: api/register
