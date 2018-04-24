@@ -63,6 +63,7 @@
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onCreate()">Добавить позицию</button>
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : selectedRegister == null || invoice.isFixed}" (click)="onOpen()">Изменить позицию</button>
                         <button class="btn btn-default btn-block" [ngClass]="{'disabled' : selectedRegister == null || invoice.isFixed}" (click)="onDelete()">Удалить позицию</button>
+                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed}" (click)="onClear()">Очистить</button>
                     </div>
                 </div>
             </div>
@@ -75,7 +76,8 @@
                 </div>
                 <div id="control-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <button class="btn btn-default btn-block" [ngClass]="{'disabled' : invoice.isFixed || registers.length == 0}" (click)="onFix()">Провести</button>
+                        <button class="btn btn-default btn-block" *ngIf="invoiceType.alias != 'template'" [ngClass]="{'disabled' : invoice.isFixed || registers.length == 0}"
+                            (click)="onFix()">Провести</button>
                         <button class="btn btn-default btn-block" (click)="toBack()">Назад</button>
                     </div>
                 </div>
@@ -92,19 +94,20 @@
                     <th class="text-center">Наименование</th>
                     <th class="text-center">Кол-во</th>
                     <th class="text-center">Ед. изм.</th>
-                    <th class="text-center">Цена</th>
-                    <th class="text-center">Сумма</th>
+                    <th class="text-center" *ngIf="invoiceType.alias != 'template'">Цена</th>
+                    <th class="text-center" *ngIf="invoiceType.alias != 'template'">Сумма</th>
                 </tr>
                 <tr *ngFor="let register of registers; let n = index" (click)="onSelect(register.id)" (dblclick)="onOpen(selectedRegister.id)"
-                    [class.info]="register == selectedRegister" class="invoice-list-item" [style.cursor]="invoice.isFixed ? 'default' : 'pointer'">
+                    [ngClass]="{'class.info': register == selectedRegister, 'danger': register.cost < 0}" class="invoice-list-item"
+                    [style.cursor]="invoice.isFixed ? 'default' : 'pointer'">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{register.name}}</td>
                     <td>{{register.amount}}</td>
                     <td>{{register.dimension}}</td>
-                    <td>{{register.cost}} {{currency}}</td>
-                    <td>{{register.sum}} {{currency}}</td>
+                    <td *ngIf="invoiceType.alias != 'template'"><div *ngIf="register.cost >= 0">{{register.cost | currency}}</div></td>
+                    <td *ngIf="invoiceType.alias != 'template'"><div *ngIf="register.sum >= 0">{{register.sum | currency}}</div></td>
                 </tr>
-                <tr>
+                <tr *ngIf="invoiceType.alias != 'template'">
                     <td colspan="3"></td>
                     <td>
                         <strong>Общая сумма:</strong>

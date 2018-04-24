@@ -199,14 +199,20 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Register> CopyRegisters(Guid sourceInvoiceId, Guid destinationInvoiceId)
         {
+            //ПОЯСНЕНИЕ:
+            //Item - позиция
+            //Batch - остаток
+            //Invoice - накладная
+            //Register - регистр
+            //Получаем регисты их исходной накладной (шаблона)
             var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(sourceInvoiceId);
-            var newRegisters = new List<Register>();
 
             registers.ToList().ForEach(reg =>
             {
-
+                // Получаем остатки по позиции и остатку текущего регистра
                 var filter = new BatchFilter() { ItemId = reg.ItemId };
                 var batches = _unitOfWork.RegisterRepository.GetBatchesByFilter(filter).GetAwaiter().GetResult();
+                // Вызываем метод копирования
                 AddCopiedRegister(new Register() { InvoiceId = destinationInvoiceId, ItemId = reg.ItemId, Amount = reg.Amount }, batches);
             });
 
@@ -220,13 +226,14 @@ namespace Sirius.Services
 
         private void AddCopiedRegister(Register register, IEnumerable<Batch> batches)
         {
+            // Проверяем наличие остатков по текущей позиции регистра
             if (batches.Count() > 0)
             {
-                register.Item = null;
                 foreach (var batch in batches)
                 {
                     if (batch.Amount >= register.Amount)
                     {
+                        // Расход не превышает остаток, поэтому просто записываем новый регистр
                         var newRegister = new Register()
                         {
                             Id = Guid.NewGuid(),
@@ -235,38 +242,52 @@ namespace Sirius.Services
                             Amount = register.Amount,
                             Cost = batch.Cost
                         };
+                        register.Amount = 0;
                         _unitOfWork.RegisterRepository.Insert(newRegister);
                         break;
                     }
                     else
                     {
+                        // Расход больше остатка, поэтому регистр добавляется с количеством текущего остатка
                         var newRegister = new Register()
                         {
                             Id = Guid.NewGuid(),
                             InvoiceId = register.InvoiceId,
                             ItemId = register.ItemId,
-                            Amount = register.Amount,
+                            Amount = batch.Amount,
                             Cost = batch.Cost
                         };
+                        // Из кол-ва в регисте вычитается кол-во остатока
                         register.Amount -= batch.Amount;
-                        _unitOfWork.RegisterRepository.Insert(register);
+                        _unitOfWork.RegisterRepository.Insert(newRegister);
                     }
                 }
-            }
-            else
-            {
-                var item = _unitOfWork.ItemRepository.GetByID(register.ItemId);
-                if (item.isCountless)
+                if (register.Amount > 0)
                 {
+                    // Итоговый расход больше всех остатков по позиции, поэтому регистр добавляется с отрицательным значением цены
                     var newRegister = new Register()
                     {
                         Id = Guid.NewGuid(),
                         InvoiceId = register.InvoiceId,
                         ItemId = register.ItemId,
                         Amount = register.Amount,
+                        Cost = (-1)
                     };
                     _unitOfWork.RegisterRepository.Insert(newRegister);
                 }
+            }
+            else
+            {
+                var item = _unitOfWork.ItemRepository.GetByID(register.ItemId);
+                var newRegister = new Register()
+                {
+                    Id = Guid.NewGuid(),
+                    InvoiceId = register.InvoiceId,
+                    ItemId = register.ItemId,
+                    Amount = register.Amount,
+                    Cost = (-1)
+                };
+                _unitOfWork.RegisterRepository.Insert(newRegister);
             }
 
 

@@ -75,6 +75,8 @@ export class InvoiceDetailComponent implements OnInit {
     private editRegisterModal: ModalType;
     private templateModal: ModalType;
 
+    public isValid: boolean = true;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -135,11 +137,12 @@ export class InvoiceDetailComponent implements OnInit {
                 //Вычисление суммы для каждого регистра
                 this.registers.map(r => {
                     r.sum = r.amount * r.cost
+                    this.sum += r.sum;
                 });
 
-                this.registers.forEach(element => {
-                    this.sum += element.sum;
-                });
+                //this.registers.forEach(element => {
+                //this.sum += element.sum;
+                //});
 
                 // Загрузка данных типа накладной
                 this.apiService.getById<InvoiceType>('invoice/type/id', this.invoice.typeId).subscribe(
@@ -263,31 +266,72 @@ export class InvoiceDetailComponent implements OnInit {
      */
     onAdd() {
         if (!this.invoice.isFixed) {
-            var params = 'itemid=' + this.register.itemId + '&cost=' + this.register.cost;
-            this.apiService.get<Batch>('register/batch', params).subscribe(
-                data => {
+            switch (this.invoiceType.alias) {
+                case 'consumption':
+                    /**
+                     * РАСХОД
+                     */
+                    var params = 'itemid=' + this.register.itemId + '&cost=' + this.register.cost;
+                    this.apiService.get<Batch>('register/batch', params).subscribe(
+                        data => {
+                            // Производим сравнение остатка и предполагаемого расхода добавляемой позиции по накладной
+                            // Получение данных об остатке
+                            var relativeBatch: Batch = data;
+                            // Вычисление существующих позиций в накладной соответвующих выбранному остатку
+                            var sumAmount: number = 0;
+                            var existRegs = this.registers.filter(r => r.itemId == this.register.itemId && r.cost == this.register.cost);
+                            existRegs.forEach(r => { sumAmount += r.amount });
+                            // Прибавляем к вычисленному количеству расхода по выбранному остатку количество, которое указано в окне добавления позиции
+                            sumAmount += this.register.amount;
+                            // Сравнения общего расхода накладной по конкретному остатку
+                            if (sumAmount <= relativeBatch.amount) {
+                                this.addRegister();
+                            } else {
+                                this.alertService.error('Расход превышает остаток! Расход: ' + sumAmount + ' ед., остаток: ' + relativeBatch.amount + ' ед.');
+                            }
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        }
+                    );
+                    break;
+                case 'template':
+                    /**
+                     * ШАБЛОН
+                     */
+                    // Фильтруем существующие регистры в поисках позиции, которая уже возможно была добавлена в шаблон
+                    var filteredRegisters = this.registers.filter(r => r.itemId == this.register.itemId);
+                    if (filteredRegisters.length > 0) {
+                        // Если позиция уже существует - находим её в списке регистров и увеличиваем кол-во
+                        var index = this.registers.indexOf(filteredRegisters[0]);
+                        // Вычисляем новое кол-во в позиции
+                        var sum = this.registers[index].amount + this.register.amount;
+                        // Отправляем кол-во в добавляемый регистр
+                        this.register.amount = sum;
+                        // Присваиваем добавляемому регистру Id существующего регистра, таким образом, в базе данных произойдёт обновление после отправки запроса
+                        this.register.id = this.registers[index].id;
+                        this.register.invoiceId = this.invoice.id;
+                        this.apiService.update('register', this.register.id, this.register).subscribe(
+                            data => {
+                                // Отправляем это кол-во в список отображения
+                                this.registers[index].amount = sum;
+                                this.modalService.close('modal-register');
+                                this.alertService.success('Добавляемая позиция ' + filteredRegisters[0].name + ' уже существует в шаблоне услуги! Количество увеличено на ' + this.register.amount + ' ' + filteredRegisters[0].dimension);
+                            }, error => {
+                                this.alertService.serverError(error);
+                            });
 
-                    console.log(this.registerCost);
-                    // Производим сравнение остатка и предполагаемого расхода добавляемой позиции по накладной
-                    // Получение данных об остатке
-                    var relativeBatch: Batch = data;
-                    // Вычисление существующих позиций в накладной соответвующих выбранному остатку
-                    var sumAmount: number = 0;
-                    var existRegs = this.registers.filter(r => r.itemId == this.register.itemId && r.cost == this.register.cost);
-                    existRegs.forEach(r => { sumAmount += r.amount });
-                    // Прибавляем к вычисленному количеству расхода по выбранному остатку количество, которое указано в окне добавления позиции
-                    sumAmount+=this.register.amount;
-                    // Сравнения общего расхода накладной по конкретному остатку
-                    if (sumAmount <= relativeBatch.amount) {
-                        this.addRegister();
                     } else {
-                        this.alertService.error('Расход превышает остаток! Расход: '+sumAmount+' ед., остаток: '+relativeBatch.amount+' ед.');
+                        this.addRegister();
                     }
-                },
-                error => {
-                    this.alertService.serverError(error);
-                }
-            );
+                    break;
+                case 'arrival':
+                    /**
+                    * ПРИХОД 
+                    */
+                    this.addRegister();
+                    break;
+            }
         }
     }
 
@@ -310,8 +354,8 @@ export class InvoiceDetailComponent implements OnInit {
                         // Высчитываем общую сумму накладной для отображения
                         this.calcSum();
 
-                        delete(this.registerCost);
-                        delete(this.optionBatches);
+                        delete (this.registerCost);
+                        delete (this.optionBatches);
 
                         this.modalService.close('modal-register');
                     },
@@ -381,14 +425,27 @@ export class InvoiceDetailComponent implements OnInit {
      */
     onFix() {
         if (!this.invoice.isFixed && this.registers.length > 0) {
-            this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
-                data => {
-                    this.invoice.isFixed = true;
-                    this.alertService.success(data);
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+            //Проверка соответствия расходов к остаткам и вычисление суммы для каждого регистра
+            this.isValid = true;
+            this.registers.map(r => {
+                // Проверяем цены. Если есть отрицательные значения, значит где-то нехватает остатков
+                if (r.cost < 0) {
+                    // Если отрицательные значения найдены
+                    this.isValid = false;
+                }
+            });
+            if (this.isValid) {
+                this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
+                    data => {
+                        this.invoice.isFixed = true;
+                        this.alertService.success(data);
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    });
+            } else {
+                this.alertService.error('Расход некоторых позиций документа превышает фактический остаток!');
+            }
         }
     }
 
@@ -527,37 +584,42 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     onOpenTemplates() {
-        // Загрузка списка накладных-шаблонов
-        // Получение данных о типе 'Шаблон'
-        this.apiService.getById<InvoiceType>('invoice/type/alias', 'template').subscribe(
-            data => {
-                var type = data;
-                // Параметр для отбора по типу накладной
-                var params = "typeid=" + type.id;
-                // Получение списка накладных
-                this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
-                    data => {
-                        // Конвертация полученного списка в массив для выпадающего списка ng-select
-                        this.optionTemplates = Converter.ConvertToOptionArray(data);
-                        // Назначение свойств модали 'Шаблон' для модального окна
-                        this.modal = this.templateModal;
-                        // Открытие модального окна
-                        this.modalService.open('modal-template');
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
+        if (this.registers.length == 0) {
+            // Загрузка списка накладных-шаблонов
+            // Получение данных о типе 'Шаблон'
+            this.apiService.getById<InvoiceType>('invoice/type/alias', 'template').subscribe(
+                data => {
+                    var type = data;
+                    // Параметр для отбора по типу накладной
+                    var params = "typeid=" + type.id;
+                    // Получение списка накладных
+                    this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
+                        data => {
+                            // Конвертация полученного списка в массив для выпадающего списка ng-select
+                            this.optionTemplates = Converter.ConvertToOptionArray(data);
+                            // Назначение свойств модали 'Шаблон' для модального окна
+                            this.modal = this.templateModal;
+                            // Открытие модального окна
+                            this.modalService.open('modal-template');
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        });
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        } else {
+            this.alertService.error('Нельзя добавить услугу из шаблона, так как документ содержит позиции. Пожалуйста, удалите все позиции и попробуйте снова.');
+        }
     }
 
     addRegistersFromTemplate() {
-        var object = { sourceId: this.templateInvoiceId, destinationId: this.invoice.id };
         var params = 'sourceId=' + this.templateInvoiceId + '&destinationId=' + this.invoice.id;
+        // Метод делает копию регистров шаблона и назначаем им Id текущего документа
         this.apiService.create<Register[]>('register/copy?' + params, new Array<Register>()).subscribe(
             data => {
+                //Таким образом, после повторной инициализации в списке появляются скопированные регистры
                 this.ngOnInit();
                 this.modalService.close('modal-template');
             },

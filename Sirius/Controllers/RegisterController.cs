@@ -174,10 +174,10 @@ namespace Sirius.Controllers
         /// <param name="id"></param>
         /// <param name="register"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public IActionResult Put(Guid id, [FromBody]Register register)
+        [HttpPut("{registerId}")]
+        public IActionResult Put(Guid registerId, [FromBody]Register register)
         {
-            var result = _siriusService.UpdateRegister(id, register);
+            var result = _siriusService.UpdateRegister(registerId, register);
             if (result != null)
             {
                 return Ok(result);
@@ -198,6 +198,7 @@ namespace Sirius.Controllers
             }
             return new BadRequestResult();
         }
+
     }
 }
 

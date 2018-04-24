@@ -76,8 +76,7 @@ namespace Sirius.Models
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor > 0) &&
                     (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
-                    (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true)
-                    )
+                    (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
                 .OrderBy(r => r.Invoice.CreateDate)
                 .ToListAsync();
 
@@ -114,6 +113,7 @@ namespace Sirius.Models
                     (r.ItemId == filter.ItemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor < 0) &&
+                    (r.Item.isCountless == false) &&
                     (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
                     (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
                 .OrderBy(r => r.Invoice.CreateDate)
