@@ -39,6 +39,8 @@ export class BatchesComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        // Устанавливаем поля фильтра
+        this.filterService.setFilter({ category: true, item: true, vendor: true });
         // На всякий случай отключаем визуализацию загрузки, так как загрузка будет происходить после нажатия на кнопку "Сформировать"
         this.loadingService.hideLoadingIcon();
 

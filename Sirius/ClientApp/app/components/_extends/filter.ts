@@ -1,4 +1,5 @@
 export class Filter {
+    name: string;
     itemId: string;
     categoryId: string;
     vendorId: string;

@@ -1,7 +1,7 @@
 ﻿using Sirius.Models;
 using System.Threading.Tasks;
 
-namespace Sirius.DAL
+namespace Sirius.DAL.Repository.Contract
 {
     interface IUserRepository
     {

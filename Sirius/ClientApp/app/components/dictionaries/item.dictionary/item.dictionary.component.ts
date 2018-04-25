@@ -1,42 +1,57 @@
 import { Component, OnInit } from '@angular/core';
 import { Item, ItemDetail, Dimension, Category /*Vendor*/ } from '../../_models';
 import { ApiService, AlertService, PageHeaderService } from '../../_services'
-import { ModalService } from '../../_services';
-import { ItemFilter } from './item.filter';
-
+import { ModalService, FilterService } from '../../_services';
+import { Filter } from '../../_extends';
 @Component({
     selector: 'app-item-dictionary',
     templateUrl: './item.dictionary.component.html',
-    styleUrls: ['../../../assets/css/modal.css']
+    styleUrls: [
+        '../../../assets/css/accordion.css',
+        '../../../assets/css/modal.css'
+    ]
 })
 export class ItemDictionaryComponent implements OnInit {
     public loading: boolean = true;
     public items: Item[] = [];
     public itemDetail: ItemDetail = new ItemDetail();
     public item: Item = new Item();
+    public selectedItemId: string;
 
     public dimensions: Dimension[] = [];
     public categories: Category[] = [];
-
-    public itemFilter: ItemFilter = new ItemFilter();
 
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
         private modalService: ModalService,
-        private pageHeaderService: PageHeaderService) { }
+        private pageHeaderService: PageHeaderService,
+        private filterService: FilterService) { }
 
     /**Инициализация
      * 
      */
     ngOnInit() {
-        this.pageHeaderService.changeText("Справочник: Наименования");
+        // Устанавливаем поля фильтра
+        this.filterService.setFilter({ category: true, item: true });
+
+        this.pageHeaderService.changeText("Наименования");
+
+        this.getItemsByFilter();
 
         if (this.loading) {
             this.loadDictionaries();
         }
+    }
 
-        this.apiService.getAll<Item>('item').subscribe(
+    getItemsByFilter() {
+        // Получение критериев фильтрации 
+        var filter = this.filterService.getFilter();
+        var params: string = "";
+        params += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
+        params += filter.itemId != null ? "itemId=" + filter.itemId : "";
+
+        this.apiService.get<Item[]>('item', params).subscribe(
             data => {
                 this.items = data;
                 this.loading = false;
@@ -63,29 +78,38 @@ export class ItemDictionaryComponent implements OnInit {
     /**
      * Открытие модального окна с формой добавления нового наименования 
     */
-    openNewItem() {
+    onCreateItem() {
         this.item = new Item();
         this.modalService.open('modal-new-item');
     }
 
     /**
+     * Выбор наименования
+     */
+    onSelectItem(itemId: string) {
+        this.selectedItemId = itemId;
+    }
+
+    /**
      * Открытие модального окна с информацией о наименовании и возможностью редактирования 
     */
-    openItem(id: string) {
-        this.apiService.getById<ItemDetail>('item', id).subscribe(
-            data => {
-                this.itemDetail = data;
-                this.modalService.open('modal-edit-item');
-            },
-            error => {
-                this.alertService.error('Ошибка загрузки', true);
-            });
+    onOpenItem() {
+        if (this.selectedItemId != null && this.selectedItemId != "") {
+            this.apiService.getById<ItemDetail>('item', this.selectedItemId).subscribe(
+                data => {
+                    this.itemDetail = data;
+                    this.modalService.open('modal-edit-item');
+                },
+                error => {
+                    this.alertService.error('Ошибка загрузки', true);
+                });
+        }
     }
 
     /**
      * Добавление нового наименования 
      */
-    addItem() {
+    onAddItem() {
         this.apiService.create<Item>('item', this.item).subscribe(
             data => {
                 this.modalService.close('modal-new-item');
@@ -99,7 +123,7 @@ export class ItemDictionaryComponent implements OnInit {
     /**
      * Обновление данных наименования 
      */
-    updateItem() {
+    onUpdateItem() {
         if (this.itemDetail.id != null || this.itemDetail.id != "") {
             var newItem: Item = new Item();
             newItem.id = this.itemDetail.id;
@@ -132,8 +156,7 @@ export class ItemDictionaryComponent implements OnInit {
                 this.dimensions = data;
             },
             error => {
-                this.alertService.error('Ошибка загрузки списка единици измерения', true);
-                this.loading = false;
+                this.alertService.serverError(error);
             });
 
         this.apiService.getAll<Category>('category').subscribe(
@@ -141,8 +164,7 @@ export class ItemDictionaryComponent implements OnInit {
                 this.categories = data;
             },
             error => {
-                this.alertService.error('Ошибка загрузки списка категорий', true);
-                this.loading = false;
+                this.alertService.serverError(error);
             });
     }
 }

@@ -5,32 +5,33 @@
     </div>
 
     <div class="col-xs-12 col-sm-4 col-sm-push-8" *ngIf="!loading">
-        <div class="panel panel-default">
-            <div class="panel-heading">Фильтр</div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Наименование">
-                </div>
-                <div>
-                    <label for="item-filter-category">Категория</label>
-                    <select class="form-control" name="item-filter-category" [(ngModel)]="itemFilter.categoryId" #categoryFilter="ngModel" required>
-                        <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
-                    </select>
-                </div>
 
-                <div>
-                    <label for="item-filter-dimension">Единица измерения</label>
-                    <select class="form-control" name="item-filter-dimension" [(ngModel)]="itemFilter.dimensionId" #dimensionFilter="ngModel"
-                        required>
-                        <option *ngFor="let dimension of dimensions" value="{{dimension.id}}">{{dimension.name}}</option>
-                    </select>
+        <div class="panel-group" id="item-accordion-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#item-accordion" data-target="#filter-panel">
+                        Фильтр
+                    </a>
+                </div>
+                <div id="filter-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <app-filter></app-filter>
+                        <button class="btn btn-default" (click)="getItemsByFilter()">Сформировать</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <button class="btn btn-default" (click)="openNewItem()">Новый</button>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#item-accordion" data-target="#filter-panel">
+                        Управление
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <button class="btn btn-default btn-block" (click)="onCreateItem()">Создать</button>
+                    <button class="btn btn-default btn-block" (click)="onOpenItem()" 
+                    [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Открыть</button>
+                </div>
             </div>
         </div>
     </div>
@@ -42,7 +43,8 @@
                     <th class="text-center">№</th>
                     <th>Наименования</th>
                 </tr>
-                <tr *ngFor="let item of items; let n = index" (click)="openItem(item.id)" class="select-block">
+                <tr *ngFor="let item of items; let n = index" (click)="onSelectItem(item.id)" (dblclick)="onOpenItem()" class="select-block"
+                    [ngClass]="{'class.info': item.Id == selectedItemId}" [style.cursor]="'pointer'">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{ item.name }}</td>
                 </tr>
@@ -60,7 +62,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Новое наименование</h4>
                 </div>
-                <form name="form1" (ngSubmit)="addItem()" #f="ngForm" novalidate>
+                <form name="form1" (ngSubmit)="onAddItem()" #f="ngForm" novalidate>
                     <div class="modal-body">
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
                             <label for="item-name">Название</label>
@@ -83,10 +85,10 @@
                         </div>
 
                         <div class="checkbox-inline">
-                                <label>
-                                    <input type="checkbox" name="item-countless" [(ngModel)]="item.isCountless">Невычисляемое
-                                </label>
-                            </div>
+                            <label>
+                                <input type="checkbox" name="item-countless" [(ngModel)]="item.isCountless">Невычисляемое
+                            </label>
+                        </div>
 
                     </div>
                     <div class="modal-footer">
@@ -111,7 +113,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Изменить данные наименования</h4>
                 </div>
-                <form name="form2" (ngSubmit)="f.form.valid && updateItem()" #f="ngForm" novalidate>
+                <form name="form2" (ngSubmit)="f.form.valid && onUpdateItem()" #f="ngForm" novalidate>
                     <div class="modal-body">
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
                             <label for="item-edit-name">Название</label>

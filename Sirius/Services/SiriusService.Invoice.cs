@@ -132,18 +132,41 @@ namespace Sirius.Services
         public string FixInvoice(Guid invoiceId)
         {
             string result;
-            /*
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
 
-            registers.ToList().ForEach(r => {
-                var batch
+            // Взаимодействие с регистром накопления
+            registers.ToList().ForEach(register => {
+                var storageRegister = _unitOfWork.StorageRegisterRepository.GetByItemIdAndCost(register.ItemId, register.Cost);
+
+                if(storageRegister != null)
+                {
+                    storageRegister.Amount += register.Amount * invoice.Factor;
+                } else
+                {
+                    var newStorageRegister = new StorageRegister()
+                    {
+                        Id = Guid.NewGuid(),
+                        createDate = DateTime.Now,
+                        Amount = register.Amount,
+                        Cost = register.Cost,
+                        ItemId = register.ItemId
+                    };
+                    _unitOfWork.StorageRegisterRepository.Insert(newStorageRegister);
+                }
+
+                if(storageRegister.Amount == 0)
+                {
+                    _unitOfWork.StorageRegisterRepository.Delete(storageRegister);
+                }
             });
-            */
+            
             // Изменение свойств существующей накладной
-            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             invoice.IsTemporary = false;
             invoice.IsFixed = true;
-            UpdateInvoice(invoiceId, invoice);
+            _unitOfWork.Save();
+
+            //UpdateInvoice(invoiceId, invoice);
 
             // Проверка сохраненных изменений
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);

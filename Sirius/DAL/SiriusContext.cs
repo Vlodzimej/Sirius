@@ -23,9 +23,12 @@ namespace Sirius.DAL
 
         public DbSet<InvoiceType> InvoiceTypes { get; set; }
 
+        public DbSet<StorageRegister> StorageRegisters { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SiriusDB;Username=sirius_user;Password=340571578;Integrated Security=false;");
         }
     }
 }
+ 

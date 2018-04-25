@@ -1,14 +1,22 @@
 <div class="form-group">
-        <ng-select [options]="optionCategories" [(ngModel)]="filterService.filter.categoryId" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска" (selected)="onCategoryChanged($event)" (deselected)="getAllItems()">
-        </ng-select>
-    </div>
+    <input type="text" name="name" *ngIf="filterService.params.name" [(ngModel)]="filter.name">
+</div>
 
-    <div class="form-group">
-        <ng-select [options]="optionItems" [(ngModel)]="filterService.filter.itemId" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска" (selected)="onItemChanged($event)">
-        </ng-select>
-    </div>
+<div class="form-group">
+    <ng-select [options]="optionCategories" [(ngModel)]="filterService.filter.categoryId" [allowClear]="true" placeholder="Категория"
+        filterPlaceholder="Введите категорию для поиска" (selected)="onCategoryChanged($event)" (deselected)="getAllItems()"
+        *ngIf="filterService.params.category">
+    </ng-select>
+</div>
 
-    <div class="form-group">
-        <ng-select [options]="optionVendors" [(ngModel)]="filterService.filter.vendorId" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска" (selected)="onVendorChanged($event)">
-        </ng-select>
-    </div>
+<div class="form-group">
+    <ng-select [options]="optionItems" [(ngModel)]="filterService.filter.itemId" [allowClear]="true" placeholder="Наименование"
+        filterPlaceholder="Введите наименование для поиска" (selected)="onItemChanged($event)" *ngIf="filterService.params.item">
+    </ng-select>
+</div>
+
+<div class="form-group">
+    <ng-select [options]="optionVendors" [(ngModel)]="filterService.filter.vendorId" [allowClear]="true" placeholder="Поставщик"
+        filterPlaceholder="Введите поставщика для поиска" (selected)="onVendorChanged($event)" *ngIf="filterService.params.vendor">
+    </ng-select>
+</div>

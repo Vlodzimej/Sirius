@@ -33,23 +33,23 @@ namespace Sirius.Controllers
         /// GET: api/item
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public IActionResult Get()
-        {
-             var items = _siriusService.GetAllItems();
-             if (items != null)
-             {
-                 return Ok(items);
-             }
-            return NotFound();
-        }
+        //[HttpGet]
+        //public IActionResult Get()
+        //{
+        //     var items = _siriusService.GetAllItems();
+        //     if (items != null)
+        //     {
+        //         return Ok(items);
+        //     }
+        //    return NotFound();
+        //}
 
         /// <summary>
         /// GET: api/item/filter
         /// </summary>
         /// <returns></returns>
-        [HttpGet("filter")]
-        public IActionResult Get([FromQuery] MetaFilter filter)
+        [HttpGet]
+        public IActionResult Get([FromQuery] ItemFilter filter)
         {
             var items = _siriusService.GetItemsByFilter(filter);
             if (items != null)

@@ -37,11 +37,13 @@ namespace Sirius.Services
         /// Получить список всех предметов
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ItemDto> GetItemsByFilter(MetaFilter filter)
+        public IEnumerable<ItemDto> GetItemsByFilter(ItemFilter filter)
         {
             if (filter != null)
             {
-                var items = _unitOfWork.ItemRepository.GetAll(x => x.CategoryId == filter.categoryId);
+                var items = _unitOfWork.ItemRepository.GetAll(x => 
+                    (filter.CategoryId != Guid.Empty ? x.CategoryId == filter.CategoryId : true) &&
+                    (filter.ItemId != Guid.Empty ? x.Id == filter.ItemId : true));
                 return items;
             }
             return null;

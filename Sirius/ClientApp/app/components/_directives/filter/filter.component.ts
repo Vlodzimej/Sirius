@@ -65,7 +65,7 @@ export class FilterComponent implements OnInit {
     */
     getItemsByCategory() {
 
-        this.apiService.getAll<Item>('item/filter?categoryId=' + this.filterService.getCategoryId()).subscribe(
+        this.apiService.get<Item[]>('item', 'categoryId=' + this.filterService.getCategoryId()).subscribe(
             data => {
                 this.optionItems = Converter.ConvertToOptionArray(data);
             },

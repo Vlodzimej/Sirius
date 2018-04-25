@@ -50,7 +50,7 @@
                     <th class="text-center">Название</th>
                     <th class="text-center">Автор</th>
                     <th class="text-center">Дата</th>
-                    <th class="text-center">Статус</th>
+                    <th class="text-center" *ngIf="typeAlias != 'template'">Статус</th>
                 </tr>
                 <tr *ngFor="let invoice of invoices; let n = index" (click)="onSelect(invoice.id)" (dblclick)="onOpen(selectedInvoice.id)"
                     [class.info]="invoice == selectedInvoice" [ngStyle]="{'cursor': 'pointer'}">
@@ -58,7 +58,7 @@
                     <td>{{invoice.name}}</td>
                     <td>{{invoice.userFullName}}</td>
                     <td>{{invoice.createDate}}</td>
-                    <td>
+                    <td *ngIf="typeAlias != 'template'">
                         <div [style.color]="invoice.isFixed ? 'green' : 'red'">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary" data-toggle="tooltip" title="Не проведено"></span>
                             <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed" data-toggle="tooltip" title="Проведено"></span>

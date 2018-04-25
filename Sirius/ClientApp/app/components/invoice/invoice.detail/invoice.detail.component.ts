@@ -520,7 +520,7 @@ export class InvoiceDetailComponent implements OnInit {
      */
     getItemsByCategory() {
         var params = 'categoryId=' + this.categoryId;
-        this.apiService.get<Item[]>('item/filter', params).subscribe(
+        this.apiService.get<Item[]>('item', params).subscribe(
             data => {
                 this.optionItems = Converter.ConvertToOptionArray(data);
             },

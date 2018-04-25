@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Globalization;
 using Sirius.Helpers;
+using Sirius.DAL.Repository.Contract;
 
 namespace Sirius.Models
 {

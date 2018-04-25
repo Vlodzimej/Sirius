@@ -1,9 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Filter } from '../_extends';
+import { Filter, FilterParameters } from '../_extends';
 
 @Injectable()
 export class FilterService {
     private filter: Filter = new Filter();
+    private params: FilterParameters = new FilterParameters();
+
+    setFilter(params: FilterParameters) {
+        this.params = params;
+    }
+
+    getFilter() {
+        return this.filter;
+    }
+
+    setName(name: string) {
+        this.filter.name = name;
+    }
 
     setCategoryId(categoryId: string) {
         this.filter.categoryId = categoryId;
@@ -17,8 +30,8 @@ export class FilterService {
         this.filter.vendorId = vendorId;
     }
 
-    getFilter() {
-        return this.filter;
+    getName() {
+        return this.filter.name;
     }
 
     getCategoryId() {

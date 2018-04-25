@@ -1,4 +1,5 @@
 ﻿using System;
+using Sirius.DAL.Repository;
 using Sirius.Models;
 
 namespace Sirius.DAL
@@ -56,6 +57,12 @@ namespace Sirius.DAL
         /// </summary>
         public SettingRepository SettingRepository => settingRepository ?? new SettingRepository(_siriusContext);
         private SettingRepository settingRepository;
+
+        /// <summary>
+        /// Репозиторий "Регистр накопления"
+        /// </summary>
+        public StorageRegisterRepository StorageRegisterRepository => storageRegisterRepository ?? new StorageRegisterRepository(_siriusContext);
+        private StorageRegisterRepository storageRegisterRepository;
 
         public void Save()
         {

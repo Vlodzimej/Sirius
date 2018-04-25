@@ -3,6 +3,7 @@ using Sirius.DAL;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Linq;
+using Sirius.DAL.Repository.Contract;
 
 namespace Sirius.Models
 {

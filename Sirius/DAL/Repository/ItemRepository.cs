@@ -7,6 +7,7 @@ using Sirius.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Sirius.DAL.Repository.Contract;
 
 namespace Sirius.Models
 {
