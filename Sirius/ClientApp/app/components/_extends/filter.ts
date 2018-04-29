@@ -5,4 +5,5 @@ export class Filter {
     vendorId: string;
     startDate: Date;
     finishDate: Date;
+    fixedOnly: boolean;
 }

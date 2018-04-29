@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-sm-push-8">
         <div class="panel-group" id="invoice-accordion-1">
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#filter-panel">
@@ -9,28 +10,33 @@
                 </div>
                 <div id="filter-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Наименование">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Цена">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Остаток">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Единицы измерения">
-                        </div>
+                        <app-filter></app-filter>
+                        <button class="btn btn-default btn-block" (click)="getInvoicesByFilter()">Сформировать</button>
                     </div>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#info-panel">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#item-accordion" data-target="#control-panel">
+                        Управление
+                    </a>
+                </div>
+                <div id="filter-panel" class="control-collapse collapse in">
+                    <div class="panel-body">
+                        <button class="btn btn-default btn-block" (click)="onCreateItem()">Создать</button>
+                        <button class="btn btn-default btn-block" (click)="onOpenItem()" [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Открыть</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#action-panel">
                         Действия
                     </a>
                 </div>
-                <div id="info-panel" class="panel-collapse collapse in">
+                <div id="action-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <a class="btn btn-default btn-block" (click)="onCreate()">Создать</a>
                         <a class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedInvoice}" (click)="onOpen(selectedInvoice.id)">Перейти</a>

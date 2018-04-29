@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sirius.DAL.Repository.Contract;
+using System.Linq.Expressions;
 
 namespace Sirius.Models
 {
@@ -14,6 +15,29 @@ namespace Sirius.Models
     {
         public RegisterRepository(SiriusContext _siriusContext) : base(_siriusContext)
         { }
+
+        public IEnumerable<object> GetAll(
+        Expression<Func<Register, bool>> filter = null,
+        Func<IQueryable<Register>, IOrderedQueryable<Register>> orderBy = null,
+        string includeProperties = "")
+        {
+            var registers = _siriusContext.Registers
+               .Include(i => i.Invoice)
+               .Include(i => i.Item)
+               .Where(filter)
+               .Select(r => new
+               {
+                   r.Id,
+                   r.Item.Name,
+                   Dimension = r.Item.Dimension.Name,
+                   r.Amount,
+                   r.Cost,
+                   Sum = ((double)r.Cost * r.Amount),
+                   CreateDate = DateConverter.ConvertToStandardString(r.Invoice.CreateDate),
+                   r.InvoiceId
+               });
+            return registers;
+        }
 
         public IEnumerable<Register> GetByInvoiceId(Guid invoiceId)
         {

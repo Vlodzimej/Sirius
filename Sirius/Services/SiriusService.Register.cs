@@ -5,11 +5,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sirius.Extends.Filters;
+using System.Linq.Expressions;
 
 namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
+        /// <summary>
+        /// Получение регистров по фильтру
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public object GetRegistersByFilter(MetaFilter filter)
+        {
+            if (filter.FinishDate != DateTime.MinValue)
+            {
+                filter.FinishDate = filter.FinishDate.AddMinutes(59).AddHours(23);
+            }
+            Expression<Func<Register, bool>> f = x =>
+            (filter.ItemId != Guid.Empty ? x.ItemId == filter.ItemId : true) &&
+            (filter.CategoryId != Guid.Empty ? x.Item.CategoryId == filter.CategoryId : true) &&
+            (filter.StartDate != DateTime.MinValue ? x.Invoice.CreateDate >= filter.StartDate : true) &&
+            (filter.FinishDate != DateTime.MinValue ? x.Invoice.CreateDate <= filter.FinishDate : true);
+            return _unitOfWork.RegisterRepository.GetAll(f);
+        }
         /// <summary>
         /// Получить запись регистра по Id
         /// </summary>

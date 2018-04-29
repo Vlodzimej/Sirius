@@ -3,6 +3,6 @@ export class FilterParameters {
     category?: boolean = false;
     item?: boolean = false;
     vendor?: boolean = false;
-    startDate?: boolean = false;
-    finishDate?: boolean = false;
+    date?: boolean = false;
+    fixedOnly?: boolean = false;
 }

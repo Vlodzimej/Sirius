@@ -1,25 +1,25 @@
 <div class="row">
-    <app-loading-icon></app-loading-icon>
-    <div *ngIf="!loading" class="col-xs-12 col-sm-4 col-sm-push-8">
-        <div class="panel-group" id="invoice-accordion-1">
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="report-accordion-1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#info-panel">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#report-accordion" data-target="#filter-panel">
                         Фильтр
                     </a>
                 </div>
-                <div id="info-panel" class="panel-collapse collapse in">
+                <div id="filter-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <p>Дата создания: </p>
-
+                        <app-filter></app-filter>
+                        <button class="btn btn-default btn-block" (click)="getRegistersByFilter()">Сформировать</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="!loading" class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
-        <div class="panel panel-default">
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+        <app-loading-icon></app-loading-icon>
+        <div class="panel panel-default" *ngIf="!loadingService.getLoadingStatus()">
             <table class="table table-striped table-bordered">
                 <tr>
                     <th class="text-center">№</th>

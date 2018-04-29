@@ -256,14 +256,24 @@ namespace Sirius.Services
 
         public IEnumerable<InvoiceListDto> GetInvoices(InvoiceFilter filter)
         {
+            if (filter.Name != null)
+            {
+                filter.Name = filter.Name.ToLower();
+            }
+            if(filter.FinishDate != DateTime.MinValue)
+            {
+                filter.FinishDate = filter.FinishDate.AddMinutes(59).AddHours(23);
+            }
+
             Expression<Func<Invoice, bool>> f = x =>
                (filter.Id != Guid.Empty ? x.Id == filter.Id : true) &&
-               (filter.Name != null ? x.Name == filter.Name : true) &&
+               (filter.Name != null ? x.Name.ToLower().Contains(filter.Name) : true) &&
                (filter.VendorId != Guid.Empty ? x.VendorId == filter.VendorId : true) &&
                (filter.UserId != Guid.Empty ? x.UserId == filter.UserId : true) &&
                (filter.TypeId != Guid.Empty ? x.TypeId == filter.TypeId : true) &&
                (filter.StartDate != DateTime.MinValue ? x.CreateDate >= filter.StartDate : true) &&
-               (filter.FinishDate != DateTime.MinValue ? x.CreateDate >= filter.FinishDate : true);
+               (filter.FinishDate != DateTime.MinValue ? x.CreateDate <= filter.FinishDate : true) &&
+               (filter.FixedOnly == true ? x.IsFixed == true : true);
             return _unitOfWork.InvoiceRepository.GetAll(f);
         }
     }

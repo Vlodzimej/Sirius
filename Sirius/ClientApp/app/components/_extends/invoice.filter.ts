@@ -6,4 +6,5 @@ export class InvoiceFilter {
     typeId: string;
     startDate: Date;
     finishDate: Date;
+    isFixed: boolean;
 }

@@ -33,10 +33,10 @@ namespace Sirius.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(MetaFilter filter)
         {
-            var registers = _siriusService.GetAllRegisters() as List<Register>;
-            if (registers.Count > 0)
+            var registers = _siriusService.GetRegistersByFilter(filter);
+            if (registers != null)
             {
                 return Ok(registers);
             }

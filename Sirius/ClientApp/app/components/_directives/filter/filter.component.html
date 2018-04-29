@@ -1,22 +1,43 @@
-<div class="form-group">
-    <input type="text" name="name" *ngIf="filterService.params.name" [(ngModel)]="filter.name">
+<div class="form-group" *ngIf="filterService.params.name">
+    <input type="text" class="form-control" name="name" [(ngModel)]="filterService.filter.name" placeholder="Введите часть названия">
 </div>
 
-<div class="form-group">
-    <ng-select [options]="optionCategories" [(ngModel)]="filterService.filter.categoryId" [allowClear]="true" placeholder="Категория"
-        filterPlaceholder="Введите категорию для поиска" (selected)="onCategoryChanged($event)" (deselected)="getAllItems()"
-        *ngIf="filterService.params.category">
+<div class="form-group" *ngIf="filterService.params.category">
+    <ng-select [options]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска"
+        (selected)="onCategoryChanged($event)" (deselected)="getAllItems()">
     </ng-select>
 </div>
 
-<div class="form-group">
-    <ng-select [options]="optionItems" [(ngModel)]="filterService.filter.itemId" [allowClear]="true" placeholder="Наименование"
-        filterPlaceholder="Введите наименование для поиска" (selected)="onItemChanged($event)" *ngIf="filterService.params.item">
+<div class="form-group" *ngIf="filterService.params.item">
+    <ng-select [options]="optionItems" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска"
+        (selected)="onItemChanged($event)" >
     </ng-select>
 </div>
 
-<div class="form-group">
-    <ng-select [options]="optionVendors" [(ngModel)]="filterService.filter.vendorId" [allowClear]="true" placeholder="Поставщик"
-        filterPlaceholder="Введите поставщика для поиска" (selected)="onVendorChanged($event)" *ngIf="filterService.params.vendor">
+<div class="form-group" *ngIf="filterService.params.vendor">
+    <ng-select [options]="optionVendors" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска"
+        (selected)="onVendorChanged($event)">
     </ng-select>
 </div>
+
+<div class="row" *ngIf="filterService.params.date">
+    <div class="col-xs-6">
+        <div class="form-group">
+            <input type="date" class="form-control" [(ngModel)]="filterService.filter.startDate" data-toggle="tooltip" data-placement="top" title="Начальная дата поиска">
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="form-group">
+            <input type="date" class="form-control" [(ngModel)]="filterService.filter.finishDate" data-toggle="tooltip" data-placement="top" title="Конечная дата поиска">
+        </div>
+    </div>
+</div>
+
+<div class="checkbox-inline" *ngIf="filterService.params.fixedOnly">
+    <label>
+        <input type="checkbox" [(ngModel)]="filterService.filter.fixedOnly">Только проведённые
+    </label>
+</div>
+
+<button class="btn btn-default btn-block" (click)="onCleanFilter()">Сбросить</button>
+<hr>
