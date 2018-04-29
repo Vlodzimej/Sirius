@@ -1,33 +1,41 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../../_models';
-import { ApiService, AlertService, ModalService } from '../../_services';
+import { ApiService, AlertService, ModalService, LoadingService, PageHeaderService } from '../../_services';
 
 
 @Component({
     selector: 'app-category-dictionary',
     templateUrl: './category.dictionary.component.html',
-    styleUrls: ['../../../assets/css/modal.css']
+    styleUrls: [
+        '../../../assets/css/accordion.css',
+        '../../../assets/css/modal.css'
+    ]
 })
 export class CategoryDictionaryComponent implements OnInit {
-    public loading: boolean = true;
+
     public categories: Category[] = [];
     public category: Category = new Category();
 
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
-        private modalService: ModalService) { }
+        private modalService: ModalService,
+        private loadingService: LoadingService,
+        private pageHeaderService: PageHeaderService
+    ) { }
 
     ngOnInit() {
-
+        // Включаем визуализацию загрузки
+        this.loadingService.showLoadingIcon();
+        this.pageHeaderService.changeText("Категории");
         this.apiService.getAll<Category>('category').subscribe(
             data => {
                 this.categories = data;
-                this.loading = false;
+                this.loadingService.hideLoadingIcon();
             },
             error => {
-                this.alertService.error('Ошибка вызова', true);
-                this.loading = false;
+                this.alertService.serverError(error);
+
             });
     }
 
@@ -46,7 +54,7 @@ export class CategoryDictionaryComponent implements OnInit {
                 this.modalService.open('modal-edit-category');
             },
             error => {
-                this.alertService.error('Ошибка загрузки', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -54,9 +62,10 @@ export class CategoryDictionaryComponent implements OnInit {
         this.apiService.create<Category>('category', this.category).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-new-category');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -64,9 +73,14 @@ export class CategoryDictionaryComponent implements OnInit {
         this.apiService.update<Category>('category', this.category.id, this.category).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-edit-category');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
+    }
+    onCreateCategory() {
+        this.category = new Category();
+        this.modalService.open('modal-new-category');
     }
 }

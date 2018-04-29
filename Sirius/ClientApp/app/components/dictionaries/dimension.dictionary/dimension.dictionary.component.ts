@@ -1,32 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { Dimension } from '../../_models';
-import { ApiService, AlertService } from '../../_services';
-import { ModalService } from '../../_services';
+import { ApiService, AlertService, LoadingService, PageHeaderService, ModalService } from '../../_services';
 
 @Component({
     selector: 'app-dimension-dictionary',
     templateUrl: './dimension.dictionary.component.html',
-    styleUrls: ['../../../assets/css/modal.css']
+    styleUrls: [
+        '../../../assets/css/accordion.css',
+        '../../../assets/css/modal.css'
+    ]
 })
 export class DimensionDictionaryComponent implements OnInit {
-    public loading: boolean = true;
     public dimensions: Dimension[] = [];
     public dimension: Dimension = new Dimension();
 
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
-        private modalService: ModalService) { }
+        private modalService: ModalService,
+        private loadingService: LoadingService,
+        private pageHeaderService: PageHeaderService
+    ) { }
 
     ngOnInit() {
-
+        // Включаем визуализацию загрузки
+        this.loadingService.showLoadingIcon();
+        this.pageHeaderService.changeText("Единицы измерения");
         this.apiService.getAll<Dimension>('dimension').subscribe(
             data => {
                 this.dimensions = data;
-                this.loading = false;
+                this.loadingService.hideLoadingIcon();
             },
             error => {
-                this.alertService.error('Ошибка вызова', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -39,14 +45,13 @@ export class DimensionDictionaryComponent implements OnInit {
     }
 
     openDimension(id: string) {
-        console.log(id);
         this.apiService.getById<Dimension>('dimension', id).subscribe(
             data => {
                 this.dimension = data;
                 this.modalService.open('modal-edit-dimension');
             },
             error => {
-                this.alertService.error('Ошибка загрузки', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -54,9 +59,10 @@ export class DimensionDictionaryComponent implements OnInit {
         this.apiService.create<Dimension>('dimension', this.dimension).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-new-dimension');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -64,9 +70,14 @@ export class DimensionDictionaryComponent implements OnInit {
         this.apiService.update<Dimension>('dimension', this.dimension.id, this.dimension).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-edit-dimension');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
+    }
+    onCreateDimension() {
+        this.dimension = new Dimension();
+        this.openModal('modal-new-dimension');
     }
 }

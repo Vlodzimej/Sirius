@@ -1,27 +1,38 @@
 <div class="row">
-    <div class="col-xs-8 col-xs-offset-2 col-sm-8 col-sm-offset-2">
-
-        <img *ngIf="loading" src="../../../assets/images/loading.gif">
-
-        <div *ngIf="!loading">
-            <button class="btn btn-default" (click)="openModal('modal-new-vendor')">Добавить</button>
-            <hr>
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="vendor-accordion-1">
             <div class="panel panel-default">
-                <table class="table table-hover table-striped table-bordered">
-                    <tr>
-                        <th class="text-center">№</th>
-                        <th>Поставщик</th>
-                        <th>Адрес</th>
-                        <th>Контакты</th>
-                    </tr>
-                    <tr *ngFor="let vendor of vendors; let n = index" (click)="openVendor(vendor.id)" class="select-block">
-                        <td class="text-center">{{n+1}}</td>
-                        <td>{{ vendor.name }}</td>
-                        <td>{{ vendor.address }}</td>
-                        <td>{{ vendor.contact }}</td>
-                    </tr>
-                </table>
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#vendor-accordion" data-target="#control-panel">
+                        Управление
+                    </a>
+                </div>
+                <div id="control-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button class="btn btn-default btn-block" (click)="onCreateVendor()">Добавить</button>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+        <app-loading-icon></app-loading-icon>
+        <div class="panel panel-default" *ngIf="!loadingService.getLoadingStatus()">
+            <table class="table table-hover table-striped table-bordered">
+                <tr>
+                    <th class="text-center">№</th>
+                    <th>Поставщик</th>
+                    <th>Адрес</th>
+                    <th>Контакты</th>
+                </tr>
+                <tr *ngFor="let vendor of vendors; let n = index" (click)="openVendor(vendor.id)" class="select-block" [ngStyle]="{'cursor': 'pointer'}">
+                    <td class="text-center">{{n+1}}</td>
+                    <td>{{ vendor.name }}</td>
+                    <td>{{ vendor.address }}</td>
+                    <td>{{ vendor.contact }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

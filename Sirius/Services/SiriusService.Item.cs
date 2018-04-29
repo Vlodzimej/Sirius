@@ -87,7 +87,7 @@ namespace Sirius.Services
             _unitOfWork.ItemRepository.Insert(item);
             _unitOfWork.Save();
 
-            return _unitOfWork.ItemRepository.GetByID(item.Id) ?? null;
+            return _unitOfWork.ItemRepository.GetByID(item.Id);
         }
 
         /// <summary>

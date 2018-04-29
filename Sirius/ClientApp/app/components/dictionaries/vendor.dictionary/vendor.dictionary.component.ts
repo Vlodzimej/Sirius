@@ -1,31 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { Vendor } from '../../_models';
-import { ApiService, AlertService, ModalService } from '../../_services';
+import { ApiService, AlertService, ModalService, LoadingService, PageHeaderService } from '../../_services';
 
 @Component({
     selector: 'app-vendor-dictionary',
     templateUrl: './vendor.dictionary.component.html',
-    styleUrls: ['../../../assets/css/modal.css']
+    styleUrls: [
+        '../../../assets/css/accordion.css',
+        '../../../assets/css/modal.css'
+    ]
 })
 export class VendorDictionaryComponent implements OnInit {
-    public loading: boolean = true;
     public vendors: Vendor[] = [];
     public vendor: Vendor = new Vendor();
 
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
-        private modalService: ModalService) { }
+        private modalService: ModalService,
+        private loadingService: LoadingService,
+        private pageHeaderService: PageHeaderService
+    ) { }
 
     ngOnInit() {
+        // Включаем визуализацию загрузки
+        this.loadingService.showLoadingIcon();
+        this.pageHeaderService.changeText("Поставщики");
         this.apiService.getAll<Vendor>('vendor').subscribe(
             data => {
                 this.vendors = data;
-                this.loading = false;
+                this.loadingService.hideLoadingIcon();
             },
             error => {
-                this.alertService.error('Ошибка вызова', true);
-                this.loading = false;
+                this.alertService.serverError(error);
             });
     }
 
@@ -44,7 +51,7 @@ export class VendorDictionaryComponent implements OnInit {
                 this.modalService.open('modal-edit-vendor');
             },
             error => {
-                this.alertService.error('Ошибка загрузки', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -52,9 +59,10 @@ export class VendorDictionaryComponent implements OnInit {
         this.apiService.create<Vendor>('vendor', this.vendor).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-new-vendor');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
     }
 
@@ -62,9 +70,15 @@ export class VendorDictionaryComponent implements OnInit {
         this.apiService.update<Vendor>('vendor', this.vendor.id, this.vendor).subscribe(
             data => {
                 this.ngOnInit();
+                this.modalService.close('modal-edit-vendor');
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.serverError(error);
             });
+    }
+
+    onCreateVendor() {
+        this.vendor = new Vendor();
+        this.modalService.open('modal-new-vendor');
     }
 }

@@ -63,9 +63,14 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="dimension"></param>
         [HttpPost]
-        public void Post([FromBody]Dimension dimension)
+        public IActionResult Post([FromBody]Dimension dimension)
         {
-            _siriusService.AddDimension(dimension);
+            var result = _siriusService.AddDimension(dimension);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return new BadRequestResult();
         }
 
         /// <summary>

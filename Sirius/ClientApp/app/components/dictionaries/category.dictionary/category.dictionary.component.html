@@ -1,23 +1,34 @@
 <div class="row">
-    <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-4">
-
-        <img *ngIf="loading" src="../../../assets/images/loading.gif">
-
-        <div *ngIf="!loading">
-            <button class="btn btn-default" (click)="openModal('modal-new-category')">Добавить</button>
-            <hr>
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="category-accordion-1">
             <div class="panel panel-default">
-                <table class="table table-hover table-striped table-bordered">
-                    <tr>
-                        <th class="text-center">№</th>
-                        <th>Категории</th>
-                    </tr>
-                    <tr *ngFor="let category of categories; let n = index" (click)="openCategory(category.id)" class="select-block">
-                        <td class="text-center">{{n+1}}</td>
-                        <td>{{ category.name }}</td>
-                    </tr>
-                </table>
+                <div class="panel-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#category-accordion" data-target="#control-panel">
+                        Управление
+                    </a>
+                </div>
+                <div id="control-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button class="btn btn-default btn-block" (click)="onCreateCategory()">Добавить</button>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+        <app-loading-icon></app-loading-icon>
+        <div class="panel panel-default" *ngIf="!loadingService.getLoadingStatus()">
+            <table class="table table-hover table-striped table-bordered">
+                <tr>
+                    <th class="text-center">№</th>
+                    <th>Категории</th>
+                </tr>
+                <tr *ngFor="let category of categories; let n = index" (click)="openCategory(category.id)" class="select-block" [ngStyle]="{'cursor': 'pointer'}">
+                    <td class="text-center">{{n+1}}</td>
+                    <td>{{ category.name }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -53,31 +64,31 @@
 </modal>
 
 <modal id="modal-edit-category">
-        <div id="modal-2" class="modal show" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Единица измерения</h4>
-                    </div>
-                    <form name="form" (ngSubmit)="f.form.valid && updateCategory()" #f="ngForm" novalidate>
-                        <div class="modal-body">
-                            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
-                                <label for="category-name">Название</label>
-                                <input type="text" class="form-control" name="category-name" [(ngModel)]="category.name" #name="ngModel" required />
-                                <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="form-group">
-                                <button [disabled]="loading" class="btn btn-primary">Обновить</button>
-                                <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
-                                <a (click)="closeModal('modal-edit-category')" class="btn btn-link">Отмена</a>
-                            </div>
-                        </div>
-                    </form>
+    <div id="modal-2" class="modal show" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Единица измерения</h4>
                 </div>
+                <form name="form" (ngSubmit)="f.form.valid && updateCategory()" #f="ngForm" novalidate>
+                    <div class="modal-body">
+                        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
+                            <label for="category-name">Название</label>
+                            <input type="text" class="form-control" name="category-name" [(ngModel)]="category.name" #name="ngModel" required />
+                            <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button [disabled]="loading" class="btn btn-primary">Обновить</button>
+                            <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
+                            <a (click)="closeModal('modal-edit-category')" class="btn btn-link">Отмена</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </modal>
+    </div>
+</modal>
