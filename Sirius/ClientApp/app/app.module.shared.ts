@@ -13,6 +13,9 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from './components/register';
 import { SettingsComponent } from './components/settings';
 
+import { AboutComponent } from './components/info';
+import { HelpComponent } from './components/info';
+
 import {
     AlertComponent,
     ModalComponent,
@@ -85,7 +88,9 @@ import {
         ReportComponent,
         BatchesComponent,
         FullDatePipe,
-        CurrencyPipe
+        CurrencyPipe,
+        AboutComponent,
+        HelpComponent
     ],
     imports: [
         CommonModule,
@@ -108,6 +113,8 @@ import {
             { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
             { path: 'report/:typealias', component: ReportComponent, canActivate: [AuthGuard] },
             { path: 'batches', component: BatchesComponent, canActivate: [AuthGuard] },
+            { path: 'about', component: AboutComponent, canActivate: [AuthGuard] },
+            { path: 'help', component: HelpComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AlertService, AuthenticationService } from './../_services';
+import { AlertService, AuthenticationService, PageHeaderService } from './../_services';
 
 @Component({
     templateUrl: 'login.component.html'
@@ -16,12 +16,14 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private pageHeaderService: PageHeaderService) { }
 
     ngOnInit() {
-        // reset login status
+        // Сброс аутентификации 
         this.authenticationService.logout();
-
+        // Заголовок
+        this.pageHeaderService.changeText('Вход');
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
@@ -34,49 +36,8 @@ export class LoginComponent implements OnInit {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    this.alertService.error('Неверный логин или пароль');
+                    this.alertService.error(error._body);
                     this.loading = false;
                 });
     }
 }
-
-
-/*
-import { Component } from '@angular/core';
-import { User } from './../user/user';
-import { UserService } from './../user/user.service';
-import { PageStates } from './../states/page.states';
-import { Router } from '@angular/router';
-
-@Component({
-    selector: 'login',
-    templateUrl: './login.component.html'
-})
-export class LoginComponent
-{
-    public user: User = new User();
-    public state: PageStates = PageStates.InProgress;
-
-    constructor(private userService: UserService, private router: Router) { }
-
-    Login() {
-        console.log(this.user);
-        this.userService.Login(this.user).subscribe(
-            response => {
-                this.state = PageStates.Success;
-                this.router.navigateByUrl('/home');
-                console.log(response.json());
-            
-            },
-            error => {
-                switch(error.status)
-                {
-                    case 400: this.state = PageStates.Failed; break;
-                    case 404: this.state = PageStates.ServerError; break;
-                }
-                console.error(`Error: ${error.status} ${error.statusText}`);
-            }
-        );
-    }
-}
-*/

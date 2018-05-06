@@ -42,7 +42,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li routerLinkActive="link-active">
-                            <a [routerLink]="['/items']">Номенклатура</a>
+                            <a [routerLink]="['/items']">Наименования</a>
                         </li>
                         <li routerLinkActive="link-active">
                             <a [routerLink]="['/categories']">Категории</a>
@@ -77,6 +77,29 @@
                 </li>
 
                 <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Система
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/about']">Информация
+                            </a>
+                        </li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/help']">Помощь
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li routerLinkActive="link-active">
+                            <a [routerLink]="['/login']">Выход
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         Администрирование
                         <b class="caret"></b>
@@ -90,23 +113,7 @@
                         </li>
                     </ul>
                 </li>
-            </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Профиль
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li routerLinkActive="link-active">
-                            <a [routerLink]="['/nomenclature']">Настройки</a>
-                        </li>
-                        <li routerLinkActive="link-active">
-                            <a [routerLink]="['/login']">Выход
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>

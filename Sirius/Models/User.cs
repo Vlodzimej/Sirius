@@ -22,5 +22,7 @@ namespace Sirius.Models
         public DateTime StartDate { get; set; }
 
         public DateTime FinishDate { get; set; }
+
+        public bool IsConfirmed { get; set; }
     }
 }

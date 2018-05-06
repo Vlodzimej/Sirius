@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sirius.Models
 {
@@ -10,10 +7,25 @@ namespace Sirius.Models
     /// </summary>
     public class Setting
     {
+        /// <summary>
+        /// Идентификатор настройки
+        /// </summary>
         public Guid Id { get; set; }
-        // Ключ
+        /// <summary>
+        /// Название настройки
+        /// </summary>
         public string Name { get; set; }
-        // Значение
+        /// <summary>
+        /// Значение настройки
+        /// </summary>
         public string Value { get; set; }
+        /// <summary>
+        /// Тип настройки
+        /// </summary>
+        public Guid TypeId { get; set; }
+        /// <summary>
+        /// Псевдоним
+        /// </summary>
+        public string Alias { get; set; }
     }
 }

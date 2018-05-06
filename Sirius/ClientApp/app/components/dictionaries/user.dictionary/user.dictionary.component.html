@@ -1,18 +1,28 @@
 ﻿<div class="panel panel-default">
     <table class="table table-hover table-striped table-bordered">
         <tr>
-            <th class="text-center">№</th>
+            <th class="text-center">Статус</th>
             <th>Логин</th>
             <th>ФИО</th>
             <th>Дата регистрации</th>
             <th></th>
         </tr>
         <tr *ngFor="let user of users; let n = index">
-            <td class="text-center">{{n}}</td>
+            <td class="text-center">
+                <div [style.color]="user.isConfirmed ? 'green' : 'red'">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true" *ngIf="user.isConfirmed" data-toggle="tooltip" title="Подтверждён"></span>
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true" *ngIf="!user.isConfirmed" data-toggle="tooltip" title="Не подтверждён"></span>
+                </div>
+            </td>
             <td>{{ user.username }}</td>
             <td>{{ user.firstName }} {{ user.lastName }}</td>
             <td>{{ user.startDate }}</td>
-            <td><button class="btb btn-danger btn-xs" (click)="removeUser(user.id)"><i class="glyphicon glyphicon-minus"></i></button></td>
+            <td class="text-center">
+                <div *ngIf="user.id != currentUserId">
+                <button class="btb btn-success btn-xs" (click)="onChangeUserStatus(user.id, true)" *ngIf="!user.isConfirmed">Подтвердить</button>
+                <button class="btb btn-danger btn-xs" (click)="onChangeUserStatus(user.id, false)" *ngIf="user.isConfirmed">Блокировать</button>
+                </div>
+            </td>
         </tr>
     </table>
 </div>

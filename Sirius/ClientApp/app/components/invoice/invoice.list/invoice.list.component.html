@@ -18,20 +18,6 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#filter-panel">
-                        Управление
-                    </a>
-                </div>
-                <div id="filter-panel" class="control-collapse collapse in">
-                    <div class="panel-body">
-                        <button class="btn btn-default btn-block" (click)="onCreateItem()">Создать</button>
-                        <button class="btn btn-default btn-block" (click)="onOpenItem()" [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Открыть</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#action-panel">
                         Действия
                     </a>

@@ -7,4 +7,5 @@ export class User
     lastName: string;
     finishDate: Date;
     startDate: Date;
+    isConfirmed: boolean;
 }

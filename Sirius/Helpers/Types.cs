@@ -42,5 +42,25 @@ namespace Sirius.Helpers
                 public static Guid Id { get { return _id; } }
             }
         }
+        public static class SettingsTypes
+        {
+            public static class Invoice
+            {
+                private static Guid _id = new Guid("6C1A7963-0EB3-4FE1-9F22-EA0E9CAD8DCC");
+                /// <summary>
+                /// Идентификатор настроек накладных
+                /// </summary>
+                public static Guid Id { get { return _id; } }
+
+                public static class Prefix
+                {
+                    private static Guid _id = new Guid("26E7180D-6ACC-4B4A-B2DF-7D8190234090");
+                    /// <summary>
+                    /// Идентификатор настроек накладных
+                    /// </summary>
+                    public static Guid Id { get { return _id; } }
+                }
+            }
+        }
     }
 }

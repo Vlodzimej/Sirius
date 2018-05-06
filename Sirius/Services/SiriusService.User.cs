@@ -65,6 +65,7 @@ namespace Sirius.Services
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
+            user.StartDate = DateTime.Now;
 
             _unitOfWork.UserRepository.Insert(user);
             _unitOfWork.Save();
@@ -192,6 +193,19 @@ namespace Sirius.Services
         public IEnumerable<User> GetAllUsers()
         {
             return _unitOfWork.UserRepository.Get();
+        }
+
+        public bool ChangeUserStatus(Guid userId, bool isConfirmed = false)
+        {
+            var user = GetUserById(userId);
+            if(user != null)
+            {
+                user.IsConfirmed = isConfirmed;
+                _unitOfWork.UserRepository.Update(user);
+                _unitOfWork.Save();
+                return true;
+            }
+            return false;
         }
     }
 }

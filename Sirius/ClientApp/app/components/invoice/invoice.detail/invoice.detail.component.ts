@@ -268,6 +268,7 @@ export class InvoiceDetailComponent implements OnInit {
         if (!this.invoice.isFixed) {
             switch (this.invoiceType.alias) {
                 case 'consumption':
+                case 'writeoff':
                     /**
                      * РАСХОД
                      */
@@ -564,7 +565,8 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     onFormSubmit() {
-        if (this.register.itemId != null && this.register.amount > 0) {
+        console.log(this.register);
+        if (this.register.itemId != "" && this.register.amount > 0) {
             switch (this.modal.type) {
                 case 'new': this.onAdd(); break;
                 case 'edit': this.onChange(); break;

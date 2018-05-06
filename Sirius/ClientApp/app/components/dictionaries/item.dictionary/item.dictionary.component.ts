@@ -49,7 +49,7 @@ export class ItemDictionaryComponent implements OnInit {
         var filter = this.filterService.getFilter();
         var params: string = "";
         params += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
-        params += filter.itemId != null ? "itemId=" + filter.itemId : "";
+        params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
 
         this.apiService.get<Item[]>('item', params).subscribe(
             data => {

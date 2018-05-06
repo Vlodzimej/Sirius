@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Sirius.DAL;
 using Sirius.Models;
 using Sirius.Helpers;
+using System.Linq.Expressions;
 
 namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
+        public string GetSettingValueById(Guid id)
+        {
+            return _unitOfWork.SettingRepository.GetByID(id).Alias;
+        }
+        public string GetSettingValueByTypeIdAndAlias(Guid typeId, string alias)
+        {
+            Expression<Func<Setting, bool>> f = x => (x.Alias == alias) && (x.TypeId == typeId);
+            return _unitOfWork.SettingRepository.Get(f).FirstOrDefault()?.Value;
+        }
         public void DatabaseReset()
         {
             // Создание списка категорий
@@ -70,11 +78,52 @@ namespace Sirius.Services
             };
             itemPrototypes.Add(item);
 
+            // Создание списка настроек
+            var settingsPrototypes = new List<Setting>();
+            var setting = new Setting()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Префикс прихода",
+                Value = "Пн",
+                TypeId = Types.SettingsTypes.Invoice.Prefix.Id,
+                Alias = "arrival"
+            };
+            settingsPrototypes.Add(setting);
+
+            setting = new Setting()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Префикс расхода",
+                Value = "Рн",
+                TypeId = Types.SettingsTypes.Invoice.Prefix.Id,
+                Alias = "consumption"
+            };
+            settingsPrototypes.Add(setting);
+
+            setting = new Setting()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Префикс списания",
+                Value = "Сп",
+                TypeId = Types.SettingsTypes.Invoice.Prefix.Id,
+                Alias = "writeoff"
+            };
+            settingsPrototypes.Add(setting);
+
+            setting = new Setting()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Префикс шаблона",
+                Value = "Шбл",
+                TypeId = Types.SettingsTypes.Invoice.Prefix.Id,
+                Alias = "template"
+            };
+            settingsPrototypes.Add(setting);
 
             _unitOfWork.SettingRepository.DatabaseDropTables();
             _unitOfWork.Save();
 
-            _unitOfWork.SettingRepository.DatabaseFill(dimensionPrototypes, categoryPrototypes, vendorPrototypes, itemPrototypes);
+            _unitOfWork.SettingRepository.DatabaseFill(dimensionPrototypes, categoryPrototypes, vendorPrototypes, itemPrototypes, settingsPrototypes);
             _unitOfWork.Save();
         }
 

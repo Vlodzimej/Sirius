@@ -35,7 +35,8 @@ namespace Sirius.Models
             var invoices = _siriusContext.Invoices
             .Include(i => i.User)
             .Include(i => i.Vendor)
-            .Where(filter);
+            .Where(filter)
+            .OrderBy(i => i.CreateDate);
 
             if (invoices != null)
             {

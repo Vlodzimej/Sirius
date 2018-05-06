@@ -9,19 +9,25 @@
                 </div>
                 <div id="info-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
+                        
                         <p>Автор:
                             <strong>{{invoice.userFullName}}</strong>
                         </p>
+
                         <p>Дата создания:
                             <strong>{{invoice.createDate | fulldate}}</strong>
                         </p>
-                        <p *ngIf="invoice.isFixed">Статус:
-                            <strong>проведён</strong>
-                        </p>
-                        <p *ngIf="!invoice.isFixed">Статус:
-                            <strong>не проведён</strong>
-                        </p>
-                        <p>Общая сумма:
+
+                        <div *ngIf="invoiceType.alias != 'template'">
+                            <p *ngIf="invoice.isFixed">Статус:
+                                <strong>проведён</strong>
+                            </p>
+                            <p *ngIf="!invoice.isFixed">Статус:
+                                <strong>не проведён</strong>
+                            </p>
+                        </div>
+
+                        <p *ngIf="invoiceType.alias != 'template'">Общая сумма:
                             <strong>{{sum | currency}}</strong>
                         </p>
 
@@ -104,8 +110,12 @@
                     <td>{{register.name}}</td>
                     <td>{{register.amount}}</td>
                     <td>{{register.dimension}}</td>
-                    <td *ngIf="invoiceType.alias != 'template'"><div *ngIf="register.cost >= 0">{{register.cost | currency}}</div></td>
-                    <td *ngIf="invoiceType.alias != 'template'"><div *ngIf="register.sum >= 0">{{register.sum | currency}}</div></td>
+                    <td *ngIf="invoiceType.alias != 'template'">
+                        <div *ngIf="register.cost >= 0">{{register.cost | currency}}</div>
+                    </td>
+                    <td *ngIf="invoiceType.alias != 'template'">
+                        <div *ngIf="register.sum >= 0">{{register.sum | currency}}</div>
+                    </td>
                 </tr>
                 <tr *ngIf="invoiceType.alias != 'template'">
                     <td colspan="3"></td>
@@ -161,7 +171,7 @@
                         <!---->
 
                         <!--- Поля для расходных накладных-->
-                        <div class="form-group" *ngIf="invoiceType.alias == 'consumption'">
+                        <div class="form-group" *ngIf="invoiceType.alias == 'consumption' || invoiceType.alias=='writeoff'">
                             <ng-select [options]="optionBatches" [allowClear]="true" placeholder="Остатки" filterPlaceholder="Укажите остаток" (selected)="onBatchChanged($event)"
                                 [(ngModel)]="registerCost" name="cost">
                             </ng-select>

@@ -91,8 +91,11 @@ namespace Sirius.Services
 
             if (addedInvoice != null)
             {
-                // Здесь должен быть запрос префикса для накладной из таблицы Settings
-                var prefix = "Пн";
+                // Получаем информацию о типе накладной 
+                var invoiceType = GetInvoiceTypeByTypeId(invoice.TypeId);
+                // И узнаём префикс из настроек
+                var prefix = GetSettingValueByTypeIdAndAlias(Types.SettingsTypes.Invoice.Prefix.Id, invoiceType.Alias);
+
                 var year = DateTime.Now.ToString("yy");
                 var number = addedInvoice.CreateDate.ToString("hhmmss");
 
@@ -154,10 +157,12 @@ namespace Sirius.Services
                     };
                     _unitOfWork.StorageRegisterRepository.Insert(newStorageRegister);
                 }
-
-                if(storageRegister.Amount == 0)
+                if (storageRegister != null)
                 {
-                    _unitOfWork.StorageRegisterRepository.Delete(storageRegister);
+                    if (storageRegister.Amount == 0)
+                    {
+                        _unitOfWork.StorageRegisterRepository.Delete(storageRegister);
+                    }
                 }
             });
             
@@ -274,7 +279,17 @@ namespace Sirius.Services
                (filter.StartDate != DateTime.MinValue ? x.CreateDate >= filter.StartDate : true) &&
                (filter.FinishDate != DateTime.MinValue ? x.CreateDate <= filter.FinishDate : true) &&
                (filter.FixedOnly == true ? x.IsFixed == true : true);
+
+
+
             return _unitOfWork.InvoiceRepository.GetAll(f);
         }
+
+        //private IOrderedQueryable<Invoice> Sort(IOrderedQueryable<Invoice> invoices)
+        //{
+        //    IOrderedQueryable<Invoice> orderedInvoices = invoices.OrderBy(b => b.CreateDate);
+
+        //    return orderedInvoices;
+        //}
     }
 }

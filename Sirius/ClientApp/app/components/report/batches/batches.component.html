@@ -23,7 +23,7 @@
             <table class="table table-bordered table-responsive table-condensed">
                 <tr class="active">
                     <th class="text-center">Количество</th>
-                    <th class="text-center">Цена</th>
+                    <th class="text-center">Цена за ед.</th>
                     <th class="text-center">Сумма</th>
                 </tr>
                 <tr *ngFor="let item of listItems; let n = index" [ngClass]="{'danger': item.amount < 0}">

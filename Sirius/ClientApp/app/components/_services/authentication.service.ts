@@ -1,13 +1,19 @@
 ﻿import { OnInit } from '@angular/core';
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AuthenticationService {
 
-    constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) { }
+    constructor(
+        private http: Http, 
+        @Inject('BASE_URL') 
+        private baseUrl: string, 
+        private router: Router
+    ) { }
 
     login(username: string, password: string) {
         return this.http.post(this.baseUrl + 'api/user/authenticate', { username: username, password: password })
@@ -37,6 +43,8 @@ export class AuthenticationService {
                 let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
                 return new RequestOptions({ headers: headers });
             }
+        } else {
+            this.router.navigateByUrl('/login');
         }
         return new RequestOptions();
     }

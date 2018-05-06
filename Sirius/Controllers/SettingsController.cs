@@ -7,7 +7,6 @@ using Sirius.Models;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
-using System.Collections.Generic;
 
 namespace Sirius.Controllers
 {
@@ -26,13 +25,13 @@ namespace Sirius.Controllers
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
         /// <summary>
-        /// POST: api/category
+        /// POST: dbreset
+        /// Сброс базы данных
         /// </summary>
-        /// <param name="category"></param>
+        /// <returns></returns>
         [HttpPost("dbreset")]
-        public IActionResult DbReset([FromBody]Category category)
+        public IActionResult DbReset()
         {
             _siriusService.DatabaseReset();
             return Ok();

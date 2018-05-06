@@ -17,5 +17,7 @@ namespace Sirius.Models.Dtos
         public string StartDate { get; set; }
 
         public string FinishDate { get; set; }
+
+        public bool IsConfirmed { get; set; }
     }
 }

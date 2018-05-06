@@ -39,7 +39,11 @@ namespace Sirius.Controllers
             var user = _siriusService.Authenticate(userDto.Username, userDto.Password);
 
             if (user == null)
-                return Unauthorized();
+                //return Unauthorized();
+                return StatusCode(401, "Неверный логин или пароль.");
+
+            if (user.IsConfirmed == false)
+                return StatusCode(401, "Пользователь не подтверждён.");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -90,7 +94,7 @@ namespace Sirius.Controllers
         public IActionResult GetAll()
         {
             var users = _siriusService.GetAllUsers();
-            var userDtos = _mapper.Map<IEnumerable<User> , IEnumerable<UserDto>>(users);
+            var userDtos = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
             return Ok(userDtos);
         }
 
@@ -127,6 +131,16 @@ namespace Sirius.Controllers
         {
             _siriusService.Delete(id);
             return Ok();
+        }
+
+        [HttpPut("status/{id}")]
+        public IActionResult ChangeStatus(Guid id, [FromQuery]bool isConfirmed)
+        {
+            if(_siriusService.ChangeUserStatus(id, isConfirmed))
+            {
+                return StatusCode(200, "Статус пользователя изменён.");
+            }
+            return StatusCode(400, "Пользователь не найден.");
         }
     }
 }

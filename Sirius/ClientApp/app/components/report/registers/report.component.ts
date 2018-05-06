@@ -43,16 +43,7 @@ export class ReportComponent implements OnInit {
                     this.type = data;
                     var title = this.type.name.toLowerCase();
                     this.pageHeaderService.changeText('Отчет по '+title+'у');
-                    this.apiService.getById<Register[]>('register/type', this.typeAlias).subscribe(
-                        data => {
-                            this.registers = data;
-                            console.log(this.registers);
-                        },
-                        error => {
-
-                        }
-                    );
-
+                    this.getRegistersByFilter();
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -65,9 +56,9 @@ export class ReportComponent implements OnInit {
         this.loadingService.showLoadingIcon();
         // Получение критериев фильтрации 
         var filter = this.filterService.getFilter();
-        var params: string = "";
-        console.log('start: '+filter.startDate);
-        params += filter.itemId != null ? "itemId=" + filter.itemId : "";
+
+        var params: string = "typeid="+this.type.id;
+        params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
         params += filter.startDate != null && typeof(filter.startDate) != 'undefined' ? "&startDate=" + filter.startDate : "";
         params += filter.finishDate != null && typeof(filter.finishDate) != 'undefined'? "&finishDate=" + filter.finishDate : "";
         this.apiService.get<Register[]>('register', params).subscribe(
