@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Sirius.Services;
 using Sirius.DAL;
 using Sirius.Helpers;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Sirius
 {
@@ -89,6 +90,11 @@ namespace Sirius
                 .AllowCredentials());
 
             app.UseStaticFiles();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
 
