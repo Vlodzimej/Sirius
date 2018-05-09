@@ -189,8 +189,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">
-                            <button [disabled]="loading" class="btn btn-primary">{{modal.submit}}</button>
-                            <img *ngIf="loading" src="../../../assets/images/loading_small.gif" />
+                            <button class="btn btn-primary">{{modal.submit}}</button>
                             <a (click)="onCloseModal('modal-register')" class="btn btn-link">Отмена</a>
                         </div>
                     </div>
