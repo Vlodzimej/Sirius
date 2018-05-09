@@ -84,7 +84,7 @@ export class InvoiceDetailComponent implements OnInit {
         private alertService: AlertService,
         private pageHeaderService: PageHeaderService,
         private modalService: ModalService,
-        private loadingService: LoadingService,
+        public loadingService: LoadingService,
         private location: Location
     ) {
         this.newRegisterModal = {
@@ -191,6 +191,8 @@ export class InvoiceDetailComponent implements OnInit {
     onCloseModal(id: string) {
         this.modalService.close(id);
     }
+
+    onClear() { }
 
     /** 
      * Событие: Нажатие кнопки добавления нового регистра

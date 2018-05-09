@@ -34,7 +34,7 @@ export class BatchesComponent implements OnInit {
         private alertService: AlertService,
         private modalService: ModalService,
         private pageHeaderService: PageHeaderService,
-        private loadingService: LoadingService,
+        public loadingService: LoadingService,
         private filterService: FilterService
     ) { }
 

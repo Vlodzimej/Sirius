@@ -19,7 +19,7 @@
 
     <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
         <app-loading-icon></app-loading-icon>
-        <div class="panel panel-default" *ngIf="!loadingService.isProgress">
+        <div class="panel panel-default" *ngIf="!loadingService.getLoadingStatus()">
             <table class="table table-bordered table-responsive table-condensed">
                 <tr class="active">
                     <th class="text-center">Количество</th>
@@ -42,7 +42,7 @@
                 </tr>
             </table>
         </div>
-        <div *ngIf="listItems.length == 0 && isReport && !loadingService.isProgress">
+        <div *ngIf="listItems.length == 0 && isReport && !loadingService.getLoadingStatus()">
             <h4>Остатки не найдены</h4>
             <p>Измените критерии фильтра.</p>
         </div>

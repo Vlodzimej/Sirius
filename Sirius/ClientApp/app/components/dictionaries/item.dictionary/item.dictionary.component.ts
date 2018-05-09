@@ -25,7 +25,7 @@ export class ItemDictionaryComponent implements OnInit {
         private alertService: AlertService,
         private modalService: ModalService,
         private pageHeaderService: PageHeaderService,
-        private loadingService: LoadingService,
+        public loadingService: LoadingService,
         private filterService: FilterService) { }
 
     /**

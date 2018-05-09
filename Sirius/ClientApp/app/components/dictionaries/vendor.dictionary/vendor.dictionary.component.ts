@@ -18,7 +18,7 @@ export class VendorDictionaryComponent implements OnInit {
         private apiService: ApiService,
         private alertService: AlertService,
         private modalService: ModalService,
-        private loadingService: LoadingService,
+        public loadingService: LoadingService,
         private pageHeaderService: PageHeaderService
     ) { }
 

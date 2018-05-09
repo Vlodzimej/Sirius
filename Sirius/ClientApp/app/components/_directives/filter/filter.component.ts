@@ -19,7 +19,7 @@ export class FilterComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private alertService: AlertService,
-        private filterService: FilterService
+        public filterService: FilterService
     ) { }
 
     ngOnInit(): void {
