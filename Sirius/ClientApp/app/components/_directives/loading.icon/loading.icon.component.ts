@@ -5,7 +5,7 @@ import { LoadingService } from '../../_services';
     templateUrl: './loading.icon.component.html'
 })
 export class LoadingIconComponent implements OnInit {
-    constructor(private loadingService: LoadingService) { }
+    constructor(public loadingService: LoadingService) { }
 
     ngOnInit(): void { }
 }
