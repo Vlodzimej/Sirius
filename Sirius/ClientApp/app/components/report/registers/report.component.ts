@@ -28,7 +28,7 @@ export class ReportComponent implements OnInit {
         private modalService: ModalService,
         private pageHeaderService: PageHeaderService,
         private filterService: FilterService,
-        private loadingService: LoadingService
+        public loadingService: LoadingService
     ) { }
 
     ngOnInit(): void {

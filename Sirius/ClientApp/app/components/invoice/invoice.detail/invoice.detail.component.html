@@ -128,7 +128,7 @@
                 </tr>
             </table>
         </div>
-        <div *ngIf="registers.length == 0 && !loadingService.isProgress">
+        <div *ngIf="registers.length == 0 && !loadingService.getLoadingStatus()">
             <h4>Список пуст</h4>
         </div>
     </div>
