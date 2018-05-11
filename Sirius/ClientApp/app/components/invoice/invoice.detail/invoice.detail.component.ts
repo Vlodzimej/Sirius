@@ -10,7 +10,6 @@ import { FullDatePipe } from '../../_pipes';
 import { Location } from '@angular/common';
 
 // Классы для работы с выпадающим списком
-import { IOption } from 'ng-select';
 import { Converter } from '../../_helpers';
 import { FormGroup } from '@angular/forms';
 
@@ -51,12 +50,11 @@ export class InvoiceDetailComponent implements OnInit {
     // Список поставщиков
     public vendors: Vendor[] = [];
 
-    public optionItems: Array<IOption> = [];
-    public optionCategories: Array<IOption> = [];
-    public optionBatches: Array<IOption> = [];
-    public optionTemplates: Array<IOption> = [];
-
-    public form: FormGroup;
+    public optionItems: Array<string> = [];
+    public optionCategories: Array<string> = [];
+    public optionBatches: Array<string> = [];
+    public optionTemplates: Array<string> = [];
+   // public form: FormGroup;
 
     // Категория добавляемой/изменяемой позиции
     public categoryId: string = "";
@@ -461,7 +459,7 @@ export class InvoiceDetailComponent implements OnInit {
                 // Получаем остатки по наименованию...
                 this.batches = data;
                 // ...и конвертируем их по шаблону в список для ng-select
-                this.optionBatches = Converter.BatchToOptionArray(this.batches);
+                //this.optionBatches = Converter.BatchToOptionArray(this.batches);
                 // 
                 //this.registerCost = this.register.cost.toString();
             },
@@ -509,7 +507,7 @@ export class InvoiceDetailComponent implements OnInit {
         if (this.optionCategories.length == 0) {
             this.apiService.getAll<Category>('category').subscribe(
                 data => {
-                    this.optionCategories = Converter.ConvertToOptionArray(data);
+                  //  this.optionCategories = Converter.ConvertToOptionArray(data);
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -525,7 +523,7 @@ export class InvoiceDetailComponent implements OnInit {
         var params = 'categoryId=' + this.categoryId;
         this.apiService.get<Item[]>('item', params).subscribe(
             data => {
-                this.optionItems = Converter.ConvertToOptionArray(data);
+           //     this.optionItems = Converter.ConvertToOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -540,7 +538,7 @@ export class InvoiceDetailComponent implements OnInit {
 
         this.apiService.getAll<Item>('item').subscribe(
             data => {
-                this.optionItems = Converter.ConvertToOptionArray(data);
+             //   this.optionItems = Converter.ConvertToOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -552,7 +550,7 @@ export class InvoiceDetailComponent implements OnInit {
      * Событие: изменение категории
      * @param option 
      */
-    onCategoryChanged(option: IOption) {
+    onCategoryChanged(option: any) {
         this.categoryId = option.value;
         this.getItemsByCategory();
     }
@@ -561,7 +559,7 @@ export class InvoiceDetailComponent implements OnInit {
      * Событие: изменение наименования
      * @param option 
      */
-    onItemChanged(option: IOption) {
+    onItemChanged(option: any) {
         this.register.itemId = option.value;
         this.getBatchesByItem();
     }
@@ -578,7 +576,7 @@ export class InvoiceDetailComponent implements OnInit {
         }
     }
 
-    onBatchChanged(option: IOption) {
+    onBatchChanged(option: any) {
         this.register.cost = parseFloat(option.value);
     }
 
@@ -600,7 +598,7 @@ export class InvoiceDetailComponent implements OnInit {
                     this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
                         data => {
                             // Конвертация полученного списка в массив для выпадающего списка ng-select
-                            this.optionTemplates = Converter.ConvertToOptionArray(data);
+                           // this.optionTemplates = Converter.ConvertToOptionArray(data);
                             // Назначение свойств модали 'Шаблон' для модального окна
                             this.modal = this.templateModal;
                             // Открытие модального окна

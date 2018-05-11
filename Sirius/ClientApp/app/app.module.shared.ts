@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { SelectModule } from 'ng-select';
+//import {Select2Component} from 'angular-select2-component';
 
 import { AppComponent } from './components/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -96,7 +96,6 @@ import {
         CommonModule,
         HttpModule,
         FormsModule,
-        SelectModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full', canActivate: [AuthGuard] },
             { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },

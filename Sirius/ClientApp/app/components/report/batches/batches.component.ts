@@ -3,7 +3,6 @@ import { Batch, BatchGroup, BatchListElement, BatchListElementType, Item, Catego
 import { Filter } from '../../_extends';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CurrencyPipe } from '../../_pipes';
-import { IOption } from 'ng-select';
 import { Converter } from '../../_helpers';
 import { ApiService, AlertService, ModalService, PageHeaderService, LoadingService, FilterService } from '../../_services';
 
@@ -20,9 +19,9 @@ export class BatchesComponent implements OnInit {
     public batchGroups: BatchGroup[] = [];
     public batches: Batch[] = [];
     public listItems: BatchListElement[] = [];
-    public optionItems: Array<IOption> = [];
-    public optionCategories: Array<IOption> = [];
-    public optionVendors: Array<IOption> = [];
+    //public optionItems: Array<string> = [];
+    //public optionCategories: Array<string> = [];
+    //public optionVendors: Array<string> = [];
     public filter: Filter = new Filter();
     // Признак первого сформированного очета
     public isReport: boolean = false;

@@ -3,21 +3,21 @@
 </div>
 
 <div class="form-group" *ngIf="filterService.params.category">
-    <ng-select [options]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска"
+    <!--<ng-select [items]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска"
         (selected)="onCategoryChanged($event)" (deselected)="getAllItems()">
-    </ng-select>
+    </ng-select>-->
 </div>
 
 <div class="form-group" *ngIf="filterService.params.item">
-    <ng-select [options]="optionItems" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска"
+    <!--<ng-select [items]="optionItems" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска"
         (selected)="onItemChanged($event)" >
-    </ng-select>
+    </ng-select>-->
 </div>
 
 <div class="form-group" *ngIf="filterService.params.vendor">
-    <ng-select [options]="optionVendors" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска"
+    <!--<ng-select [items]="optionVendors" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска"
         (selected)="onVendorChanged($event)">
-    </ng-select>
+    </ng-select>-->
 </div>
 
 <div class="row" *ngIf="filterService.params.date">

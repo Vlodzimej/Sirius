@@ -1,11 +1,10 @@
-import { IOption } from 'ng-select';
 import { Batch } from '../_models';
 
 export class Converter {
     /**
      * OptionsConverter
      * Конвертирование массива объектов в массив объектов для выпадающего списка select2
-     */
+     *//*
     public static ConvertToOptionArray(objectArray: any[]) : IOption[] {
         var obj = objectArray as MetaObject[];
         var optionEntries: IOption[] = [];
@@ -25,7 +24,7 @@ export class Converter {
             optionEntries.push(optionEntry);
         });
         return optionEntries;
-    } 
+    } */
 }
 
 export class MetaObject {

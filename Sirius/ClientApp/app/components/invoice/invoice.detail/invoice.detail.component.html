@@ -147,18 +147,18 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <ng-select [options]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите название категории"
+                            <!--<ng-select [items]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите название категории"
                                 (selected)="onCategoryChanged($event)" [(ngModel)]="categoryId" (deselected)="getAllItems()"
                                 name="category">
-                            </ng-select>
+                            </ng-select>-->
                             <!--<div *ngIf="f1.submitted && categoryId == ''" class="help-block">Требуется указать категорию</div>-->
                         </div>
 
                         <div class="form-group">
-                            <ng-select [options]="optionItems" [(ngModel)]="register.itemId" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование"
+                            <!--<ng-select [items]="optionItems" [(ngModel)]="register.itemId" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование"
                                 (selected)="onItemChanged($event)" name="item">
                             </ng-select>
-                            <div *ngIf="f1.submitted && register.itemId == null" class="help-block">Требуется выбрать наименование</div>
+                            <div *ngIf="f1.submitted && register.itemId == null" class="help-block">Требуется выбрать наименование</div>-->
                         </div>
 
                         <!--- Поля для приходных накладных-->
@@ -172,10 +172,10 @@
 
                         <!--- Поля для расходных накладных-->
                         <div class="form-group" *ngIf="invoiceType.alias == 'consumption' || invoiceType.alias=='writeoff'">
-                            <ng-select [options]="optionBatches" [allowClear]="true" placeholder="Остатки" filterPlaceholder="Укажите остаток" (selected)="onBatchChanged($event)"
+                            <!--<ng-select [items]="optionBatches" [allowClear]="true" placeholder="Остатки" filterPlaceholder="Укажите остаток" (selected)="onBatchChanged($event)"
                                 [(ngModel)]="registerCost" name="cost">
                             </ng-select>
-                            <div *ngIf="f1.submitted && registerCost == 0" class="help-block">Требуется указать остаток</div>
+                            <div *ngIf="f1.submitted && registerCost == 0" class="help-block">Требуется указать остаток</div>-->
                         </div>
                         <!---->
 
@@ -211,10 +211,12 @@
                 <form name="form2" (ngSubmit)="f2.form.valid && addRegistersFromTemplate()" #f2="ngForm">
                     <div class="modal-body">
                         <div class="form-group">
-                            <ng-select [options]="optionTemplates" [allowClear]="true" placeholder="Шаблон" filterPlaceholder="Выберите шаблон услуги"
+                            <!--
+                            <ng-select [items]="optionTemplates" [allowClear]="true" placeholder="Шаблон" filterPlaceholder="Выберите шаблон услуги"
                                 [(ngModel)]="templateInvoiceId" name="template">
                             </ng-select>
                             <div *ngIf="f2.submitted && templateInvoiceId == ''" class="help-block">Требуется выбрать шаблон</div>
+                        -->
                         </div>
                     </div>
                     <div class="modal-footer">
