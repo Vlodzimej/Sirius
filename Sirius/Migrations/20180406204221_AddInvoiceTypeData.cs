@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Sirius.DAL;
 using Sirius.Models;
 using Sirius.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Sirius.Services;
 
 namespace Sirius.Migrations
 {
@@ -11,6 +13,7 @@ namespace Sirius.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            /*
             using (var context = new SiriusContext())
             {
                 var invoiceType = new InvoiceType()
@@ -50,8 +53,7 @@ namespace Sirius.Migrations
                 context.InvoiceTypes.Add(invoiceType);
 
                 context.SaveChanges();
-            }
-
+            }*/
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

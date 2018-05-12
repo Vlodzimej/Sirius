@@ -12,6 +12,7 @@ using Sirius.Services;
 using Sirius.DAL;
 using Sirius.Helpers;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sirius
 {
@@ -30,6 +31,12 @@ namespace Sirius
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            // добавляем контекст SiriusContext в качестве сервиса в приложение
+            services.AddDbContext<SiriusContext>(options =>
+                options.UseNpgsql(connection));
+
             services.AddDbContext<SiriusContext>();
             services.AddMvc();
             services.AddAutoMapper();
@@ -61,6 +68,7 @@ namespace Sirius
 
             // configure DI for application services
             services.AddScoped<ISiriusService, SiriusService>();
+            services.AddScoped<UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

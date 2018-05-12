@@ -4,9 +4,9 @@ using Sirius.Models;
 
 namespace Sirius.DAL
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
-        private SiriusContext _siriusContext = new SiriusContext();
+        private readonly SiriusContext _siriusContext;
 
         /// <summary>
         /// Репозиторий "Пользователь"
@@ -63,6 +63,11 @@ namespace Sirius.DAL
         /// </summary>
         public StorageRegisterRepository StorageRegisterRepository => storageRegisterRepository ?? new StorageRegisterRepository(_siriusContext);
         private StorageRegisterRepository storageRegisterRepository;
+
+        public UnitOfWork(SiriusContext siriusContext)
+        {
+            _siriusContext = siriusContext;
+        }
 
         public void Save()
         {

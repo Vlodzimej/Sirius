@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Sirius.DAL;
+using Sirius.Services;
 using System;
 using System.Collections.Generic;
 

@@ -20,9 +20,9 @@ namespace Sirius.Controllers
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public CategoryController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public CategoryController(IMapper mapper, IOptions<AppSettings> appSettings, UnitOfWork unitOfWork)
         {
-            _siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(unitOfWork);
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }

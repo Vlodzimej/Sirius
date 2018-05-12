@@ -22,27 +22,12 @@ namespace Sirius.Controllers
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
-        public ItemController(IMapper mapper, IOptions<AppSettings> appSettings)
+        public ItemController(IMapper mapper, IOptions<AppSettings> appSettings, UnitOfWork unitOfWork)
         {
-            _siriusService = new SiriusService(new UnitOfWork());
+            _siriusService = new SiriusService(unitOfWork);
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
-
-        /// <summary>
-        /// GET: api/item
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet]
-        //public IActionResult Get()
-        //{
-        //     var items = _siriusService.GetAllItems();
-        //     if (items != null)
-        //     {
-        //         return Ok(items);
-        //     }
-        //    return NotFound();
-        //}
 
         /// <summary>
         /// GET: api/item/filter

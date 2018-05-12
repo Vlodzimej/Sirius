@@ -39,10 +39,8 @@ namespace Sirius.Services
         /// <returns></returns>
         public Register GetRegisterById(Guid id)
         {
-            using (var unitOfWork = new DAL.UnitOfWork())
-            {
-                return unitOfWork.RegisterRepository.GetByID(id);
-            }
+            return _unitOfWork.RegisterRepository.GetByID(id);
+
         }
         /// <summary>
         /// Получить запись регистра по Id
@@ -134,7 +132,6 @@ namespace Sirius.Services
         {
             if (ids != null && ids.Count() > 0)
             {
-                int count = 0;
                 foreach (var id in ids)
                 {
                     var register = _unitOfWork.RegisterRepository.GetByID(id);

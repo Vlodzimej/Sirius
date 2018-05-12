@@ -28,12 +28,18 @@ namespace Sirius.Models
         }
 
         public void DatabaseFill(
+            List<InvoiceType> invoiceTypes,
             List<Dimension> dimensions, 
             List<Category> categories, 
             List<Vendor> vendors, 
             List<Item> items,
             List<Setting> settings)
         {
+            // Добавление типов накладных
+            foreach (var invoiceType in invoiceTypes)
+            {
+                _siriusContext.InvoiceTypes.Add(invoiceType);
+            }
             // Добавление единиц измерений
             foreach (var dimension in dimensions)
             {

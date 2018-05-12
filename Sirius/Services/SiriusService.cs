@@ -7,7 +7,7 @@ namespace Sirius.Services
     public partial class SiriusService : ISiriusService
     {
 
-        private UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
         //private SiriusContext _siriusContext;
         private User currentUser;
 

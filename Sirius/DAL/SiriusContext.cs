@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Sirius.Helpers;
 using Sirius.Models;
 
 namespace Sirius.DAL
@@ -25,9 +27,13 @@ namespace Sirius.DAL
 
         public DbSet<StorageRegister> StorageRegisters { get; set; }
 
+        public SiriusContext(DbContextOptions<SiriusContext> options) : base(options)  {  }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SiriusDB;Username=sirius_user;Password=340571578;Integrated Security=false;");
+
+            //optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SiriusDB;Username=sirius_user;Password=340571578;Integrated Security=false;");
+            //optionsBuilder.UseNpgsql("Host=82.146.47.103;Port=5432;Database=siriusdb;Username=siriususer;Password=Uncle340571578;Integrated Security=false;");
         }
     }
 }

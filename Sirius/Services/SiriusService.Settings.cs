@@ -20,6 +20,43 @@ namespace Sirius.Services
         }
         public void DatabaseReset()
         {
+            var invoiceTypes = new List<InvoiceType>();
+            var invoiceType = new InvoiceType()
+            {
+                Id = Types.InvoiceTypes.Arrival.Id,
+                Factor = 1,
+                Name = "Приход",
+                Alias = "arrival"
+            };
+            invoiceTypes.Add(invoiceType);
+
+            invoiceType = new InvoiceType()
+            {
+                Id = Types.InvoiceTypes.Consumption.Id,
+                Factor = (-1),
+                Name = "Расход",
+                Alias = "consumption"
+            };
+            invoiceTypes.Add(invoiceType);
+
+            invoiceType = new InvoiceType()
+            {
+                Id = Types.InvoiceTypes.Writeoff.Id,
+                Factor = (-1),
+                Name = "Списание",
+                Alias = "writeoff"
+            };
+            invoiceTypes.Add(invoiceType);
+
+            invoiceType = new InvoiceType()
+            {
+                Id = Types.InvoiceTypes.Template.Id,
+                Factor = 0,
+                Name = "Услуга",
+                Alias = "template"
+            };
+            invoiceTypes.Add(invoiceType);
+
             // Создание списка категорий
             var categoryPrototypes = new List<Category>();
             var category = new Category() {
@@ -123,7 +160,7 @@ namespace Sirius.Services
             _unitOfWork.SettingRepository.DatabaseDropTables();
             _unitOfWork.Save();
 
-            _unitOfWork.SettingRepository.DatabaseFill(dimensionPrototypes, categoryPrototypes, vendorPrototypes, itemPrototypes, settingsPrototypes);
+            _unitOfWork.SettingRepository.DatabaseFill(invoiceTypes, dimensionPrototypes, categoryPrototypes, vendorPrototypes, itemPrototypes, settingsPrototypes);
             _unitOfWork.Save();
         }
 
