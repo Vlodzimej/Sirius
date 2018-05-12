@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Filter } from '../../_extends';
+import { Filter, ISelectOption } from '../../_extends';
 import { ApiService, AlertService } from '../../_services';
 import { Item, Category, Vendor } from '../../_models';
 import { Converter } from '../../_helpers';
@@ -11,9 +11,9 @@ import { FilterService } from '../../_services';
 })
 export class FilterComponent implements OnInit {
 
-    public optionItems: Array<string> = [];
-    public optionCategories: Array<string> = [];
-    public optionVendors: Array<string> = [];
+    public optionItems: Array<ISelectOption> = [];
+    public optionCategories: Array<ISelectOption> = [];
+    public optionVendors: Array<ISelectOption> = [];
 
     constructor(
         private apiService: ApiService,
@@ -23,7 +23,6 @@ export class FilterComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.optionVendors = ['one', 'two'];
         // Предварительная загрузка списка категорий из справочника
         this.getAllCategories();
 
@@ -37,7 +36,7 @@ export class FilterComponent implements OnInit {
     getAllCategories() {
         this.apiService.getAll<Category>('category').subscribe(
             data => {
-                //this.optionCategories = Converter.ConvertToOptionArray(data);
+                this.optionCategories = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -51,7 +50,7 @@ export class FilterComponent implements OnInit {
     getAllItems() {
         this.apiService.getAll<Item>('item').subscribe(
             data => {
-                //this.optionItems = Converter.ConvertToOptionArray(data);
+                this.optionItems = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -65,7 +64,7 @@ export class FilterComponent implements OnInit {
     getItemsByCategory() {
         this.apiService.get<Item[]>('item', 'categoryId=' + this.filterService.getCategoryId()).subscribe(
             data => {
-                //this.optionItems = Converter.ConvertToOptionArray(data);
+                this.optionItems = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -79,7 +78,7 @@ export class FilterComponent implements OnInit {
     getAllVendors() {
         this.apiService.getAll<Vendor>('vendor').subscribe(
             data => {
-                //this.optionVendors = Converter.ConvertToOptionArray(data);
+                this.optionVendors = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -88,9 +87,9 @@ export class FilterComponent implements OnInit {
     }
 
 
-    onCategoryChanged(option: any) {
+    onCategoryChanged() {
        // this.filterService.setCategoryId(option.value)
-       // this.getItemsByCategory();
+       this.getItemsByCategory();
     }
 
     onItemChanged(option: any) {
@@ -102,6 +101,6 @@ export class FilterComponent implements OnInit {
     }
 
     onCleanFilter() {
-       // this.filterService.cleanFilter();
+        this.filterService.cleanFilter();
     }
 }

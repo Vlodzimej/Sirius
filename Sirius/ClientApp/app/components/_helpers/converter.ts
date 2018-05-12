@@ -1,4 +1,5 @@
 import { Batch } from '../_models';
+import { ISelectOption } from '../_extends';
 
 export class Converter {
     /**
@@ -25,9 +26,30 @@ export class Converter {
         });
         return optionEntries;
     } */
+    public static ConvertToSelectOptionArray(objectArray: any[]) : ISelectOption[] {
+        var obj = objectArray as IMetaObject[];
+        var optionEntries: ISelectOption[] = [];
+        obj.forEach(x => {
+            var optionEntry: ISelectOption = { text: x.name, id: x.id };
+            optionEntries.push(optionEntry);
+        });
+        return optionEntries;
+    }
+
+
+    public static BatchToSelectOptionArray(objectArray: any[]) : ISelectOption[] {
+        var obj = objectArray as Batch[];
+        var optionEntries: ISelectOption[] = [];
+        obj.forEach(x => {
+            var label = x.amount + ' шт. по цене ' + x.cost + ' руб.';
+            var optionEntry: ISelectOption = { text: label, id: x.cost.toString() };
+            optionEntries.push(optionEntry);
+        });
+        return optionEntries;
+    }
 }
 
-export class MetaObject {
+export interface IMetaObject {
     id: string;
     name: string;
 }

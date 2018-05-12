@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
 import { Converter } from '../../_helpers';
 import { FormGroup } from '@angular/forms';
 
-import { ModalType } from '../../_extends';
+import { ModalType, ISelectOption } from '../../_extends';
 
 @Component({
     selector: 'app-invoice-detail',
@@ -50,11 +50,11 @@ export class InvoiceDetailComponent implements OnInit {
     // Список поставщиков
     public vendors: Vendor[] = [];
 
-    public optionItems: Array<string> = [];
-    public optionCategories: Array<string> = [];
-    public optionBatches: Array<string> = [];
-    public optionTemplates: Array<string> = [];
-   // public form: FormGroup;
+    public optionItems: Array<ISelectOption> = [];
+    public optionCategories: Array<ISelectOption> = [];
+    public optionBatches: Array<ISelectOption> = [];
+    public optionTemplates: Array<ISelectOption> = [];
+    // public form: FormGroup;
 
     // Категория добавляемой/изменяемой позиции
     public categoryId: string = "";
@@ -458,10 +458,9 @@ export class InvoiceDetailComponent implements OnInit {
             data => {
                 // Получаем остатки по наименованию...
                 this.batches = data;
-                // ...и конвертируем их по шаблону в список для ng-select
-                //this.optionBatches = Converter.BatchToOptionArray(this.batches);
-                // 
-                //this.registerCost = this.register.cost.toString();
+                // ...и конвертируем их по шаблону в список для select
+                this.optionBatches = Converter.BatchToSelectOptionArray(this.batches);
+                this.registerCost = this.register.cost.toString();
             },
             error => {
                 this.alertService.serverError(error);
@@ -507,7 +506,7 @@ export class InvoiceDetailComponent implements OnInit {
         if (this.optionCategories.length == 0) {
             this.apiService.getAll<Category>('category').subscribe(
                 data => {
-                  //  this.optionCategories = Converter.ConvertToOptionArray(data);
+                    this.optionCategories = Converter.ConvertToSelectOptionArray(data);
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -523,7 +522,7 @@ export class InvoiceDetailComponent implements OnInit {
         var params = 'categoryId=' + this.categoryId;
         this.apiService.get<Item[]>('item', params).subscribe(
             data => {
-           //     this.optionItems = Converter.ConvertToOptionArray(data);
+                this.optionItems = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -538,7 +537,7 @@ export class InvoiceDetailComponent implements OnInit {
 
         this.apiService.getAll<Item>('item').subscribe(
             data => {
-             //   this.optionItems = Converter.ConvertToOptionArray(data);
+                this.optionItems = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);
@@ -548,24 +547,19 @@ export class InvoiceDetailComponent implements OnInit {
 
     /**
      * Событие: изменение категории
-     * @param option 
      */
-    onCategoryChanged(option: any) {
-        this.categoryId = option.value;
+    onCategoryChanged() {
         this.getItemsByCategory();
     }
 
     /**
      * Событие: изменение наименования
-     * @param option 
      */
-    onItemChanged(option: any) {
-        this.register.itemId = option.value;
+    onItemChanged() {
         this.getBatchesByItem();
     }
 
     onFormSubmit() {
-        console.log(this.register);
         if (this.register.itemId != "" && this.register.amount > 0) {
             switch (this.modal.type) {
                 case 'new': this.onAdd(); break;
@@ -576,8 +570,8 @@ export class InvoiceDetailComponent implements OnInit {
         }
     }
 
-    onBatchChanged(option: any) {
-        this.register.cost = parseFloat(option.value);
+    onBatchChanged() {
+        this.register.cost = parseFloat(this.registerCost);
     }
 
     generatePageHeader() {
@@ -597,8 +591,8 @@ export class InvoiceDetailComponent implements OnInit {
                     // Получение списка накладных
                     this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
                         data => {
-                            // Конвертация полученного списка в массив для выпадающего списка ng-select
-                           // this.optionTemplates = Converter.ConvertToOptionArray(data);
+                            // Конвертация полученного списка в массив для выпадающего выпадающего списка 
+                            this.optionTemplates = Converter.ConvertToSelectOptionArray(data);
                             // Назначение свойств модали 'Шаблон' для модального окна
                             this.modal = this.templateModal;
                             // Открытие модального окна
@@ -612,7 +606,7 @@ export class InvoiceDetailComponent implements OnInit {
                     this.alertService.serverError(error);
                 });
         } else {
-            this.alertService.error('Нельзя добавить услугу из шаблона, так как документ содержит позиции. Пожалуйста, удалите все позиции и попробуйте снова.');
+            this.alertService.error('Нельзя добавить услугу из шаблона, так как документ уже содержит позиции. Пожалуйста, удалите все позиции и попробуйте снова.');
         }
     }
 

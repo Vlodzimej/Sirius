@@ -3,18 +3,27 @@
 </div>
 
 <div class="form-group" *ngIf="filterService.params.category">
+    <select class="form-control" [(ngModel)]="filterService.filter.categoryId" (change)="onCategoryChanged()">
+        <option *ngFor="let option of optionCategories" [value]="option.id">{{option.text}}</option>
+    </select>
     <!--<ng-select [items]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите категорию для поиска"
         (selected)="onCategoryChanged($event)" (deselected)="getAllItems()">
     </ng-select>-->
 </div>
 
 <div class="form-group" *ngIf="filterService.params.item">
+    <select class="form-control" [(ngModel)]="filterService.filter.itemId">
+        <option *ngFor="let option of optionItems" [value]="option.id">{{option.text}}</option>
+    </select>
     <!--<ng-select [items]="optionItems" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование для поиска"
         (selected)="onItemChanged($event)" >
     </ng-select>-->
 </div>
 
 <div class="form-group" *ngIf="filterService.params.vendor">
+    <select class="form-control" [(ngModel)]="filterService.filter.vendorId">
+        <option *ngFor="let option of optionVendors" [value]="option.id">{{option.text}}</option>
+    </select>
     <!--<ng-select [items]="optionVendors" [allowClear]="true" placeholder="Поставщик" filterPlaceholder="Введите поставщика для поиска"
         (selected)="onVendorChanged($event)">
     </ng-select>-->
@@ -23,12 +32,14 @@
 <div class="row" *ngIf="filterService.params.date">
     <div class="col-xs-6">
         <div class="form-group">
-            <input type="date" class="form-control" [(ngModel)]="filterService.filter.startDate" data-toggle="tooltip" data-placement="top" title="Начальная дата поиска">
+            <input type="date" class="form-control" [(ngModel)]="filterService.filter.startDate" data-toggle="tooltip" data-placement="top"
+                title="Начальная дата поиска">
         </div>
     </div>
     <div class="col-xs-6">
         <div class="form-group">
-            <input type="date" class="form-control" [(ngModel)]="filterService.filter.finishDate" data-toggle="tooltip" data-placement="top" title="Конечная дата поиска">
+            <input type="date" class="form-control" [(ngModel)]="filterService.filter.finishDate" data-toggle="tooltip" data-placement="top"
+                title="Конечная дата поиска">
         </div>
     </div>
 </div>

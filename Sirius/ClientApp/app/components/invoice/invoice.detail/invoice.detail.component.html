@@ -9,7 +9,7 @@
                 </div>
                 <div id="info-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        
+
                         <p>Автор:
                             <strong>{{invoice.userFullName}}</strong>
                         </p>
@@ -31,7 +31,7 @@
                             <strong>{{sum | currency}}</strong>
                         </p>
 
-                        <p *ngIf="invoice.isFixed">Поставщик:
+                        <p *ngIf="invoice.isFixed && invoiceType.alias == 'arrival'">Поставщик:
                             <strong>{{invoice.vendorName}}</strong>
                         </p>
 
@@ -146,19 +146,32 @@
                 <form name="form1" (ngSubmit)="f1.form.valid && onFormSubmit()" #f1="ngForm">
                     <div class="modal-body">
 
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !categoryId }">
                             <!--<ng-select [items]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите название категории"
                                 (selected)="onCategoryChanged($event)" [(ngModel)]="categoryId" (deselected)="getAllItems()"
                                 name="category">
                             </ng-select>-->
-                            <!--<div *ngIf="f1.submitted && categoryId == ''" class="help-block">Требуется указать категорию</div>-->
+                            <label for="selectCategory">Категория</label>
+                            <select class="form-control" [(ngModel)]="categoryId" #selectCategory="ngModel" (change)="onCategoryChanged()" name="selectCategory"
+                                placeholder="test" required>
+                                <option *ngIf="optionCategories.length > 0" [ngValue]="null" disabled>Выберите категорию</option>
+                                <option *ngIf="optionCategories.length == 0" [ngValue]="null" disabled>Список пуст</option>
+                                <option *ngFor="let option of optionCategories" [value]="option.id">{{option.text}}</option>
+                            </select>
+                            <div *ngIf="f1.submitted && !categoryId" class="help-block">Требуется указать категорию</div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && register.itemId == null }">
                             <!--<ng-select [items]="optionItems" [(ngModel)]="register.itemId" [allowClear]="true" placeholder="Наименование" filterPlaceholder="Введите наименование"
                                 (selected)="onItemChanged($event)" name="item">
-                            </ng-select>
-                            <div *ngIf="f1.submitted && register.itemId == null" class="help-block">Требуется выбрать наименование</div>-->
+                            </ng-select>-->
+                            <label for="selectItem">Наименование</label>
+                            <select class="form-control" [(ngModel)]="register.itemId" #selectItem="ngModel" required name="selectItem" (change)="onItemChanged()">
+                                <option *ngIf="optionItems.length > 0" [ngValue]="null" disabled>Выберите наименование</option>
+                                <option *ngIf="optionItems.length == 0" [ngValue]="null" disabled>Список пуст</option>
+                                <option *ngFor="let option of optionItems" [value]="option.id">{{option.text}}</option>
+                            </select>
+                            <div *ngIf="f1.submitted && register.itemId == null" class="help-block">Требуется выбрать наименование</div>
                         </div>
 
                         <!--- Поля для приходных накладных-->
@@ -171,11 +184,18 @@
                         <!---->
 
                         <!--- Поля для расходных накладных-->
-                        <div class="form-group" *ngIf="invoiceType.alias == 'consumption' || invoiceType.alias=='writeoff'">
+                        <div class="form-group" *ngIf="invoiceType.alias == 'consumption' || invoiceType.alias=='writeoff'" [ngClass]="{ 'has-error': f1.submitted && registerCost == 0 }">
                             <!--<ng-select [items]="optionBatches" [allowClear]="true" placeholder="Остатки" filterPlaceholder="Укажите остаток" (selected)="onBatchChanged($event)"
                                 [(ngModel)]="registerCost" name="cost">
                             </ng-select>
                             <div *ngIf="f1.submitted && registerCost == 0" class="help-block">Требуется указать остаток</div>-->
+                            <label for="selectCost">Остаток и стоимость</label>
+                            <select class="form-control" [(ngModel)]="registerCost" #selectCost="ngModel" required name="selectCost" (change)="onBatchChanged()">
+                                <option *ngIf="optionBatches.length > 0" [ngValue]="null" disabled>Укажите остаток</option>
+                                <option *ngIf="optionBatches.length == 0" [ngValue]="null" disabled>Остатки отсутствуют</option>
+                                <option *ngFor="let option of optionBatches" [value]="option.id">{{option.text}}</option>
+                            </select>
+                            <div *ngIf="f1.submitted && !registerCost" class="help-block">Требуется указать остаток</div>
                         </div>
                         <!---->
 
@@ -217,6 +237,13 @@
                             </ng-select>
                             <div *ngIf="f2.submitted && templateInvoiceId == ''" class="help-block">Требуется выбрать шаблон</div>
                         -->
+                            <label for="selectTemplate">Шаблон</label>
+                            <select class="form-control" [(ngModel)]="templateInvoiceId" #selectTemplate="ngModel" required name="selectTemplate">
+                                <option *ngIf="optionTemplates.length > 0" [ngValue]="null" disabled>Выберите шаблон</option>
+                                <option *ngIf="optionTemplates.length == 0" [ngValue]="null" disabled>Шаблоны отсутствуют</option>
+                                <option *ngFor="let option of optionTemplates" [value]="option.id">{{option.text}}</option>
+                            </select>
+                            <div *ngIf="f1.submitted && !templateInvoiceId" class="help-block">Требуется выбрать шаблон</div>
                         </div>
                     </div>
                     <div class="modal-footer">
