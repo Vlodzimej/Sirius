@@ -6,15 +6,12 @@ namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
-
         private readonly UnitOfWork _unitOfWork;
-        //private SiriusContext _siriusContext;
         private User currentUser;
 
         public SiriusService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            //_siriusContext = new SiriusContext();
         }
 
         #region IDisposable

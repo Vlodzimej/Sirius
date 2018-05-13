@@ -16,6 +16,13 @@ namespace Sirius.Models
         public ItemRepository(SiriusContext _siriusContext) : base(_siriusContext)
         {  }
 
+        /// <summary>
+        /// Получение наименований  по фильтру
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
         public IEnumerable<ItemDto> GetAll(
             Expression<Func<Item, bool>> filter = null,
             Func<IQueryable<Item>, IOrderedQueryable<Item>> orderBy = null,
@@ -30,6 +37,11 @@ namespace Sirius.Models
             return result;
         }
 
+        /// <summary>
+        /// Получение наименования по идентификатору
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public ItemDetailDto GetByID(Guid itemId)
         {
             var item = _siriusContext.Items

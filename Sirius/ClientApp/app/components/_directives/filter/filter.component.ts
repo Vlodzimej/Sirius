@@ -103,4 +103,12 @@ export class FilterComponent implements OnInit {
     onCleanFilter() {
         this.filterService.cleanFilter();
     }
+
+    onBatchCalcMethodToggle() {
+        if (this.filterService.filter.isDynamic) {
+            this.filterService.params.vendor = false;
+        } else {
+            this.filterService.params.vendor = true;
+        }
+    }
 }

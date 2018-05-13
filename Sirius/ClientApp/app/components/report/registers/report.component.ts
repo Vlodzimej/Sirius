@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { InvoiceType, Register } from '../../_models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingIconComponent } from '../../_directives';
-import {
-    ApiService,
-    AlertService,
-    ModalService,
-    PageHeaderService,
-    FilterService,
-    LoadingService
-} from '../../_services';
+import { ApiService, AlertService, ModalService, PageHeaderService, FilterService, LoadingService } from '../../_services';
+import { LocalizedCurrencyPipe } from '../../_pipes';
 
 @Component({
     selector: 'app-report',
@@ -33,7 +27,9 @@ export class ReportComponent implements OnInit {
 
     ngOnInit(): void {
         // Настройка фильтра
-        this.filterService.setFilter({ item: true, date: true });
+        this.filterService.setFilter({ category: true, item: true, date: true });
+        // Очистка полей фильтра
+        this.filterService.cleanFilter();        
         // Подписка на изменения параметра в маршруте
         this.route.params.subscribe(params => {
             this.typeAlias = this.route.snapshot.params['typealias'];
@@ -66,6 +62,7 @@ export class ReportComponent implements OnInit {
         var filter = this.filterService.getFilter();
 
         var params: string = "typeid=" + this.type.id;
+        params += filter.categoryId != null ? "&categoryId=" + filter.categoryId : "";
         params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
         params += filter.startDate != null && typeof (filter.startDate) != 'undefined' ? "&startDate=" + filter.startDate : "";
         params += filter.finishDate != null && typeof (filter.finishDate) != 'undefined' ? "&finishDate=" + filter.finishDate : "";

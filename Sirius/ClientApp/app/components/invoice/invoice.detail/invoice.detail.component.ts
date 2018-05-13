@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Invoice, InvoiceUpdate, Register, Item, InvoiceType, Batch, Vendor, Category, InvoiceListItem } from '../../_models';
 import { AlertService, ApiService, PageHeaderService, ModalService, LoadingService } from '../../_services';
 import { Router } from '@angular/router';
-import { FullDatePipe } from '../../_pipes';
+import { FullDatePipe, LocalizedCurrencyPipe } from '../../_pipes';
 import { Location } from '@angular/common';
 
 // Классы для работы с выпадающим списком
@@ -24,9 +24,11 @@ import { ModalType, ISelectOption } from '../../_extends';
         '../../../assets/css/invoice/style.css'
     ]
 })
+
+
 export class InvoiceDetailComponent implements OnInit {
     // Список существующих наименований
-    public items: Item[] = [];
+    //public items: Item[] = [];
     // Текущая накладная
     public invoice: Invoice = new Invoice;
     // Массив индектификаторов удаленных регистров
@@ -66,7 +68,7 @@ export class InvoiceDetailComponent implements OnInit {
      *  Костыль для привязки значения цены регистра (для определения остатка) к списку ng-select, так как number принимать мы не хотим, приходится перед
      * открытием регистра на редактирование переводить значение цены в строку и назначать переменной registerCost
     */
-    public registerCost: string = "";
+    public registerCost: string = ""; 
 
     public modal: ModalType = new ModalType();
     private newRegisterModal: ModalType;
@@ -83,7 +85,8 @@ export class InvoiceDetailComponent implements OnInit {
         private pageHeaderService: PageHeaderService,
         private modalService: ModalService,
         public loadingService: LoadingService,
-        private location: Location
+        private location: Location,
+
     ) {
         this.newRegisterModal = {
             type: 'new',
@@ -114,11 +117,7 @@ export class InvoiceDetailComponent implements OnInit {
     ngOnInit() {
         // Включаем визуализацию загрузки
         this.loadingService.showLoadingIcon();
-        /*
-                this.form = new FormGroup({
-                    character: new FormControl('', Validators.required)
-                });*/
-
+        // Узнаём идентификатор открываемой накладной
         var invoiceId = this.route.snapshot.params['id'];
         // Загрузка накладной
         this.apiService.getById<Invoice>('invoice', invoiceId).subscribe(
@@ -127,9 +126,7 @@ export class InvoiceDetailComponent implements OnInit {
                 // Отключаем визуализацию загрузки
                 this.loadingService.hideLoadingIcon();
                 this.invoice = data;
-
                 this.registers = this.invoice.registers;
-
                 this.generatePageHeader()
 
                 //Вычисление суммы для каждого регистра
@@ -137,10 +134,6 @@ export class InvoiceDetailComponent implements OnInit {
                     r.sum = r.amount * r.cost
                     this.sum += r.sum;
                 });
-
-                //this.registers.forEach(element => {
-                //this.sum += element.sum;
-                //});
 
                 // Загрузка данных типа накладной
                 this.apiService.getById<InvoiceType>('invoice/type/id', this.invoice.typeId).subscribe(
@@ -158,7 +151,8 @@ export class InvoiceDetailComponent implements OnInit {
         // Загрузка списка наименований
         this.apiService.getAll<Item>('item').subscribe(
             data => {
-                this.items = data;
+                //this.items = data;
+                this.optionItems = Converter.ConvertToSelectOptionArray(data);
             },
             error => {
                 this.alertService.serverError(error);

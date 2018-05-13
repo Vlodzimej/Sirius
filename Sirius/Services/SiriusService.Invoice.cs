@@ -12,7 +12,7 @@ namespace Sirius.Services
     public partial class SiriusService : ISiriusService
     {
         /// <summary>
-        /// Получить накладную dto по Id
+        /// Получить данные накладной по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -22,7 +22,7 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Получить накладную по Id
+        /// Получить накладную по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -41,7 +41,7 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Удалить накладную по Id
+        /// Удалить накладную по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -185,7 +185,13 @@ namespace Sirius.Services
             }
             return result;
         }
-
+        
+        /// <summary>
+        /// Изменить поставщика
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <param name="vendorId"></param>
+        /// <returns></returns>
         public string ChangeVendor(Guid invoiceId, Guid vendorId)
         {
             string result;
@@ -208,6 +214,12 @@ namespace Sirius.Services
             return result;
         }
 
+        /// <summary>
+        /// Изменить название накладной
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public string ChangeName(Guid invoiceId, string name)
         {
             string result;
@@ -259,6 +271,11 @@ namespace Sirius.Services
             return _unitOfWork.InvoiceRepository.GetTypes();
         }
 
+        /// <summary>
+        /// Получить накладные по фильтру
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IEnumerable<InvoiceListDto> GetInvoices(InvoiceFilter filter)
         {
             if (filter.Name != null)
@@ -279,17 +296,7 @@ namespace Sirius.Services
                (filter.StartDate != DateTime.MinValue ? x.CreateDate >= filter.StartDate : true) &&
                (filter.FinishDate != DateTime.MinValue ? x.CreateDate <= filter.FinishDate : true) &&
                (filter.FixedOnly == true ? x.IsFixed == true : true);
-
-
-
             return _unitOfWork.InvoiceRepository.GetAll(f);
         }
-
-        //private IOrderedQueryable<Invoice> Sort(IOrderedQueryable<Invoice> invoices)
-        //{
-        //    IOrderedQueryable<Invoice> orderedInvoices = invoices.OrderBy(b => b.CreateDate);
-
-        //    return orderedInvoices;
-        //}
     }
 }

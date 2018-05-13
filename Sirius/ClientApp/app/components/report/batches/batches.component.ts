@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Batch, BatchGroup, BatchListElement, BatchListElementType, Item, Category, Vendor } from '../../_models';
 import { Filter } from '../../_extends';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CurrencyPipe } from '../../_pipes';
 import { Converter } from '../../_helpers';
 import { ApiService, AlertService, ModalService, PageHeaderService, LoadingService, FilterService } from '../../_services';
+import { LocalizedCurrencyPipe } from '../../_pipes';
 
 @Component({
     selector: 'app-batches',
@@ -19,9 +19,6 @@ export class BatchesComponent implements OnInit {
     public batchGroups: BatchGroup[] = [];
     public batches: Batch[] = [];
     public listItems: BatchListElement[] = [];
-    //public optionItems: Array<string> = [];
-    //public optionCategories: Array<string> = [];
-    //public optionVendors: Array<string> = [];
     public filter: Filter = new Filter();
     // Признак первого сформированного очета
     public isReport: boolean = false;
@@ -39,7 +36,9 @@ export class BatchesComponent implements OnInit {
 
     ngOnInit(): void {
         // Устанавливаем поля фильтра
-        this.filterService.setFilter({ category: true, item: true, vendor: true });
+        this.filterService.setFilter({ category: true, item: true, isDynamic: true });
+        // Очистка полей фильтра
+        this.filterService.cleanFilter();
         // На всякий случай отключаем визуализацию загрузки, так как загрузка будет происходить после нажатия на кнопку "Сформировать"
         this.loadingService.hideLoadingIcon();
 
@@ -61,6 +60,7 @@ export class BatchesComponent implements OnInit {
         params += filter.vendorId != null ? "&vendorId=" + filter.vendorId : "";
         params += filter.startDate != null ? "&startDate=" + filter.startDate : "";
         params += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
+        params += filter.isDynamic == true ? "&isDynamic=true" : "";
 
         this.apiService.get<BatchGroup[]>('register/batches', params).subscribe(
             data => {

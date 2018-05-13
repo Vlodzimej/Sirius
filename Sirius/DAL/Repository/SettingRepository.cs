@@ -16,6 +16,9 @@ namespace Sirius.Models
         public SettingRepository(SiriusContext context) : base(context)
         { }
 
+        /// <summary>
+        /// Удаление данных таблиц
+        /// </summary>
         public void DatabaseDropTables()
         {
             _siriusContext.InvoiceTypes.RemoveRange(_siriusContext.InvoiceTypes);
@@ -29,6 +32,15 @@ namespace Sirius.Models
             _siriusContext.Settings.RemoveRange(_siriusContext.Settings);
         }
 
+        /// <summary>
+        /// Добавление первичных данных в базу данных
+        /// </summary>
+        /// <param name="invoiceTypes"></param>
+        /// <param name="dimensions"></param>
+        /// <param name="categories"></param>
+        /// <param name="vendors"></param>
+        /// <param name="items"></param>
+        /// <param name="settings"></param>
         public void DatabaseFill(
             List<InvoiceType> invoiceTypes,
             List<Dimension> dimensions, 

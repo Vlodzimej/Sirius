@@ -33,7 +33,7 @@ namespace Sirius.Controllers
         [HttpPost("dbreset")]
         public IActionResult DbReset()
         {
-            _siriusService.DatabaseReset();
+            _siriusService.RollbackDatabase();
             return Ok();
         }
 

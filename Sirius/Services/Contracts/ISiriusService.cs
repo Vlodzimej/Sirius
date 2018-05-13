@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Sirius.Services
 {
-    interface ISiriusService : IDisposable
+    public partial interface ISiriusService : IDisposable
     {
     }
 }

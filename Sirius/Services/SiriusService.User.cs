@@ -36,7 +36,7 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Получения пользователя по Id
+        /// Получение пользователя по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -92,13 +92,13 @@ namespace Sirius.Services
             var user = _unitOfWork.UserRepository.GetByID(userParam.Id);
 
             if (user == null)
-                throw new AppException("User not found");
+                throw new AppException("Пользователь не найден.");
 
             if (userParam.Username != user.Username)
             {
                 // username has changed so check if the new username is already taken
                 if (_unitOfWork.UserRepository.CheckUsername(user.Username))
-                    throw new AppException("Username " + userParam.Username + " is already taken");
+                    throw new AppException("Пользователь " + userParam.Username + " существует.");
             }
 
             // update user properties
@@ -149,7 +149,7 @@ namespace Sirius.Services
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Пароль не может быть пустым или содержать пробелы.", "password");
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
@@ -185,7 +185,7 @@ namespace Sirius.Services
         }
 
         /// <summary>
-        /// Получение пользователя по Id
+        /// Получение пользователя по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -203,6 +203,12 @@ namespace Sirius.Services
             return _unitOfWork.UserRepository.Get();
         }
 
+        /// <summary>
+        /// Изменить статус пользователя
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="isConfirmed"></param>
+        /// <returns></returns>
         public bool ChangeUserStatus(Guid userId, bool isConfirmed = false)
         {
             var user = GetUserById(userId);

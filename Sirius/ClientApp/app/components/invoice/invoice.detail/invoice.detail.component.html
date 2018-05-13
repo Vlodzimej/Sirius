@@ -28,7 +28,7 @@
                         </div>
 
                         <p *ngIf="invoiceType.alias != 'template'">Общая сумма:
-                            <strong>{{sum | currency}}</strong>
+                            <strong>{{sum | localizedCurrency }}</strong>
                         </p>
 
                         <p *ngIf="invoice.isFixed && invoiceType.alias == 'arrival'">Поставщик:
@@ -111,10 +111,10 @@
                     <td>{{register.amount}}</td>
                     <td>{{register.dimension}}</td>
                     <td *ngIf="invoiceType.alias != 'template'">
-                        <div *ngIf="register.cost >= 0">{{register.cost | currency}}</div>
+                        <div *ngIf="register.cost >= 0">{{register.cost | localizedCurrency}}</div>
                     </td>
                     <td *ngIf="invoiceType.alias != 'template'">
-                        <div *ngIf="register.sum >= 0">{{register.sum | currency}}</div>
+                        <div *ngIf="register.sum >= 0">{{register.sum | localizedCurrency}}</div>
                     </td>
                 </tr>
                 <tr *ngIf="invoiceType.alias != 'template'">
@@ -123,7 +123,7 @@
                         <strong>Общая сумма:</strong>
                     </td>
                     <td colspan="2">
-                        <strong>{{sum | currency}}</strong>
+                        <strong>{{sum | localizedCurrency}}</strong>
                     </td>
                 </tr>
             </table>
@@ -146,19 +146,18 @@
                 <form name="form1" (ngSubmit)="f1.form.valid && onFormSubmit()" #f1="ngForm">
                     <div class="modal-body">
 
-                        <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && !categoryId }">
+                        <div class="form-group">
                             <!--<ng-select [items]="optionCategories" [allowClear]="true" placeholder="Категория" filterPlaceholder="Введите название категории"
                                 (selected)="onCategoryChanged($event)" [(ngModel)]="categoryId" (deselected)="getAllItems()"
                                 name="category">
                             </ng-select>-->
                             <label for="selectCategory">Категория</label>
                             <select class="form-control" [(ngModel)]="categoryId" #selectCategory="ngModel" (change)="onCategoryChanged()" name="selectCategory"
-                                placeholder="test" required>
+                                placeholder="test">
                                 <option *ngIf="optionCategories.length > 0" [ngValue]="null" disabled>Выберите категорию</option>
                                 <option *ngIf="optionCategories.length == 0" [ngValue]="null" disabled>Список пуст</option>
                                 <option *ngFor="let option of optionCategories" [value]="option.id">{{option.text}}</option>
                             </select>
-                            <div *ngIf="f1.submitted && !categoryId" class="help-block">Требуется указать категорию</div>
                         </div>
 
                         <div class="form-group" [ngClass]="{ 'has-error': f1.submitted && register.itemId == null }">

@@ -16,6 +16,13 @@ namespace Sirius.Models
         public RegisterRepository(SiriusContext _siriusContext) : base(_siriusContext)
         { }
 
+        /// <summary>
+        /// Получение регистров по фильтру
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
         public IEnumerable<object> GetAll(
         Expression<Func<Register, bool>> filter = null,
         Func<IQueryable<Register>, IOrderedQueryable<Register>> orderBy = null,
@@ -39,11 +46,21 @@ namespace Sirius.Models
             return registers;
         }
 
+        /// <summary>
+        /// Получение регистров по идентификатору накладной
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
         public IEnumerable<Register> GetByInvoiceId(Guid invoiceId)
         {
             return _siriusContext.Registers.Where(r => r.InvoiceId == invoiceId);
         }
 
+        /// <summary>
+        /// Получение регистров по алиасу типа накладной
+        /// </summary>
+        /// <param name="typeAlias"></param>
+        /// <returns></returns>
         public IEnumerable<object> GetByTypeAlias(string typeAlias)
         {
             var invoiceType = _siriusContext.InvoiceTypes
@@ -80,14 +97,9 @@ namespace Sirius.Models
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<Batch>> GetBatchesByFilter(BatchFilter filter)
+        public async Task<IEnumerable<Batch>> GetDynamicBatchesByFilter(BatchFilter filter)
         {
             List<Batch> result = new List<Batch>();
-
-            var arrivalRegisters1 = await _siriusContext.Registers
-                .Include(r => r.Item)
-                .Include(r => r.Invoice)
-                .ToListAsync();
 
             var t1 = Guid.Empty;
             var t2 = DateTime.MinValue;
@@ -184,6 +196,19 @@ namespace Sirius.Models
             return result;
         }
 
+        public IEnumerable<Batch> GetStaticBatchesByFilter(BatchFilter filter)
+        {
+            var result = _siriusContext.StorageRegisters
+                .Include(r => r.Item)
+                .Where(r =>
+                    (r.ItemId == filter.ItemId) &&
+                    (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true))
+                .OrderBy(r => r.Item.CategoryId)
+                .Select(sr => new Batch { Amount = sr.Amount, Cost = sr.Cost })
+                .ToList();
+            return result;
+        }
+
         /// <summary>
         /// Получение сгруппированного по наименованиям списка остатков 
         /// </summary>
@@ -204,13 +229,16 @@ namespace Sirius.Models
             items.ForEach(i =>
             {
                 filter.ItemId = itemId != Guid.Empty ? filter.ItemId : i.Id;
+
+                /** Получаем остатки в зависимости от значения параметра фильтра isDynamic
+                 * Если значение false, то ищем в накопительном регистре StorageRegiter
+                 * При значении true высчитываем остатки по всем существующим регистрам проведённых накладных (возможно будет медленно)    */
                 BatchGroup batchGroup = new BatchGroup()
                 {
                     Name = i.Name,
-                    Batches = GetBatchesByFilter(filter).Result.ToList()
+                    Batches = filter.isDynamic == true ? GetDynamicBatchesByFilter(filter).Result : GetStaticBatchesByFilter(filter)
                 };
                 batchGroups.Add(batchGroup);
-
             });
 
             return batchGroups;

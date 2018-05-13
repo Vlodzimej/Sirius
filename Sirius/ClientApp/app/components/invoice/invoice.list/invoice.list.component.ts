@@ -40,12 +40,14 @@ export class InvoiceListComponent implements OnInit {
         // Включаем визуализацию загрузки
         this.loadingService.showLoadingIcon();
         // Настройка фильтра
-        if(this.typeAlias == 'template') {
+        if (this.typeAlias == 'template') {
             // Для шаблонов услуг используется фильтр без возможности выбора показа проведённых документов
-            this.filterService.setFilter({ name: true, date: true});
-        } else{
+            this.filterService.setFilter({ name: true, date: true });
+        } else {
             this.filterService.setFilter({ name: true, date: true, fixedOnly: true });
         }
+        // Очистка полей фильтра
+        this.filterService.cleanFilter();        
         // Подписка на изменения значения параметра в URL указывающего на тип отображаемых накладных
         this.route.params.subscribe(params => {
             // Тип накладной (алиас)

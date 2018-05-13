@@ -60,7 +60,7 @@ import {
 // Импорт пайпов
 import {
     FullDatePipe,
-    CurrencyPipe
+    LocalizedCurrencyPipe
 } from './components/_pipes';
 
 
@@ -88,7 +88,7 @@ import {
         ReportComponent,
         BatchesComponent,
         FullDatePipe,
-        CurrencyPipe,
+        LocalizedCurrencyPipe,
         AboutComponent,
         HelpComponent
     ],
@@ -130,7 +130,7 @@ import {
     ],
     exports: [
         FullDatePipe, 
-        CurrencyPipe
+        LocalizedCurrencyPipe
     ]
 })
 export class AppModuleShared {

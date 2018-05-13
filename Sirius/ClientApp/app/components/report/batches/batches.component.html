@@ -31,13 +31,13 @@
                         <b>{{item.text}}</b>
                     </td>
                     <td *ngIf="item.type == 1">{{item.amount}}</td>
-                    <td *ngIf="item.type == 1">{{item.cost | currency}}</td>
-                    <td *ngIf="item.type == 1">{{item.sum | currency}}</td>
+                    <td *ngIf="item.type == 1">{{item.cost | localizedCurrency}}</td>
+                    <td *ngIf="item.type == 1">{{item.sum | localizedCurrency}}</td>
                     <td *ngIf="item.type == 2" class="text-center">
                         <strong>{{item.text}}</strong>
                     </td>
                     <td *ngIf="item.type == 2" colspan="3" class="text-center">
-                        <strong>Общая сумма: {{item.sum | currency}}</strong>
+                        <strong>Общая сумма: {{item.sum | localizedCurrency}}</strong>
                     </td>
                 </tr>
             </table>

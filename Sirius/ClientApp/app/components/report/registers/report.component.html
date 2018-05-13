@@ -35,8 +35,8 @@
                     <td>{{register.name}}</td>
                     <td>{{register.amount}}</td>
                     <td>{{register.dimension}}</td>
-                    <td>{{register.cost}} {{currency}}</td>
-                    <td>{{register.sum}} {{currency}}</td>
+                    <td>{{register.cost | localizedCurrency}}</td>
+                    <td>{{register.sum | localizedCurrency}}</td>
                     <td>{{register.createDate}}</td>
                 </tr>
             </table>

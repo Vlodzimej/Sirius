@@ -6,4 +6,5 @@ export class Filter {
     startDate: Date;
     finishDate: Date;
     fixedOnly: boolean;
+    isDynamic: boolean;
 }

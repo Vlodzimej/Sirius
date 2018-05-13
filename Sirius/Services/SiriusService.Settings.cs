@@ -9,16 +9,32 @@ namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
+        /// <summary>
+        /// Получение значение настройки по идентификатору
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string GetSettingValueById(Guid id)
         {
             return _unitOfWork.SettingRepository.GetByID(id).Alias;
         }
+
+        /// <summary>
+        /// Получение значение настройки по идентификатору типа и алиасу
+        /// </summary>
+        /// <param name="typeId"></param>
+        /// <param name="alias"></param>
+        /// <returns></returns>
         public string GetSettingValueByTypeIdAndAlias(Guid typeId, string alias)
         {
             Expression<Func<Setting, bool>> f = x => (x.Alias == alias) && (x.TypeId == typeId);
             return _unitOfWork.SettingRepository.Get(f).FirstOrDefault()?.Value;
         }
-        public void DatabaseReset()
+
+        /// <summary>
+        /// Откат базы данных
+        /// </summary>
+        public void RollbackDatabase()
         {
             var invoiceTypes = new List<InvoiceType>();
             var invoiceType = new InvoiceType()

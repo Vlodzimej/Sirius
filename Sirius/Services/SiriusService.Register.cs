@@ -49,11 +49,8 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<Register> GetRegistersByInvoiceId(Guid invoiceId)
         {
-            //using (var unitOfWork = new DAL.UnitOfWork())
-            //{
             var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
             return registers;
-            //}
         }
 
         /// <summary>
@@ -64,11 +61,11 @@ namespace Sirius.Services
         public Task<IEnumerable<Batch>> GetBatchesByItemId(Guid id)
         {
             var filter = new BatchFilter() { ItemId = id };
-            return _unitOfWork.RegisterRepository.GetBatchesByFilter(filter);
+            return _unitOfWork.RegisterRepository.GetDynamicBatchesByFilter(filter);
         }
 
         /// <summary>
-        /// Получить регистры по алиасу типа накладной (arrival/ )
+        /// Получить регистры по алиасу типа накладной (arrival/consumption/writeoff)
         /// </summary>
         /// <param name="typeAlias"></param>
         /// <returns></returns>
@@ -94,7 +91,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public object GetBatch(BatchFilter filter)
         {
-            return _unitOfWork.RegisterRepository.GetBatchesByFilter(filter).Result.FirstOrDefault();
+            return _unitOfWork.RegisterRepository.GetDynamicBatchesByFilter(filter).Result.FirstOrDefault();
         }
 
         /// <summary>
@@ -230,7 +227,7 @@ namespace Sirius.Services
             {
                 // Получаем остатки по позиции и остатку текущего регистра
                 var filter = new BatchFilter() { ItemId = reg.ItemId };
-                var batches = _unitOfWork.RegisterRepository.GetBatchesByFilter(filter).GetAwaiter().GetResult();
+                var batches = _unitOfWork.RegisterRepository.GetDynamicBatchesByFilter(filter).GetAwaiter().GetResult();
                 // Вызываем метод копирования
                 AddCopiedRegister(new Register() { InvoiceId = destinationInvoiceId, ItemId = reg.ItemId, Amount = reg.Amount }, batches);
             });
@@ -243,6 +240,11 @@ namespace Sirius.Services
 
         }
 
+        /// <summary>
+        /// Добавление копированных записей регистра
+        /// </summary>
+        /// <param name="register"></param>
+        /// <param name="batches"></param>
         private void AddCopiedRegister(Register register, IEnumerable<Batch> batches)
         {
             // Проверяем наличие остатков по текущей позиции регистра

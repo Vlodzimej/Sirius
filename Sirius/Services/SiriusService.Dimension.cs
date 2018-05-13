@@ -7,7 +7,7 @@ namespace Sirius.Services
     public partial class SiriusService : ISiriusService
     {
         /// <summary>
-        /// Получить единицу измерения по Id
+        /// Получение единицы измерения по идентификатору
         /// </summary>
         /// <param name="id">идентификатор единицы измерения</param>
         /// <returns>Единица измерения (Dimension)</returns>

@@ -7,7 +7,7 @@ namespace Sirius.Services
     public partial class SiriusService : ISiriusService
     {
         /// <summary>
-        /// Получить поставщика по Id
+        /// Получить поставщика по идентификатору
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

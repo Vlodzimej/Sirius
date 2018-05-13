@@ -13,20 +13,18 @@ using Sirius.DAL.Repository.Contract;
 
 namespace Sirius.Models
 {
-    public class InvoiceRepository : GenericRepository<Invoice>, IItemRepository
+    public class InvoiceRepository : GenericRepository<Invoice>, IInvoiceRepository
     {
         public InvoiceRepository(SiriusContext _siriusContext) : base(_siriusContext)
         { }
 
         /// <summary>
-        /// Получение списка накладных
+        /// Получение накладных по фильтру
         /// </summary>
-        /// <param name="Expression<Func<Invoice"></param>
         /// <param name="filter"></param>
-        /// <param name="Func<IQueryable<Invoice>"></param>
         /// <param name="orderBy"></param>
         /// <param name="includeProperties"></param>
-        /// <returns>Invoice List Items</returns>
+        /// <returns></returns>
         public IEnumerable<InvoiceListDto> GetAll(
             Expression<Func<Invoice, bool>> filter = null,
             Func<IQueryable<Invoice>, IOrderedQueryable<Invoice>> orderBy = null,
@@ -54,7 +52,11 @@ namespace Sirius.Models
             return null;
         }
 
-
+        /// <summary>
+        /// Получение информации о накладной по идентификатору
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
         public object GetById(Guid invoiceId)
         {
             var invoice = GetByID(invoiceId);
@@ -88,6 +90,11 @@ namespace Sirius.Models
             return result;
         }
 
+        /// <summary>
+        /// Получение наклданой по идентификатору
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <returns></returns>
         public Invoice GetByID(Guid invoiceId)
         {
             var invoice = _siriusContext.Invoices
@@ -104,16 +111,30 @@ namespace Sirius.Models
             return invoice;
         }
 
+        /// <summary>
+        /// Получение информации о типе накладной по идентификатору типа накладной
+        /// </summary>
+        /// <param name="invoiceTypeId"></param>
+        /// <returns></returns>
         public InvoiceType GetTypeById(Guid invoiceTypeId)
         {
             return _siriusContext.InvoiceTypes.Find(invoiceTypeId);
         }
 
+        /// <summary>
+        /// Получение информации о типе накладной по алиасу
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
         public InvoiceType GetTypeByAlias(string alias)
         {
             return _siriusContext.InvoiceTypes.Where(it => it.Alias == alias).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Получение типов накладных
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<InvoiceType> GetTypes()
         {
             return _siriusContext.InvoiceTypes;

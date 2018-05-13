@@ -8,6 +8,7 @@ namespace Sirius.Extends.Filters
         public Guid ItemId { get; set; }
         public Guid VendorId { get; set; }
         public decimal Cost { get; set; }
+        public bool isDynamic { get; set; }
         //public DateTime startDate { get; set; }
         //public DateTime finishDate { get; set; }
     }
