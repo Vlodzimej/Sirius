@@ -23,5 +23,9 @@ namespace Sirius.Models
         {
             return _siriusContext.Users.Any(u => u.Username == username);
         }
+        public int GetUserAmount()
+        {
+            return _siriusContext.Users.Count();
+        }
     }
 }

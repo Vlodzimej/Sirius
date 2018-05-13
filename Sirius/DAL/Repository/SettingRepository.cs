@@ -18,6 +18,7 @@ namespace Sirius.Models
 
         public void DatabaseDropTables()
         {
+            _siriusContext.InvoiceTypes.RemoveRange(_siriusContext.InvoiceTypes);
             _siriusContext.Categories.RemoveRange(_siriusContext.Categories);
             _siriusContext.Dimensions.RemoveRange(_siriusContext.Dimensions);
             _siriusContext.Invoices.RemoveRange(_siriusContext.Invoices);
@@ -25,6 +26,7 @@ namespace Sirius.Models
             _siriusContext.Vendors.RemoveRange(_siriusContext.Vendors);
             _siriusContext.Registers.RemoveRange(_siriusContext.Registers);
             _siriusContext.StorageRegisters.RemoveRange(_siriusContext.StorageRegisters);
+            _siriusContext.Settings.RemoveRange(_siriusContext.Settings);
         }
 
         public void DatabaseFill(

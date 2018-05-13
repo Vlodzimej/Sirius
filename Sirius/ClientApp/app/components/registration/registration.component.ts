@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { AlertService, UserService } from '../_services/index';
 
 @Component({
-    templateUrl: 'register.component.html'
+    templateUrl: 'registration.component.html'
 })
 
-export class RegisterComponent {
+export class RegistrationComponent {
     model: any = {};
     loading = false;
 

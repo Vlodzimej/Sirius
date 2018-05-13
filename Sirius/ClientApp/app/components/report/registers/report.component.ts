@@ -33,7 +33,7 @@ export class ReportComponent implements OnInit {
 
     ngOnInit(): void {
         // Настройка фильтра
-        this.filterService.setFilter({ item: true, date: true});
+        this.filterService.setFilter({ item: true, date: true });
         // Подписка на изменения параметра в маршруте
         this.route.params.subscribe(params => {
             this.typeAlias = this.route.snapshot.params['typealias'];
@@ -41,8 +41,16 @@ export class ReportComponent implements OnInit {
             this.apiService.getById<InvoiceType>('invoice/type/alias', this.typeAlias).subscribe(
                 data => {
                     this.type = data;
-                    var title = this.type.name.toLowerCase();
-                    this.pageHeaderService.changeText('Отчет по '+title+'у');
+                    /** Формируем заголовок */
+                    var title = "";
+                    if (this.typeAlias == 'writeoff') {
+                        title = 'Отчет по списанию';
+                    } else {
+                        var title = this.type.name.toLowerCase();
+                        title = 'Отчет по ' + title + 'у';
+                    }
+                    this.pageHeaderService.changeText(title);
+                    /** */
                     this.getRegistersByFilter();
                 },
                 error => {
@@ -57,10 +65,10 @@ export class ReportComponent implements OnInit {
         // Получение критериев фильтрации 
         var filter = this.filterService.getFilter();
 
-        var params: string = "typeid="+this.type.id;
+        var params: string = "typeid=" + this.type.id;
         params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
-        params += filter.startDate != null && typeof(filter.startDate) != 'undefined' ? "&startDate=" + filter.startDate : "";
-        params += filter.finishDate != null && typeof(filter.finishDate) != 'undefined'? "&finishDate=" + filter.finishDate : "";
+        params += filter.startDate != null && typeof (filter.startDate) != 'undefined' ? "&startDate=" + filter.startDate : "";
+        params += filter.finishDate != null && typeof (filter.finishDate) != 'undefined' ? "&finishDate=" + filter.finishDate : "";
         this.apiService.get<Register[]>('register', params).subscribe(
             data => {
                 this.registers = data;

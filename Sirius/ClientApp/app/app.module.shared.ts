@@ -10,7 +10,7 @@ import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { NomenclatureComponent } from './components/nomenclature/nomenclature.component';
 import { LoginComponent } from "./components/login/login.component";
-import { RegisterComponent } from './components/register';
+import { RegistrationComponent } from './components/registration';
 import { SettingsComponent } from './components/settings';
 
 import { AboutComponent } from './components/info';
@@ -76,7 +76,7 @@ import {
         PageHeaderComponent,
         NomenclatureComponent,
         LoginComponent,
-        RegisterComponent,
+        RegistrationComponent,
         SettingsComponent,
         UserDictionaryComponent,
         DimensionDictionaryComponent,
@@ -100,7 +100,7 @@ import {
             { path: '', redirectTo: 'home', pathMatch: 'full', canActivate: [AuthGuard] },
             { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
             { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
+            { path: 'registration', component: RegistrationComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'nomenclature', component: NomenclatureComponent, canActivate: [AuthGuard] },
             { path: 'users', component: UserDictionaryComponent, canActivate: [AuthGuard] },

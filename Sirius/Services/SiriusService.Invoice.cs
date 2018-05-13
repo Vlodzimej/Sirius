@@ -76,7 +76,7 @@ namespace Sirius.Services
                 Name = "",
                 UserId = invoice.UserId,
                 VendorId = DefaultValues.Vendor.Primary.Id,
-                CreateDate = DateTime.Now,
+                CreateDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
                 IsTemporary = true,
                 IsFixed = false,
                 TypeId = invoice.TypeId,
@@ -150,7 +150,7 @@ namespace Sirius.Services
                     var newStorageRegister = new StorageRegister()
                     {
                         Id = Guid.NewGuid(),
-                        createDate = DateTime.Now,
+                        createDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
                         Amount = register.Amount,
                         Cost = register.Cost,
                         ItemId = register.ItemId

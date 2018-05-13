@@ -90,6 +90,13 @@ namespace Sirius.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet("amount")]
+        public IActionResult GetUserAmount()
+        {
+            return Ok(_siriusService.GetUserAmount());
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {

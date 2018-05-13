@@ -55,17 +55,25 @@ namespace Sirius.Services
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
+                throw new AppException("Требуется ввести пароль.");
 
             if (_unitOfWork.UserRepository.CheckUsername(user.Username)) {
-                throw new AppException("Username " + user.Username + " is already taken");
+                throw new AppException("Пользователь " + user.Username + " существует.");
             }
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.StartDate = DateTime.Now;
+
+            user.StartDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime());
+
+
+            // Учетная запись первого зарегистрированного пользователя должна быть подтверждена
+            if (GetUserAmount() == 0)
+            {
+                user.IsConfirmed = true;
+            }
 
             _unitOfWork.UserRepository.Insert(user);
             _unitOfWork.Save();
@@ -206,6 +214,15 @@ namespace Sirius.Services
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Получение кол-ва зарегистрированных пользователей
+        /// </summary>
+        /// <returns></returns>
+        public int GetUserAmount()
+        {
+            return _unitOfWork.UserRepository.GetUserAmount();
         }
     }
 }
