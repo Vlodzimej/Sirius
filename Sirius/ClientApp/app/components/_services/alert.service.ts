@@ -40,6 +40,16 @@ export class AlertService {
     }
 
     serverError(error: Response) {
-        this.error('Ошибка сервера: ('+error.status+') '+error.statusText);
+        /*
+         * Через некоторое время после последнего захода 
+         * Bearer перестаёт пускать и api выдаёт 401 
+         * Пока не разберусь в чем дело, ставлю здесь переход на страницу входа
+         */ 
+        if(error.status == 401) {
+            this.router.navigateByUrl('/login');
+            this.error('Вы не распознаны. Выполните вход в систему.');
+        } else {
+            this.error('Ошибка сервера: ('+error.status+') '+error.statusText);
+        }
     }
 }
