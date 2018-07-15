@@ -13,4 +13,6 @@ export class FilterParameters {
     fixedOnly?: boolean = false;
     /** Считать остатки динамически */
     isDynamic?: boolean = false;
+    /** Показывать только критические остатки */
+    isMinimumLimit?: boolean = false;
 }

@@ -34,10 +34,9 @@ namespace Sirius
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             // добавляем контекст SiriusContext в качестве сервиса в приложение
-            services.AddDbContext<SiriusContext>(options =>
-                options.UseNpgsql(connection));
+            services.AddDbContext<SiriusContext>(options => options.UseNpgsql(connection));
+            //services.AddDbContext<SiriusContext>();
 
-            services.AddDbContext<SiriusContext>();
             services.AddMvc();
             services.AddAutoMapper();
 

@@ -30,7 +30,7 @@
                     <th>Сумма</th>
                     <th>Дата</th>
                 </tr>
-                <tr *ngFor="let register of registers; let n = index" (click)="onSelect(register.id)" (dblclick)="onOpen(selectedRegister.id)">
+                <tr *ngFor="let register of registers; let n = index">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{register.name}}</td>
                     <td>{{register.amount}}</td>
@@ -38,6 +38,10 @@
                     <td>{{register.cost | localizedCurrency}}</td>
                     <td>{{register.sum | localizedCurrency}}</td>
                     <td>{{register.createDate}}</td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>Итого</strong></td>
+                    <td colspan="2"><strong>{{sum | localizedCurrency}}</strong></td>
                 </tr>
             </table>
         </div>

@@ -17,7 +17,7 @@ namespace Sirius.DAL.Repository.Contract
         /// <param name="orderBy"></param>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        IEnumerable<ItemDto> GetAll(
+        IEnumerable<object> GetAll(
            Expression<Func<Item, bool>> filter = null,
            Func<IQueryable<Item>, IOrderedQueryable<Item>> orderBy = null,
            string includeProperties = "");
@@ -27,6 +27,6 @@ namespace Sirius.DAL.Repository.Contract
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        ItemDetailDto GetByID(Guid itemId);
+        object GetByID(Guid itemId);
     }
 }

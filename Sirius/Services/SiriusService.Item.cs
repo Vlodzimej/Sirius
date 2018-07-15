@@ -17,7 +17,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ItemDetailDto GetItemById(Guid id)
+        public object GetItemById(Guid id)
         {
             var item = _unitOfWork.ItemRepository.GetByID(id);
             return item;
@@ -27,7 +27,7 @@ namespace Sirius.Services
         /// Получить список всех предметов
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ItemDto> GetAllItems()
+        public IEnumerable<object> GetAllItems()
         {
             var items = _unitOfWork.ItemRepository.GetAll();
             return items;
@@ -37,7 +37,7 @@ namespace Sirius.Services
         /// Получить список всех предметов
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ItemDto> GetItemsByFilter(ItemFilter filter)
+        public IEnumerable<object> GetItemsByFilter(ItemFilter filter)
         {
             if (filter != null)
             {
@@ -73,7 +73,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public ItemDetailDto AddItem(ItemSaveDto savingItem)
+        public object AddItem(ItemSaveDto savingItem)
         {
             var item = new Item()
             {
@@ -81,7 +81,8 @@ namespace Sirius.Services
                 Name = savingItem.Name,
                 DimensionId = savingItem.DimensionId,
                 CategoryId = savingItem.CategoryId,
-                isCountless = savingItem.isCountless
+                IsCountless = savingItem.IsCountless,
+                MinimumLimit = savingItem.MinimumLimit
             };
 
             _unitOfWork.ItemRepository.Insert(item);
@@ -96,7 +97,7 @@ namespace Sirius.Services
         /// <param name="itemId"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public ItemDetailDto UpdateItem(Guid itemId, Item item)
+        public object UpdateItem(Guid itemId, Item item)
         {
             if (itemId == item.Id)
             {

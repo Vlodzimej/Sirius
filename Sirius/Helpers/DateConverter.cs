@@ -8,8 +8,8 @@ namespace Sirius.Helpers
         static public DateTime ConvertToRTS(DateTime dateTime)
         {
             DateTime utcDateTime = dateTime.ToUniversalTime();
-
-            string nzTimeZoneKey = "Russian Standard Time";
+            // Зона 'Russian Standard Time' не работает и вызывает исключение в Centos, так как отсутствует
+            string nzTimeZoneKey = "Europe/Moscow";
             TimeZoneInfo nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById(nzTimeZoneKey);
             DateTime nzDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, nzTimeZone);
             return nzDateTime;

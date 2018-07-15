@@ -27,7 +27,7 @@
                     <th class="text-center">Сумма</th>
                 </tr>
                 <tr *ngFor="let item of listItems; let n = index" [ngClass]="{'danger': item.amount < 0}">
-                    <td *ngIf="item.type == 0" colspan="3" class="text-center success">
+                    <td *ngIf="item.type == 0" colspan="3" class="text-center success" [ngClass]="{'danger': filter.isMinimumLimit}">
                         <b>{{item.text}}</b>
                     </td>
                     <td *ngIf="item.type == 1">{{item.amount}}</td>

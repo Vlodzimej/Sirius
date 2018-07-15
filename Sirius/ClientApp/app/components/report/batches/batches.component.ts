@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Batch, BatchGroup, BatchListElement, BatchListElementType, Item, Category, Vendor } from '../../_models';
+import { Batch, BatchGroup, BatchListElement, BatchListElementType } from '../../_models';
 import { Filter } from '../../_extends';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Converter } from '../../_helpers';
 import { ApiService, AlertService, ModalService, PageHeaderService, LoadingService, FilterService } from '../../_services';
-import { LocalizedCurrencyPipe } from '../../_pipes';
 
 @Component({
     selector: 'app-batches',
@@ -36,7 +34,7 @@ export class BatchesComponent implements OnInit {
 
     ngOnInit(): void {
         // Устанавливаем поля фильтра
-        this.filterService.setFilter({ category: true, item: true, isDynamic: true });
+        this.filterService.setFilter({ category: true, item: true, isDynamic: true, isMinimumLimit: true });
         // Очистка полей фильтра
         this.filterService.cleanFilter();
         // На всякий случай отключаем визуализацию загрузки, так как загрузка будет происходить после нажатия на кнопку "Сформировать"
@@ -61,6 +59,7 @@ export class BatchesComponent implements OnInit {
         params += filter.startDate != null ? "&startDate=" + filter.startDate : "";
         params += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
         params += filter.isDynamic == true ? "&isDynamic=true" : "";
+        params += filter.isMinimumLimit == true ? "&isMinimumLimit=true" : "";
 
         this.apiService.get<BatchGroup[]>('register/batches', params).subscribe(
             data => {

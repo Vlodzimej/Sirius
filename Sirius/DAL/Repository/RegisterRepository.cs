@@ -150,7 +150,7 @@ namespace Sirius.Models
                     (r.ItemId == filter.ItemId) &&
                     (r.Invoice.IsFixed == true) &&
                     (r.Invoice.Factor < 0) &&
-                    (r.Item.isCountless == false) &&
+                    (r.Item.IsCountless == false) &&
                     (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
                     (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
                 .OrderBy(r => r.Invoice.CreateDate)
@@ -202,7 +202,9 @@ namespace Sirius.Models
                 .Include(r => r.Item)
                 .Where(r =>
                     (r.ItemId == filter.ItemId) &&
-                    (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true))
+                    (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
+                    // Если в фильтре указана выборка по критическим остаткам
+                    (filter.isMinimumLimit ? r.Amount <= _siriusContext.Items.FirstOrDefault(x => x.Id == r.ItemId).MinimumLimit : true))
                 .OrderBy(r => r.Item.CategoryId)
                 .Select(sr => new Batch { Amount = sr.Amount, Cost = sr.Cost })
                 .ToList();
@@ -230,13 +232,13 @@ namespace Sirius.Models
             {
                 filter.ItemId = itemId != Guid.Empty ? filter.ItemId : i.Id;
 
-                /** Получаем остатки в зависимости от значения параметра фильтра isDynamic
+                /** Получаем остатки в зависимости от значения параметра фильтра IsDynamic
                  * Если значение false, то ищем в накопительном регистре StorageRegiter
                  * При значении true высчитываем остатки по всем существующим регистрам проведённых накладных (возможно будет медленно)    */
                 BatchGroup batchGroup = new BatchGroup()
                 {
                     Name = i.Name,
-                    Batches = filter.isDynamic == true ? GetDynamicBatchesByFilter(filter).Result : GetStaticBatchesByFilter(filter)
+                    Batches = filter.IsDynamic == true ? GetDynamicBatchesByFilter(filter).Result : GetStaticBatchesByFilter(filter)
                 };
                 batchGroups.Add(batchGroup);
             });

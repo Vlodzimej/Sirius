@@ -59,5 +59,11 @@
     </label>
 </div>
 
+<div class="checkbox-inline" *ngIf="filterService.params.isMinimumLimit">
+    <label>
+        <input type="checkbox" [(ngModel)]="filterService.filter.isMinimumLimit">Критические остатки
+    </label>
+</div>
+
 <button class="btn btn-default btn-block" (click)="onCleanFilter()">Сбросить</button>
 <hr>

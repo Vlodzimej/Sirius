@@ -38,11 +38,13 @@
                 <tr>
                     <th class="text-center">№</th>
                     <th>Наименования</th>
+                    <th>Мин. остаток</th>
                 </tr>
                 <tr *ngFor="let item of items; let n = index" (click)="onSelectItem(item.id)" (dblclick)="onOpenItem()" class="select-block"
                     [ngClass]="{'class.info': item.Id == selectedItemId}" [style.cursor]="'pointer'" [ngStyle]="{'cursor': 'pointer'}">
                     <td class="text-center">{{n+1}}</td>
                     <td>{{ item.name }}</td>
+                    <td>{{ item.minimumLimit }}</td>
                 </tr>
             </table>
         </div>
@@ -80,6 +82,11 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="item-minimumlimit">Минимальный остаток</label>
+                            <input type="number" class="form-control" name="item-minimumlimit" [(ngModel)]="item.minimumLimit">
+                        </div>
+
                         <div class="checkbox-inline">
                             <label>
                                 <input type="checkbox" name="item-countless" [(ngModel)]="item.isCountless">Бесконечное
@@ -112,27 +119,32 @@
                     <div class="modal-body">
                         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !name.valid }">
                             <label for="item-edit-name">Название</label>
-                            <input type="text" class="form-control" name="item-edit-name" [(ngModel)]="itemDetail.name" #name="ngModel" required />
+                            <input type="text" class="form-control" name="item-edit-name" [(ngModel)]="item.name" #name="ngModel" required />
                             <div *ngIf="f.submitted && !name.valid" class="help-block">Требуется ввести название</div>
                         </div>
 
                         <div class="form-group">
                             <label for="item-edit-category">Категория</label>
-                            <select class="form-control" name="item-edit-category" [(ngModel)]="itemDetail.category.id" #category="ngModel" required>
+                            <select class="form-control" name="item-edit-category" [(ngModel)]="item.category.id" #category="ngModel" required>
                                 <option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="item-edit-dimension">Единица измерения</label>
-                            <select class="form-control" name="item-edit-dimension" [(ngModel)]="itemDetail.dimension.id" #dimension="ngModel" required>
+                            <select class="form-control" name="item-edit-dimension" [(ngModel)]="item.dimension.id" #dimension="ngModel" required>
                                 <option *ngFor="let dimension of dimensions" value="{{dimension.id}}">{{dimension.name}}</option>
                             </select>
                         </div>
 
+                        <div>
+                            <label for="item-minimumlimit">Минимальный остаток</label>
+                            <input type="number" class="form-control" name="item-minimumlimit" [(ngModel)]="item.minimumLimit">
+                        </div>
+
                         <div class="checkbox-inline">
                             <label>
-                                <input type="checkbox" name="item-countless" [(ngModel)]="itemDetail.isCountless">Невычисляемое
+                                <input type="checkbox" name="item-countless" [(ngModel)]="item.isCountless">Невычисляемое
                             </label>
                         </div>
                     </div>

@@ -15,20 +15,20 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        ItemDetailDto GetItemById(Guid id);
+        object GetItemById(Guid id);
 
         /// <summary>
         /// Получить список всех предметов
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ItemDto> GetAllItems();
+        IEnumerable<object> GetAllItems();
 
         /// <summary>
         /// Получить список всех предметов
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IEnumerable<ItemDto> GetItemsByFilter(ItemFilter filter);
+        IEnumerable<object> GetItemsByFilter(ItemFilter filter);
 
         /// <summary>
         /// Удалить предмет
@@ -42,7 +42,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="savingItem"></param>
         /// <returns></returns>
-        ItemDetailDto AddItem(ItemSaveDto savingItem);
+        object AddItem(ItemSaveDto savingItem);
 
         /// <summary>
         /// Обновить информацию о предмете
@@ -50,6 +50,6 @@ namespace Sirius.Services
         /// <param name="itemId"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        ItemDetailDto UpdateItem(Guid itemId, Item item);
+        object UpdateItem(Guid itemId, Item item);
     }
 }

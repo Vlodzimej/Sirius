@@ -46,6 +46,4 @@ export class ApiService {
     dbReset(){
         return this.http.post(this.baseUrl + 'api/settings/dbreset', { }, this.authenticationService.jwt());       
     }
-
-    
 }

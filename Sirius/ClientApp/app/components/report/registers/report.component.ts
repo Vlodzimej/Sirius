@@ -14,6 +14,8 @@ export class ReportComponent implements OnInit {
     public typeAlias: string;
     public type: InvoiceType;
     public registers: Register[] = [];
+
+    public sum: number = 0;
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -69,6 +71,12 @@ export class ReportComponent implements OnInit {
         this.apiService.get<Register[]>('register', params).subscribe(
             data => {
                 this.registers = data;
+
+                this.sum = 0;
+                this.registers.forEach(x => {
+                    this.sum += x.sum;
+                });
+
                 this.loadingService.hideLoadingIcon();
             },
             error => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Item, ItemDetail, Dimension, Category /*Vendor*/ } from '../../_models';
+import { Item, Dimension, Category /*Vendor*/ } from '../../_models';
 import { ApiService, AlertService, PageHeaderService, LoadingService, ModalService, FilterService  } from '../../_services'
 import { Filter } from '../../_extends';
 @Component({
@@ -13,7 +13,6 @@ import { Filter } from '../../_extends';
 export class ItemDictionaryComponent implements OnInit {
     public loading: boolean = true;
     public items: Item[] = [];
-    public itemDetail: ItemDetail = new ItemDetail();
     public item: Item = new Item();
     public selectedItemId: string;
 
@@ -95,10 +94,11 @@ export class ItemDictionaryComponent implements OnInit {
     */
     onOpenItem() {
         if (this.selectedItemId != null && this.selectedItemId != "") {
-            this.apiService.getById<ItemDetail>('item', this.selectedItemId).subscribe(
+            this.apiService.getById<Item>('item', this.selectedItemId).subscribe(
                 data => {
-                    this.itemDetail = data;
+                    this.item = data;
                     this.modalService.open('modal-edit-item');
+                    console.log(this.item);
                 },
                 error => {
                     this.alertService.error('Ошибка загрузки', true);
@@ -124,20 +124,21 @@ export class ItemDictionaryComponent implements OnInit {
      * Обновление данных наименования 
      */
     onUpdateItem() {
-        if (this.itemDetail.id != null || this.itemDetail.id != "") {
-            var newItem: Item = new Item();
-            newItem.id = this.itemDetail.id;
-            newItem.name = this.itemDetail.name;
-            newItem.dimensionId = this.itemDetail.dimension.id;
-            newItem.categoryId = this.itemDetail.category.id;
-            newItem.isCountless = this.itemDetail.isCountless;
+        if (this.item.id != null || this.item.id != "") {
+
+            let newItem : Item = this.item;
+            newItem.dimensionId = this.item.dimension.id;
+            newItem.categoryId = this.item.category.id;
             delete (newItem.category);
             delete (newItem.dimension);
+
+            console.log(newItem);
 
             this.apiService.update<Item>('item', newItem.id, newItem).subscribe(
                 data => {
                     this.modalService.close('modal-edit-item');
                     this.ngOnInit();
+                    console.log(this.item);
                 },
                 error => {
                     this.alertService.error('Ошибка записи', true);

@@ -87,7 +87,7 @@ namespace Sirius.Services
             _unitOfWork.InvoiceRepository.Insert(newInvoice);
             _unitOfWork.Save();
 
-            var addedInvoice = _unitOfWork.InvoiceRepository.GetByID(newInvoiceId) ?? null;
+            var addedInvoice = _unitOfWork.InvoiceRepository.GetByID(newInvoiceId);
 
             if (addedInvoice != null)
             {
@@ -104,7 +104,7 @@ namespace Sirius.Services
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
 
-                return _unitOfWork.InvoiceRepository.GetById(newInvoiceId) ?? null;
+                return _unitOfWork.InvoiceRepository.GetById(newInvoiceId);
             }
             return null;
         }
@@ -150,7 +150,7 @@ namespace Sirius.Services
                     var newStorageRegister = new StorageRegister()
                     {
                         Id = Guid.NewGuid(),
-                        createDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
+                        CreateDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
                         Amount = register.Amount,
                         Cost = register.Cost,
                         ItemId = register.ItemId

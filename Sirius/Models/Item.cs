@@ -1,26 +1,50 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sirius.Models
 {
     /// <summary>
-    /// Предметы (наименования)
+    /// Наименование
     /// </summary>
     public class Item
     {
-        // Идентификатор
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
         public Guid Id { get; set; }
-        // Название
+
+        /// <summary>
+        /// Название
+        /// </summary>
         public string Name { get; set; }
-        // Идентификатор единицы измерения
+
+        /// <summary>
+        /// Идентификатор единицы измерения
+        /// </summary>
         public Guid DimensionId { get; set; }
-        // Единица измерения
+
+        /// <summary>
+        /// Единица измерения
+        /// </summary>
         public Dimension Dimension { get; set; }
-        // Идентификатор категории
+
+        /// <summary>
+        /// Идентификатор категории
+        /// </summary>
         public Guid CategoryId { get; set; }
-        // Категория
+
+        /// <summary>
+        /// Категория
+        /// </summary>
         public Category Category { get; set; }
-        // Признак бесчисленности
-        public bool isCountless { get; set; }
+
+        /// <summary>
+        /// Признак бесчисленности
+        /// </summary>
+        public bool IsCountless { get; set; }
+        
+        /// <summary>
+        /// Минимальное количество по данной позиции
+        /// </summary>
+        public double MinimumLimit { get; set; }
     }
 }

@@ -14,6 +14,8 @@ namespace Sirius.Models.Dtos
 
         public Guid VendorId { get; set; }
 
-        public bool isCountless { get; set; }
+        public bool IsCountless { get; set; }
+
+        public double MinimumLimit { get; set; }
     }
 }

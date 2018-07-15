@@ -10,19 +10,39 @@ namespace Sirius.Models
     /// </summary>
     public class Register
     {
-        // Идентификатор
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
         public Guid Id { get; set; }
-        // Стоимость
+
+        /// <summary>
+        /// Стоимость
+        /// </summary>
         public decimal Cost { get; set; }
-        // Количество
+
+        /// <summary>
+        /// Количество
+        /// </summary>
         public double Amount { get; set; }
-        // Идентификатор наименования
+
+        /// <summary>
+        /// Идентификатор наименования
+        /// </summary>
         public Guid ItemId { get; set; }
-        // Наименование
+
+        /// <summary>
+        /// Наименование
+        /// </summary>
         public Item Item { get; set; }
-        // Идентификатор накладной
+
+        /// <summary>
+        /// Идентификатор накладной
+        /// </summary>
         public Guid InvoiceId { get; set; }
-        //
+
+        /// <summary>
+        /// Накладная
+        /// </summary>
         public Invoice Invoice { get; set; }
     }
 }

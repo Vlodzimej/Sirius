@@ -7,4 +7,5 @@ export class Filter {
     finishDate: Date;
     fixedOnly: boolean;
     isDynamic: boolean;
+    isMinimumLimit: boolean;
 }

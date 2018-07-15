@@ -9,4 +9,5 @@ export class Item
     dimension: Dimension = new Dimension();
     category: Category = new Category();
     isCountless: boolean;
+    minimumLimit: number;
 }

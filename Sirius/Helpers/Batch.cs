@@ -11,7 +11,7 @@ namespace Sirius.Helpers
         {
 
             //Check whether the compared object is null. 
-            if (Object.ReferenceEquals(other, null)) return false;
+            if (other is null) return false;
 
             //Check whether the compared object references the same data. 
             if (Object.ReferenceEquals(this, other)) return true;
