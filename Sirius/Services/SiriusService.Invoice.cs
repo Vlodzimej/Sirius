@@ -298,5 +298,15 @@ namespace Sirius.Services
                (filter.FixedOnly == true ? x.IsFixed == true : true);
             return _unitOfWork.InvoiceRepository.GetAll(f);
         }
+
+        /// <summary>
+        /// Обновление комментария
+        /// </summary>
+        /// <param name="invoiceId"></param>
+        /// <param name="comment"></param>
+        public bool UpdateComment(Guid invoiceId, string comment)
+        {
+           return _unitOfWork.InvoiceRepository.UpdateComment(invoiceId, comment);
+        }
     }
 }

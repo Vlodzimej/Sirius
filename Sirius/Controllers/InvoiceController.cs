@@ -100,7 +100,7 @@ namespace Sirius.Controllers
         public IActionResult Delete(Guid id)
         {
             var result = _siriusService.DeleteInvoiceById(id);
-            if(result != "")
+            if (result != "")
             {
                 return Ok(result);
             }
@@ -198,6 +198,17 @@ namespace Sirius.Controllers
                 return Ok(type);
             }
             return NotFound();
+        }
+
+        [HttpPut("comment/{invoiceId}")]
+        public IActionResult UpdateComment(Guid invoiceId, [FromQuery]string value)
+        {
+            if (_siriusService.UpdateComment(invoiceId, value))
+            {
+                return Ok(true);
+            }
+            
+             return NotFound();
         }
 
 

@@ -84,7 +84,8 @@ namespace Sirius.Models
                 CreateDate = DateConverter.ConvertToStandardString(invoice.CreateDate),
                 IsTemporary = invoice.IsTemporary,
                 IsFixed = invoice.IsFixed,
-                TypeId = invoice.TypeId
+                TypeId = invoice.TypeId,
+                Comment = invoice.Comment
                 
             };
             return result;
@@ -138,6 +139,18 @@ namespace Sirius.Models
         public IEnumerable<InvoiceType> GetTypes()
         {
             return _siriusContext.InvoiceTypes;
+        }
+
+        public bool UpdateComment(Guid id, string comment)
+        {
+            var invoice = _siriusContext.Invoices.FirstOrDefault(x => x.Id == id);
+            if(invoice != null)
+            {
+                invoice.Comment = comment;
+                if (_siriusContext.SaveChanges() >= 0)
+                    return true;
+            }
+            return false;
         }
                
     }

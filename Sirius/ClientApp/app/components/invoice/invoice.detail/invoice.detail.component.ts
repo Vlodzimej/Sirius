@@ -14,6 +14,7 @@ import { Converter } from '../../_helpers';
 import { FormGroup } from '@angular/forms';
 
 import { ModalType, ISelectOption } from '../../_extends';
+import { timeout } from 'rxjs/operator/timeout';
 
 @Component({
     selector: 'app-invoice-detail',
@@ -64,11 +65,13 @@ export class InvoiceDetailComponent implements OnInit {
     // Идентификатор шаблона накладной. Используется при добавлении регистров из выбранного шаблона
     public templateInvoiceId: string = "";
 
+    public commentUpdateTimer: any;
+
     /**
      *  Костыль для привязки значения цены регистра (для определения остатка) к списку ng-select, так как number принимать мы не хотим, приходится перед
      * открытием регистра на редактирование переводить значение цены в строку и назначать переменной registerCost
     */
-    public registerCost: string = ""; 
+    public registerCost: string = "";
 
     public modal: ModalType = new ModalType();
     private newRegisterModal: ModalType;
@@ -617,6 +620,19 @@ export class InvoiceDetailComponent implements OnInit {
                 this.alertService.serverError(error);
             }
         );
+    }
+
+    updateComment() {
+        clearTimeout(this.commentUpdateTimer);
+        this.commentUpdateTimer = setTimeout(x => {
+            this.apiService.update<string>('invoice/comment', this.invoice.id + "?value=" + this.invoice.comment).subscribe(
+                data => {
+                    console.log("comment updated");
+                },
+                error => {
+                    this.alertService.serverError(error);
+                });
+        }, 2000);
     }
 
 }

@@ -17,5 +17,6 @@ namespace Sirius.Models.Dtos
         public bool IsTemporary { get; set; }
         public bool IsFixed { get; set; }
         public Guid TypeId { get; set; }
+        public string Comment { get; set; }
     }
 }

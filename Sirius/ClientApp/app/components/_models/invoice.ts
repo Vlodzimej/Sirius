@@ -13,6 +13,7 @@ export class Invoice {
     isTemporary: boolean;
     typeId: string;
     factor: number;
+    comment: string;
 }
 
 export class InvoiceListItem {
