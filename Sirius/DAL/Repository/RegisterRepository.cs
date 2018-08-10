@@ -245,5 +245,12 @@ namespace Sirius.Models
 
             return batchGroups;
         }
+
+        public IEnumerable<Register> GetFixedRegisters()
+        {
+            return _siriusContext.Registers
+                .Include(i => i.Invoice)
+                .Where(x => x.Invoice.IsFixed == true);
+        }
     }
 }

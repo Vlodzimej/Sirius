@@ -299,7 +299,7 @@ namespace Sirius.Services
             }
             else
             {
-                var item = _unitOfWork.ItemRepository.GetByID(register.ItemId);
+                var item = _unitOfWork.ItemRepository.GetById(register.ItemId);
                 var newRegister = new Register()
                 {
                     Id = Guid.NewGuid(),

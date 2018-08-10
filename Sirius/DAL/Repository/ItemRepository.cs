@@ -43,7 +43,7 @@ namespace Sirius.Models
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        public object GetByID(Guid itemId)
+        public object GetById(Guid itemId)
         {
             var item = _siriusContext.Items
                 .Include(i => i.Dimension)

@@ -27,6 +27,6 @@ namespace Sirius.DAL.Repository.Contract
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns></returns>
-        object GetByID(Guid itemId);
+        object GetById(Guid itemId);
     }
 }

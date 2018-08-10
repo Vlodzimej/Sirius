@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Item, Dimension, Category /*Vendor*/ } from '../../_models';
-import { ApiService, AlertService, PageHeaderService, LoadingService, ModalService, FilterService  } from '../../_services'
+import { ApiService, AlertService, PageHeaderService, LoadingService, ModalService, FilterService } from '../../_services'
 import { Filter } from '../../_extends';
 @Component({
     selector: 'app-item-dictionary',
@@ -126,7 +126,7 @@ export class ItemDictionaryComponent implements OnInit {
     onUpdateItem() {
         if (this.item.id != null || this.item.id != "") {
 
-            let newItem : Item = this.item;
+            let newItem: Item = this.item;
             newItem.dimensionId = this.item.dimension.id;
             newItem.categoryId = this.item.category.id;
             delete (newItem.category);
@@ -149,7 +149,7 @@ export class ItemDictionaryComponent implements OnInit {
     }
 
     /**
-     * Загрузка необходимых справичников
+     * Загрузка необходимых справочников
      */
     loadDictionaries() {
         this.apiService.getAll<Dimension>('dimension').subscribe(
@@ -166,6 +166,24 @@ export class ItemDictionaryComponent implements OnInit {
             },
             error => {
                 this.alertService.serverError(error);
+            });
+    }
+
+    onDeleteItem() {
+        this.apiService.delete("item", this.selectedItemId).subscribe(
+            data => {
+                this.closeModal('modal-edit-item');
+                if (this.selectedItemId == data.text()) {
+                    var deletedItem = this.items.find(i => i.id == this.selectedItemId) as Item;
+                    const i = this.items.indexOf(deletedItem);
+                    this.items.splice(i, 1);
+                    delete (this.selectedItemId);
+                } else {
+                    this.alertService.error("Идентификатор не совпадает.");
+                }
+            },
+            error => {
+                this.alertService.error(error.text());
             });
     }
 }

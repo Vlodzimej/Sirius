@@ -19,7 +19,7 @@ namespace Sirius.Services
         /// <returns></returns>
         public object GetItemById(Guid id)
         {
-            var item = _unitOfWork.ItemRepository.GetByID(id);
+            var item = _unitOfWork.ItemRepository.GetById(id);
             return item;
         }
 
@@ -56,16 +56,24 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteItemById(Guid id)
+        public string DeleteItemById(Guid id)
         {
             var item = _unitOfWork.ItemRepository.GetByID(id);
+            var registers = _unitOfWork.RegisterRepository.GetFixedRegisters();
+            // Если какой-либо регистр проведённой накладной ссылается на предмет, то удалять предмет запрещено
             if (item != null)
             {
-                _unitOfWork.ItemRepository.Delete(item);
-                _unitOfWork.Save();
-                return true;
-            }
-            return false;
+                if (registers.FirstOrDefault(x => x.ItemId == item.Id) == null)
+                {
+                    _unitOfWork.ItemRepository.Delete(item);
+                    _unitOfWork.Save();
+                    return item.Id.ToString();
+                } else
+                {
+                    return "Наименование невозможно удалить, так как на него ссылаются проведённые документы!";
+                }
+            } 
+            return "Наименование не найдено.";
         }
 
         /// <summary>
@@ -88,7 +96,7 @@ namespace Sirius.Services
             _unitOfWork.ItemRepository.Insert(item);
             _unitOfWork.Save();
 
-            return _unitOfWork.ItemRepository.GetByID(item.Id);
+            return _unitOfWork.ItemRepository.GetById(item.Id);
         }
 
         /// <summary>
@@ -103,7 +111,7 @@ namespace Sirius.Services
             {
                 _unitOfWork.ItemRepository.Update(item);
                 _unitOfWork.Save();
-                return _unitOfWork.ItemRepository.GetByID(itemId);
+                return _unitOfWork.ItemRepository.GetById(itemId);
             }
             return null;
         }

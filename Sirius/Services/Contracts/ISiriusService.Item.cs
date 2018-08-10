@@ -35,7 +35,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        bool DeleteItemById(Guid id);
+        string DeleteItemById(Guid id);
 
         /// <summary>
         /// Добавить новый предмет

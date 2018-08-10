@@ -25,6 +25,7 @@
                     <div class="panel-body">
                         <button class="btn btn-default btn-block" (click)="onCreateItem()">Создать</button>
                         <button class="btn btn-default btn-block" (click)="onOpenItem()" [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Открыть</button>
+                        <button class="btn btn-default btn-block" (click)="onDeleteItem()" [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Удалить</button>
                     </div>
                 </div>
             </div>
@@ -150,6 +151,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="form-group">
+                            <a class="btn btn-danger" (click)="onDeleteItem()" [ngClass]="{'disabled' : selectedItemId == null || selectedItemId == ''}">Удалить</a>
                             <button class="btn btn-primary">Обновить</button>
                             <a (click)="closeModal('modal-edit-item')" class="btn btn-link">Отмена</a>
                         </div>

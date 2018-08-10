@@ -99,11 +99,12 @@ namespace Sirius.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            if (_siriusService.DeleteItemById(id))
+            var result = _siriusService.DeleteItemById(id);
+            if (result == id.ToString())
             {
-                return Ok();
+                return Ok(result);
             }
-            return new BadRequestResult();
+            return BadRequest(result);
         }
     }
 }
