@@ -1,14 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Item, Dimension, Category /*Vendor*/ } from '../../_models';
-import { ApiService, AlertService, PageHeaderService, LoadingService, ModalService, FilterService } from '../../_services'
+import {
+    ApiService,
+    AlertService,
+    PageHeaderService,
+    LoadingService,
+    ModalService,
+    FilterService,
+} from '../../_services';
 import { Filter } from '../../_extends';
+import * as _ from 'lodash';
+
 @Component({
     selector: 'app-item-dictionary',
     templateUrl: './item.dictionary.component.html',
     styleUrls: [
         '../../../assets/css/accordion.css',
-        '../../../assets/css/modal.css'
-    ]
+        '../../../assets/css/modal.css',
+    ],
 })
 export class ItemDictionaryComponent implements OnInit {
     public loading: boolean = true;
@@ -25,7 +34,8 @@ export class ItemDictionaryComponent implements OnInit {
         private modalService: ModalService,
         private pageHeaderService: PageHeaderService,
         public loadingService: LoadingService,
-        private filterService: FilterService) { }
+        private filterService: FilterService
+    ) {}
 
     /**
      * Инициализация
@@ -38,45 +48,50 @@ export class ItemDictionaryComponent implements OnInit {
         // Очистка полей фильтра
         this.filterService.cleanFilter();
         // Установка заголовка раздела
-        this.pageHeaderService.changeText("Наименования");
+        this.pageHeaderService.changeText('Наименования');
         this.getItemsByFilter();
         this.loadDictionaries();
     }
 
     getItemsByFilter() {
-        // Получение критериев фильтрации 
+        // Получение критериев фильтрации
         var filter = this.filterService.getFilter();
-        var params: string = "";
-        params += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
-        params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
+        var params: string = '';
+        params +=
+            filter.categoryId != null ? 'categoryId=' + filter.categoryId : '';
+        params += filter.itemId != null ? '&itemId=' + filter.itemId : '';
 
         this.apiService.get<Item[]>('item', params).subscribe(
             data => {
-                this.items = data;
+                const arr = data.map(x => {
+                    return { ...x, name: x.name.trim().toLowerCase() };
+                });
+                this.items = _.sortBy(arr, 'name');
                 this.loadingService.hideLoadingIcon();
             },
             error => {
                 this.alertService.serverError(error);
-            });
+            }
+        );
     }
 
     /**
-     * Открытие модального окна 
-    */
+     * Открытие модального окна
+     */
     openModal(id: string) {
         this.modalService.open(id);
     }
 
     /**
-     * Закрытие модального окна 
-    */
+     * Закрытие модального окна
+     */
     closeModal(id: string) {
         this.modalService.close(id);
     }
 
     /**
-     * Открытие модального окна с формой добавления нового наименования 
-    */
+     * Открытие модального окна с формой добавления нового наименования
+     */
     onCreateItem() {
         this.item = new Item();
         this.modalService.open('modal-new-item');
@@ -90,24 +105,27 @@ export class ItemDictionaryComponent implements OnInit {
     }
 
     /**
-     * Открытие модального окна с информацией о наименовании и возможностью редактирования 
-    */
+     * Открытие модального окна с информацией о наименовании и возможностью редактирования
+     */
     onOpenItem() {
-        if (this.selectedItemId != null && this.selectedItemId != "") {
-            this.apiService.getById<Item>('item', this.selectedItemId).subscribe(
-                data => {
-                    this.item = data;
-                    this.modalService.open('modal-edit-item');
-                    console.log(this.item);
-                },
-                error => {
-                    this.alertService.error('Ошибка загрузки', true);
-                });
+        if (this.selectedItemId != null && this.selectedItemId != '') {
+            this.apiService
+                .getById<Item>('item', this.selectedItemId)
+                .subscribe(
+                    data => {
+                        this.item = data;
+                        this.modalService.open('modal-edit-item');
+                        console.log(this.item);
+                    },
+                    error => {
+                        this.alertService.error('Ошибка загрузки', true);
+                    }
+                );
         }
     }
 
     /**
-     * Добавление нового наименования 
+     * Добавление нового наименования
      */
     onAddItem() {
         this.apiService.create<Item>('item', this.item).subscribe(
@@ -117,20 +135,20 @@ export class ItemDictionaryComponent implements OnInit {
             },
             error => {
                 this.alertService.error('Ошибка записи', true);
-            });
+            }
+        );
     }
 
     /**
-     * Обновление данных наименования 
+     * Обновление данных наименования
      */
     onUpdateItem() {
-        if (this.item.id != null || this.item.id != "") {
-
+        if (this.item.id != null || this.item.id != '') {
             let newItem: Item = this.item;
             newItem.dimensionId = this.item.dimension.id;
             newItem.categoryId = this.item.category.id;
-            delete (newItem.category);
-            delete (newItem.dimension);
+            delete newItem.category;
+            delete newItem.dimension;
 
             console.log(newItem);
 
@@ -142,7 +160,8 @@ export class ItemDictionaryComponent implements OnInit {
                 },
                 error => {
                     this.alertService.error('Ошибка записи', true);
-                });
+                }
+            );
         } else {
             this.alertService.error('Отсутствуют данные', true);
         }
@@ -158,7 +177,8 @@ export class ItemDictionaryComponent implements OnInit {
             },
             error => {
                 this.alertService.serverError(error);
-            });
+            }
+        );
 
         this.apiService.getAll<Category>('category').subscribe(
             data => {
@@ -166,24 +186,28 @@ export class ItemDictionaryComponent implements OnInit {
             },
             error => {
                 this.alertService.serverError(error);
-            });
+            }
+        );
     }
 
     onDeleteItem() {
-        this.apiService.delete("item", this.selectedItemId).subscribe(
+        this.apiService.delete('item', this.selectedItemId).subscribe(
             data => {
                 this.closeModal('modal-edit-item');
                 if (this.selectedItemId == data.text()) {
-                    var deletedItem = this.items.find(i => i.id == this.selectedItemId) as Item;
+                    var deletedItem = this.items.find(
+                        i => i.id == this.selectedItemId
+                    ) as Item;
                     const i = this.items.indexOf(deletedItem);
                     this.items.splice(i, 1);
-                    delete (this.selectedItemId);
+                    delete this.selectedItemId;
                 } else {
-                    this.alertService.error("Идентификатор не совпадает.");
+                    this.alertService.error('Идентификатор не совпадает.');
                 }
             },
             error => {
                 this.alertService.error(error.text());
-            });
+            }
+        );
     }
 }
