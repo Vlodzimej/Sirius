@@ -64,9 +64,9 @@ export class ItemDictionaryComponent implements OnInit {
         this.apiService.get<Item[]>('item', params).subscribe(
             data => {
                 const arr = data.map(x => {
-                    return { ...x, name: x.name.trim().toLowerCase() };
+                    return { ...x, sortName: x.name.trim().toLowerCase() };
                 });
-                this.items = _.sortBy(arr, 'name');
+                this.items = _.sortBy(arr, 'sortName');
                 this.loadingService.hideLoadingIcon();
             },
             error => {
