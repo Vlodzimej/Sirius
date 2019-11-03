@@ -3,8 +3,24 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
-import { Invoice, InvoiceUpdate, Register, Item, InvoiceType, Batch, Vendor, Category, InvoiceListItem } from '../../_models';
-import { AlertService, ApiService, PageHeaderService, ModalService, LoadingService } from '../../_services';
+import {
+    Invoice,
+    InvoiceUpdate,
+    Register,
+    Item,
+    InvoiceType,
+    Batch,
+    Vendor,
+    Category,
+    InvoiceListItem,
+} from '../../_models';
+import {
+    AlertService,
+    ApiService,
+    PageHeaderService,
+    ModalService,
+    LoadingService,
+} from '../../_services';
 import { Router } from '@angular/router';
 import { FullDatePipe, LocalizedCurrencyPipe } from '../../_pipes';
 import { Location } from '@angular/common';
@@ -16,22 +32,22 @@ import { FormGroup } from '@angular/forms';
 import { ModalType, ISelectOption } from '../../_extends';
 import { timeout } from 'rxjs/operator/timeout';
 
+import * as _ from 'lodash';
+
 @Component({
     selector: 'app-invoice-detail',
     templateUrl: './invoice.detail.component.html',
     styleUrls: [
         '../../../assets/css/accordion.css',
         '../../../assets/css/modal.css',
-        '../../../assets/css/invoice/style.css'
-    ]
+        '../../../assets/css/invoice/style.css',
+    ],
 })
-
-
 export class InvoiceDetailComponent implements OnInit {
     // Список существующих наименований
     //public items: Item[] = [];
     // Текущая накладная
-    public invoice: Invoice = new Invoice;
+    public invoice: Invoice = new Invoice();
     // Массив индектификаторов удаленных регистров
     public deletedRegisterIds: string[] = [];
     // Массив добавленных регистров
@@ -60,18 +76,18 @@ export class InvoiceDetailComponent implements OnInit {
     // public form: FormGroup;
 
     // Категория добавляемой/изменяемой позиции
-    public categoryId: string = "";
+    public categoryId: string = '';
 
     // Идентификатор шаблона накладной. Используется при добавлении регистров из выбранного шаблона
-    public templateInvoiceId: string = "";
+    public templateInvoiceId: string = '';
 
     public commentUpdateTimer: any;
 
     /**
      *  Костыль для привязки значения цены регистра (для определения остатка) к списку ng-select, так как number принимать мы не хотим, приходится перед
      * открытием регистра на редактирование переводить значение цены в строку и назначать переменной registerCost
-    */
-    public registerCost: string = "";
+     */
+    public registerCost: string = '';
 
     public modal: ModalType = new ModalType();
     private newRegisterModal: ModalType;
@@ -88,33 +104,32 @@ export class InvoiceDetailComponent implements OnInit {
         private pageHeaderService: PageHeaderService,
         private modalService: ModalService,
         public loadingService: LoadingService,
-        private location: Location,
-
+        private location: Location
     ) {
         this.newRegisterModal = {
             type: 'new',
             title: 'Новая позиция',
-            submit: 'Добавить'
-        }
+            submit: 'Добавить',
+        };
 
         this.editRegisterModal = {
             type: 'edit',
             title: 'Редактирование позиции',
-            submit: 'Изменить'
-        }
+            submit: 'Изменить',
+        };
 
         this.templateModal = {
             type: 'template',
             title: 'Шаблон услуги',
-            submit: 'Вставить'
-        }
+            submit: 'Вставить',
+        };
 
         // Устанавливаем значения переменных до загрузки накладной, что бы у парсера не возникало вопросов
-        this.invoice.userFullName = "";
-        this.invoice.createDate = "";
+        this.invoice.userFullName = '';
+        this.invoice.createDate = '';
         this.invoice.isFixed = true;
-        this.invoice.vendorName = "";
-        this.invoice.vendorId = "";
+        this.invoice.vendorName = '';
+        this.invoice.vendorId = '';
     }
 
     ngOnInit() {
@@ -125,37 +140,47 @@ export class InvoiceDetailComponent implements OnInit {
         // Загрузка накладной
         this.apiService.getById<Invoice>('invoice', invoiceId).subscribe(
             data => {
-
                 // Отключаем визуализацию загрузки
                 this.loadingService.hideLoadingIcon();
                 this.invoice = data;
                 this.registers = this.invoice.registers;
-                this.generatePageHeader()
+                this.generatePageHeader();
 
                 //Вычисление суммы для каждого регистра
                 this.registers.map(r => {
-                    r.sum = r.amount * r.cost
+                    r.sum = r.amount * r.cost;
                     this.sum += r.sum;
                 });
 
                 // Загрузка данных типа накладной
-                this.apiService.getById<InvoiceType>('invoice/type/id', this.invoice.typeId).subscribe(
-                    data => {
-                        this.invoiceType = data;
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
+                this.apiService
+                    .getById<InvoiceType>(
+                        'invoice/type/id',
+                        this.invoice.typeId
+                    )
+                    .subscribe(
+                        data => {
+                            this.invoiceType = data;
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        }
+                    );
             },
             error => {
                 this.alertService.error('Ошибка загрузки', true);
-            });
+            }
+        );
 
         // Загрузка списка наименований
         this.apiService.getAll<Item>('item').subscribe(
             data => {
                 //this.items = data;
-                this.optionItems = Converter.ConvertToSelectOptionArray(data);
+                const arr = Converter.ConvertToSelectOptionArray(data).map(x => {
+                    return { ...x, sortName: x.text.trim().toLowerCase() };
+                  });
+                this.optionItems = _.sortBy(arr, 'sortName');
+                this.loadingService.hideLoadingIcon();
             },
             error => {
                 this.alertService.serverError(error);
@@ -175,7 +200,7 @@ export class InvoiceDetailComponent implements OnInit {
 
     /**
      * Событие: Открытие модального окна
-      */
+     */
     onOpenModal(id: string) {
         this.modalService.open(id);
     }
@@ -187,39 +212,41 @@ export class InvoiceDetailComponent implements OnInit {
         this.modalService.close(id);
     }
 
-    onClear() { }
+    onClear() {}
 
-    /** 
+    /**
      * Событие: Нажатие кнопки добавления нового регистра
      */
     onCreate() {
         if (!this.invoice.isFixed) {
-            this.categoryId = "";
+            this.categoryId = '';
             // Загрузка списка категорий
             this.getAllCategories();
-            delete (this.register);
+            delete this.register;
             this.register = new Register();
             this.modal = this.newRegisterModal;
             this.modalService.open('modal-register');
         }
     }
 
-    /** 
+    /**
      * Событие: Выбор регистра в списке
      */
     onSelect(registerId: string) {
         if (!this.invoice.isFixed) {
-            this.selectedRegister = this.registers.find(i => i.id == registerId) as Register;
+            this.selectedRegister = this.registers.find(
+                i => i.id == registerId
+            ) as Register;
         }
     }
 
-    /** 
+    /**
      * Событие: Открытие регистра для редактирования
      */
     onOpen() {
         if (!this.invoice.isFixed && this.selectedRegister != null) {
             this.optionBatches = [];
-            this.categoryId = "";
+            this.categoryId = '';
             this.register = this.selectedRegister;
             this.registerCost = this.register.cost.toString();
             // Загрузка списка категорий
@@ -233,32 +260,37 @@ export class InvoiceDetailComponent implements OnInit {
         console.log(this.registerCost);
     }
 
-    /** 
+    /**
      * Событие: Удаление регистра
      */
     onDelete() {
         if (!this.invoice.isFixed && this.selectedRegister != null) {
-            console.log("Удаление ID: " + this.selectedRegister.id);
-            this.apiService.delete("register", this.selectedRegister.id).subscribe(
-                data => {
-                    // Удаляем регист из массива для отображения
-                    var deletedRegister = this.registers.find(i => i.id == this.selectedRegister.id) as Register;
-                    const i = this.registers.indexOf(deletedRegister);
-                    this.registers.splice(i, 1);
+            console.log('Удаление ID: ' + this.selectedRegister.id);
+            this.apiService
+                .delete('register', this.selectedRegister.id)
+                .subscribe(
+                    data => {
+                        // Удаляем регист из массива для отображения
+                        var deletedRegister = this.registers.find(
+                            i => i.id == this.selectedRegister.id
+                        ) as Register;
+                        const i = this.registers.indexOf(deletedRegister);
+                        this.registers.splice(i, 1);
 
-                    // Высчитываем общую сумму накладной для отображения
-                    this.calcSum();
+                        // Высчитываем общую сумму накладной для отображения
+                        this.calcSum();
 
-                    // Удаляем выбранный регистр из памяти
-                    delete (this.selectedRegister);
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+                        // Удаляем выбранный регистр из памяти
+                        delete this.selectedRegister;
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         }
     }
 
-    /** 
+    /**
      * Событие: Добавление регистра
      */
     onAdd() {
@@ -269,64 +301,97 @@ export class InvoiceDetailComponent implements OnInit {
                     /**
                      * РАСХОД
                      */
-                    var params = 'itemid=' + this.register.itemId + '&cost=' + this.register.cost;
-                    this.apiService.get<Batch>('register/batch', params).subscribe(
-                        data => {
-                            // Производим сравнение остатка и предполагаемого расхода добавляемой позиции по накладной
-                            // Получение данных об остатке
-                            var relativeBatch: Batch = data;
-                            // Вычисление существующих позиций в накладной соответвующих выбранному остатку
-                            var sumAmount: number = 0;
-                            var existRegs = this.registers.filter(r => r.itemId == this.register.itemId && r.cost == this.register.cost);
-                            existRegs.forEach(r => { sumAmount += r.amount });
-                            // Прибавляем к вычисленному количеству расхода по выбранному остатку количество, которое указано в окне добавления позиции
-                            sumAmount += this.register.amount;
-                            // Сравнения общего расхода накладной по конкретному остатку
-                            if (sumAmount <= relativeBatch.amount) {
-                                this.addRegister();
-                            } else {
-                                this.alertService.error('Расход превышает остаток! Расход: ' + sumAmount + ' ед., остаток: ' + relativeBatch.amount + ' ед.');
+                    var params =
+                        'itemid=' +
+                        this.register.itemId +
+                        '&cost=' +
+                        this.register.cost;
+                    this.apiService
+                        .get<Batch>('register/batch', params)
+                        .subscribe(
+                            data => {
+                                // Производим сравнение остатка и предполагаемого расхода добавляемой позиции по накладной
+                                // Получение данных об остатке
+                                var relativeBatch: Batch = data;
+                                // Вычисление существующих позиций в накладной соответвующих выбранному остатку
+                                var sumAmount: number = 0;
+                                var existRegs = this.registers.filter(
+                                    r =>
+                                        r.itemId == this.register.itemId &&
+                                        r.cost == this.register.cost
+                                );
+                                existRegs.forEach(r => {
+                                    sumAmount += r.amount;
+                                });
+                                // Прибавляем к вычисленному количеству расхода по выбранному остатку количество, которое указано в окне добавления позиции
+                                sumAmount += this.register.amount;
+                                // Сравнения общего расхода накладной по конкретному остатку
+                                if (sumAmount <= relativeBatch.amount) {
+                                    this.addRegister();
+                                } else {
+                                    this.alertService.error(
+                                        'Расход превышает остаток! Расход: ' +
+                                            sumAmount +
+                                            ' ед., остаток: ' +
+                                            relativeBatch.amount +
+                                            ' ед.'
+                                    );
+                                }
+                            },
+                            error => {
+                                this.alertService.serverError(error);
                             }
-                        },
-                        error => {
-                            this.alertService.serverError(error);
-                        }
-                    );
+                        );
                     break;
                 case 'template':
                     /**
                      * ШАБЛОН
                      */
                     // Фильтруем существующие регистры в поисках позиции, которая уже возможно была добавлена в шаблон
-                    var filteredRegisters = this.registers.filter(r => r.itemId == this.register.itemId);
+                    var filteredRegisters = this.registers.filter(
+                        r => r.itemId == this.register.itemId
+                    );
                     if (filteredRegisters.length > 0) {
                         // Если позиция уже существует - находим её в списке регистров и увеличиваем кол-во
-                        var index = this.registers.indexOf(filteredRegisters[0]);
+                        var index = this.registers.indexOf(
+                            filteredRegisters[0]
+                        );
                         // Вычисляем новое кол-во в позиции
-                        var sum = this.registers[index].amount + this.register.amount;
+                        var sum =
+                            this.registers[index].amount + this.register.amount;
                         // Отправляем кол-во в добавляемый регистр
                         this.register.amount = sum;
                         // Присваиваем добавляемому регистру Id существующего регистра, таким образом, в базе данных произойдёт обновление после отправки запроса
                         this.register.id = this.registers[index].id;
                         this.register.invoiceId = this.invoice.id;
-                        this.apiService.update('register', this.register.id, this.register).subscribe(
-                            data => {
-                                // Отправляем это кол-во в список отображения
-                                this.registers[index].amount = sum;
-                                this.modalService.close('modal-register');
-                                this.alertService.success('Добавляемая позиция ' + filteredRegisters[0].name + ' уже существует в шаблоне услуги! Количество увеличено на ' + this.register.amount + ' ' + filteredRegisters[0].dimension);
-                            }, error => {
-                                this.alertService.serverError(error);
-                            });
-
+                        this.apiService
+                            .update('register', this.register.id, this.register)
+                            .subscribe(
+                                data => {
+                                    // Отправляем это кол-во в список отображения
+                                    this.registers[index].amount = sum;
+                                    this.modalService.close('modal-register');
+                                    this.alertService.success(
+                                        'Добавляемая позиция ' +
+                                            filteredRegisters[0].name +
+                                            ' уже существует в шаблоне услуги! Количество увеличено на ' +
+                                            this.register.amount +
+                                            ' ' +
+                                            filteredRegisters[0].dimension
+                                    );
+                                },
+                                error => {
+                                    this.alertService.serverError(error);
+                                }
+                            );
                     } else {
                         this.addRegister();
                     }
                     break;
                 case 'arrival':
                     /**
-                    * ПРИХОД 
-                    */
+                     * ПРИХОД
+                     */
                     this.addRegister();
                     break;
             }
@@ -340,74 +405,92 @@ export class InvoiceDetailComponent implements OnInit {
                 this.register.name = item.name;
                 this.register.dimension = item.dimension.name;
                 this.register.invoiceId = this.invoice.id;
-                this.apiService.create<Register>('register', this.register).subscribe(
-                    data => {
-                        var addedRegister: Register = data;
-                        // Присваиваем id созданного регистра взятый из базы данных
-                        this.register.id = addedRegister.id;
-                        // Вычисление суммы для отображения
-                        this.register.sum = this.register.cost * this.register.amount;
-                        // Добавление нового регистра в массив отображения 
-                        this.registers.push(this.register);
-                        // Высчитываем общую сумму накладной для отображения
-                        this.calcSum();
+                this.apiService
+                    .create<Register>('register', this.register)
+                    .subscribe(
+                        data => {
+                            var addedRegister: Register = data;
+                            // Присваиваем id созданного регистра взятый из базы данных
+                            this.register.id = addedRegister.id;
+                            // Вычисление суммы для отображения
+                            this.register.sum =
+                                this.register.cost * this.register.amount;
+                            // Добавление нового регистра в массив отображения
+                            this.registers.push(this.register);
+                            // Высчитываем общую сумму накладной для отображения
+                            this.calcSum();
 
-                        delete (this.registerCost);
-                        delete (this.optionBatches);
+                            delete this.registerCost;
+                            delete this.optionBatches;
 
-                        this.modalService.close('modal-register');
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
+                            this.modalService.close('modal-register');
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        }
+                    );
             },
             error => {
                 this.alertService.serverError(error);
-            });
+            }
+        );
     }
 
     calcSum() {
         this.sum = 0;
-        this.registers.map(r => this.sum += r.sum);
+        this.registers.map(r => (this.sum += r.sum));
     }
 
-    /** 
+    /**
      * Событие: Изменение регистра
      */
     onChange() {
         if (!this.invoice.isFixed) {
             this.register.invoiceId = this.invoice.id;
-            this.apiService.update<Register>('register', this.register.id, this.register).subscribe(
-                data => {
-                    this.apiService.getById<Item>('item', this.register.itemId).subscribe(
-                        data => {
-                            // Получаем наименование (возможно, изменённое)
-                            var item: Item = data;
-                            // Находим регист по id в масстве отображения
-                            var changedRegister = this.registers.find(i => i.id == this.register.id) as Register;
-                            // Вычисляем его индекс в масстве
-                            const i = this.addedRegisters.indexOf(changedRegister);
-                            // Присваиваем id накладной
-                            // Присваиваем название наименования
-                            this.register.name = item.name;
-                            // Присваиваем название ед. измерения
-                            this.register.dimension = item.dimension.name;
-                            // Вычисление суммы для отображения
-                            this.register.sum = this.register.cost * this.register.amount;
-                            // Обновляем объект регистра в массиве
-                            this.registers[i] = this.register;
-                            // Высчитываем общую сумму накладной для отображения
-                            this.calcSum();
-                            // Закрываем модаль
-                            this.modalService.close('modal-register');
-                        },
-                        error => {
-                            this.alertService.serverError(error);
-                        });
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+            this.apiService
+                .update<Register>('register', this.register.id, this.register)
+                .subscribe(
+                    data => {
+                        this.apiService
+                            .getById<Item>('item', this.register.itemId)
+                            .subscribe(
+                                data => {
+                                    // Получаем наименование (возможно, изменённое)
+                                    var item: Item = data;
+                                    // Находим регист по id в масстве отображения
+                                    var changedRegister = this.registers.find(
+                                        i => i.id == this.register.id
+                                    ) as Register;
+                                    // Вычисляем его индекс в масстве
+                                    const i = this.addedRegisters.indexOf(
+                                        changedRegister
+                                    );
+                                    // Присваиваем id накладной
+                                    // Присваиваем название наименования
+                                    this.register.name = item.name;
+                                    // Присваиваем название ед. измерения
+                                    this.register.dimension =
+                                        item.dimension.name;
+                                    // Вычисление суммы для отображения
+                                    this.register.sum =
+                                        this.register.cost *
+                                        this.register.amount;
+                                    // Обновляем объект регистра в массиве
+                                    this.registers[i] = this.register;
+                                    // Высчитываем общую сумму накладной для отображения
+                                    this.calcSum();
+                                    // Закрываем модаль
+                                    this.modalService.close('modal-register');
+                                },
+                                error => {
+                                    this.alertService.serverError(error);
+                                }
+                            );
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         }
     }
 
@@ -418,8 +501,8 @@ export class InvoiceDetailComponent implements OnInit {
         this.location.back();
     }
 
-    /** 
-     * Получение остатков по id выбранного наименования 
+    /**
+     * Получение остатков по id выбранного наименования
      */
     onFix() {
         if (!this.invoice.isFixed && this.registers.length > 0) {
@@ -433,50 +516,66 @@ export class InvoiceDetailComponent implements OnInit {
                 }
             });
             if (this.isValid) {
-                this.apiService.update<string>('invoice/fix', this.invoice.id).subscribe(
-                    data => {
-                        this.invoice.isFixed = true;
-                        this.alertService.success(data);
-                    },
-                    error => {
-                        this.alertService.serverError(error);
-                    });
+                this.apiService
+                    .update<string>('invoice/fix', this.invoice.id)
+                    .subscribe(
+                        data => {
+                            this.invoice.isFixed = true;
+                            this.alertService.success(data);
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        }
+                    );
             } else {
-                this.alertService.error('Расход некоторых позиций документа превышает фактический остаток!');
+                this.alertService.error(
+                    'Расход некоторых позиций документа превышает фактический остаток!'
+                );
             }
         }
     }
 
-    /** 
-     * Получение остатков по id выбранного наименования 
-    */
+    /**
+     * Получение остатков по id выбранного наименования
+     */
     getBatchesByItem() {
-        this.apiService.getById<Batch[]>('register/item', this.register.itemId).subscribe(
-            data => {
-                // Получаем остатки по наименованию...
-                this.batches = data;
-                // ...и конвертируем их по шаблону в список для select
-                this.optionBatches = Converter.BatchToSelectOptionArray(this.batches);
-                this.registerCost = this.register.cost.toString();
-            },
-            error => {
-                this.alertService.serverError(error);
-            });
-
+        this.apiService
+            .getById<Batch[]>('register/item', this.register.itemId)
+            .subscribe(
+                data => {
+                    // Получаем остатки по наименованию...
+                    this.batches = data;
+                    // ...и конвертируем их по шаблону в список для select
+                    this.optionBatches = Converter.BatchToSelectOptionArray(
+                        this.batches
+                    );
+                    this.registerCost = this.register.cost.toString();
+                },
+                error => {
+                    this.alertService.serverError(error);
+                }
+            );
     }
 
     /**
      * Изменение поставщика
      */
     onVendorChanged() {
-        if (this.invoice.vendorId != "") {
-            this.apiService.update<string>('invoice', this.invoice.id + '/vendor?value=' + this.invoice.vendorId, "").subscribe(
-                data => {
-                    this.alertService.success(data);
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+        if (this.invoice.vendorId != '') {
+            this.apiService
+                .update<string>(
+                    'invoice',
+                    this.invoice.id + '/vendor?value=' + this.invoice.vendorId,
+                    ''
+                )
+                .subscribe(
+                    data => {
+                        this.alertService.success(data);
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         }
     }
 
@@ -485,14 +584,21 @@ export class InvoiceDetailComponent implements OnInit {
      */
     onNameChanged() {
         this.generatePageHeader();
-        if (this.invoice.name != "") {
-            this.apiService.update<string>('invoice', this.invoice.id + '/name?value=' + this.invoice.name, "").subscribe(
-                data => {
-                    this.alertService.success(data);
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+        if (this.invoice.name != '') {
+            this.apiService
+                .update<string>(
+                    'invoice',
+                    this.invoice.id + '/name?value=' + this.invoice.name,
+                    ''
+                )
+                .subscribe(
+                    data => {
+                        this.alertService.success(data);
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         }
     }
 
@@ -503,7 +609,9 @@ export class InvoiceDetailComponent implements OnInit {
         if (this.optionCategories.length == 0) {
             this.apiService.getAll<Category>('category').subscribe(
                 data => {
-                    this.optionCategories = Converter.ConvertToSelectOptionArray(data);
+                    this.optionCategories = Converter.ConvertToSelectOptionArray(
+                        data
+                    );
                 },
                 error => {
                     this.alertService.serverError(error);
@@ -528,10 +636,9 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     /*
-    * Загрузка всех наименований из справочника
-    */
+     * Загрузка всех наименований из справочника
+     */
     getAllItems() {
-
         this.apiService.getAll<Item>('item').subscribe(
             data => {
                 this.optionItems = Converter.ConvertToSelectOptionArray(data);
@@ -557,13 +664,19 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     onFormSubmit() {
-        if (this.register.itemId != "" && this.register.amount > 0) {
+        if (this.register.itemId != '' && this.register.amount > 0) {
             switch (this.modal.type) {
-                case 'new': this.onAdd(); break;
-                case 'edit': this.onChange(); break;
+                case 'new':
+                    this.onAdd();
+                    break;
+                case 'edit':
+                    this.onChange();
+                    break;
             }
         } else {
-            this.alertService.error('Невозможно добавить позицию. Проверьте правильность заполнения полей.');
+            this.alertService.error(
+                'Невозможно добавить позицию. Проверьте правильность заполнения полей.'
+            );
         }
     }
 
@@ -572,7 +685,7 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     generatePageHeader() {
-        var headerText = this.invoice.name + " от " + this.invoice.createDate;
+        var headerText = this.invoice.name + ' от ' + this.invoice.createDate;
         this.pageHeaderService.changeText(headerText);
     }
 
@@ -580,59 +693,83 @@ export class InvoiceDetailComponent implements OnInit {
         if (this.registers.length == 0) {
             // Загрузка списка накладных-шаблонов
             // Получение данных о типе 'Шаблон'
-            this.apiService.getById<InvoiceType>('invoice/type/alias', 'template').subscribe(
-                data => {
-                    var type = data;
-                    // Параметр для отбора по типу накладной
-                    var params = "typeid=" + type.id;
-                    // Получение списка накладных
-                    this.apiService.get<InvoiceListItem[]>('invoice', params).subscribe(
-                        data => {
-                            // Конвертация полученного списка в массив для выпадающего выпадающего списка 
-                            this.optionTemplates = Converter.ConvertToSelectOptionArray(data);
-                            // Назначение свойств модали 'Шаблон' для модального окна
-                            this.modal = this.templateModal;
-                            // Открытие модального окна
-                            this.modalService.open('modal-template');
-                        },
-                        error => {
-                            this.alertService.serverError(error);
-                        });
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+            this.apiService
+                .getById<InvoiceType>('invoice/type/alias', 'template')
+                .subscribe(
+                    data => {
+                        var type = data;
+                        // Параметр для отбора по типу накладной
+                        var params = 'typeid=' + type.id;
+                        // Получение списка накладных
+                        this.apiService
+                            .get<InvoiceListItem[]>('invoice', params)
+                            .subscribe(
+                                data => {
+                                    // Конвертация полученного списка в массив для выпадающего выпадающего списка
+                                    this.optionTemplates = Converter.ConvertToSelectOptionArray(
+                                        data
+                                    );
+                                    // Назначение свойств модали 'Шаблон' для модального окна
+                                    this.modal = this.templateModal;
+                                    // Открытие модального окна
+                                    this.modalService.open('modal-template');
+                                },
+                                error => {
+                                    this.alertService.serverError(error);
+                                }
+                            );
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         } else {
-            this.alertService.error('Нельзя добавить услугу из шаблона, так как документ уже содержит позиции. Пожалуйста, удалите все позиции и попробуйте снова.');
+            this.alertService.error(
+                'Нельзя добавить услугу из шаблона, так как документ уже содержит позиции. Пожалуйста, удалите все позиции и попробуйте снова.'
+            );
         }
     }
 
     addRegistersFromTemplate() {
-        var params = 'sourceId=' + this.templateInvoiceId + '&destinationId=' + this.invoice.id;
+        var params =
+            'sourceId=' +
+            this.templateInvoiceId +
+            '&destinationId=' +
+            this.invoice.id;
         // Метод делает копию регистров шаблона и назначаем им Id текущего документа
-        this.apiService.create<Register[]>('register/copy?' + params, new Array<Register>()).subscribe(
-            data => {
-                //Таким образом, после повторной инициализации в списке появляются скопированные регистры
-                this.ngOnInit();
-                this.modalService.close('modal-template');
-            },
-            error => {
-                this.alertService.serverError(error);
-            }
-        );
+        this.apiService
+            .create<Register[]>(
+                'register/copy?' + params,
+                new Array<Register>()
+            )
+            .subscribe(
+                data => {
+                    //Таким образом, после повторной инициализации в списке появляются скопированные регистры
+                    this.ngOnInit();
+                    this.modalService.close('modal-template');
+                },
+                error => {
+                    this.alertService.serverError(error);
+                }
+            );
     }
 
     updateComment() {
         clearTimeout(this.commentUpdateTimer);
         this.commentUpdateTimer = setTimeout(x => {
-            this.apiService.update<string>('invoice/comment', this.invoice.id + "?value=" + this.invoice.comment).subscribe(
-                data => {
-                    console.log("comment updated");
-                },
-                error => {
-                    this.alertService.serverError(error);
-                });
+            this.apiService
+                .update<string>(
+                    'invoice/comment',
+                    this.invoice.id + '?value=' + this.invoice.comment
+                )
+                .subscribe(
+                    data => {
+                        console.log('comment updated');
+                    },
+                    error => {
+                        this.alertService.serverError(error);
+                    }
+                );
         }, 2000);
     }
-
 }
