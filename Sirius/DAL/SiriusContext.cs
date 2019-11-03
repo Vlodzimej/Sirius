@@ -27,6 +27,8 @@ namespace Sirius.DAL
 
         public DbSet<StorageRegister> StorageRegisters { get; set; }
 
+        public DbSet<AccessLevel> AccessLevels { get; set; }
+
         public SiriusContext(DbContextOptions<SiriusContext> options) : base(options)  {  }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
