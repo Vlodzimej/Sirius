@@ -40,7 +40,7 @@ namespace Sirius.Models
                    r.Amount,
                    r.Cost,
                    Sum = ((double)r.Cost * r.Amount),
-                   CreateDate = DateConverter.ConvertToStandardString(r.Invoice.CreateDate),
+                   Date = DateConverter.ConvertToStandardString(r.Invoice.Date),
                    r.InvoiceId
                });
             return registers;
@@ -84,7 +84,7 @@ namespace Sirius.Models
                         r.Amount,
                         r.Cost,
                         Sum = ((double)r.Cost * r.Amount),
-                        CreateDate = DateConverter.ConvertToStandardString(r.Invoice.CreateDate),
+                        Date = DateConverter.ConvertToStandardString(r.Invoice.Date),
                         r.InvoiceId
                     });
                 return registers;
@@ -114,7 +114,7 @@ namespace Sirius.Models
                     (r.Invoice.Factor > 0) &&
                     (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
                     (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
-                .OrderBy(r => r.Invoice.CreateDate)
+                .OrderBy(r => r.Invoice.Date)
                 .ToListAsync();
 
             List<Batch> batches = new List<Batch>();
@@ -153,7 +153,7 @@ namespace Sirius.Models
                     (r.Item.IsCountless == false) &&
                     (filter.CategoryId != Guid.Empty ? r.Item.CategoryId == filter.CategoryId : true) &&
                     (filter.VendorId != Guid.Empty ? r.Invoice.VendorId == filter.VendorId : true))
-                .OrderBy(r => r.Invoice.CreateDate)
+                .OrderBy(r => r.Invoice.Date)
                 .ToListAsync();
 
             registers.ForEach(reg1 =>

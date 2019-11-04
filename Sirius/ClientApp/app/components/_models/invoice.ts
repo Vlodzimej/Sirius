@@ -8,7 +8,7 @@ export class Invoice {
     vendorId: string;
     vendorName: string;
     registers: Register[];
-    createDate: string;
+    date: string;
     isFixed: boolean;
     isTemporary: boolean;
     typeId: string;
@@ -20,7 +20,7 @@ export class InvoiceListItem {
     id: string;
     name: string;
     userFullName: string;
-    createDate: string;
+    date: string;
     isFixed: boolean;
     isTemporary: boolean;
 }
@@ -32,7 +32,7 @@ export class InvoiceUpdate {
     userid: string;
     isrecorderd: boolean;
     istemporary: boolean;
-    createDate: string;
+    date: string;
 }
 
 export class InvoiceType {

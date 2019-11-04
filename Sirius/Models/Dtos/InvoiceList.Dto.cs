@@ -7,7 +7,7 @@ namespace Sirius.Models.Dtos
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string UserFullName { get; set; }
-        public string CreateDate { get; set; }
+        public string Date { get; set; }
         public bool IsFixed { get; set; }
         public bool IsTemporary { get; set; }
     }

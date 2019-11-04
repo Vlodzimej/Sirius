@@ -217,7 +217,16 @@ namespace Sirius.Controllers
             return NotFound();
         }
 
-
+        [HttpPut("date/{invoiceId}")]
+        [Authorize(Roles = "admin")]
+        public IActionResult UpdateDate(Guid invoiceId, [FromQuery]string value)
+        {
+            if (_siriusService.UpdateDate(invoiceId, value))
+            {
+                return Ok(true);
+            }
+            return NotFound();
+        }
 
     }
 }

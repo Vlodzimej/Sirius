@@ -34,7 +34,7 @@ namespace Sirius.Models
             .Include(i => i.User)
             .Include(i => i.Vendor)
             .Where(filter)
-            .OrderBy(i => i.CreateDate);
+            .OrderBy(i => i.Date);
 
             if (invoices != null)
             {
@@ -43,7 +43,7 @@ namespace Sirius.Models
                     Id = i.Id,
                     Name = i.Name,
                     UserFullName = i.User.FirstName + " " + i.User.LastName,
-                    CreateDate = DateConverter.ConvertToStandardString(i.CreateDate),
+                    Date = DateConverter.ConvertToStandardString(i.Date),
                     IsFixed = i.IsFixed,
                     IsTemporary = i.IsTemporary
                 });
@@ -67,7 +67,7 @@ namespace Sirius.Models
                 r.Cost,
                 r.Amount,
                 r.ItemId,
-                CreateDate = r.Invoice.CreateDate.ToString("hhmmss"),
+                Date = r.Invoice.Date.ToString("hhmmss"),
                 r.Item.Name,
                 Dimension = r.Item.Dimension.Name
             });
@@ -81,7 +81,7 @@ namespace Sirius.Models
                 VendorId = invoice.Vendor.Id,
                 VendorName = invoice.Vendor.Name,
                 Registers = registers,
-                CreateDate = DateConverter.ConvertToStandardString(invoice.CreateDate),
+                Date = DateConverter.ConvertToStandardString(invoice.Date),
                 IsTemporary = invoice.IsTemporary,
                 IsFixed = invoice.IsFixed,
                 TypeId = invoice.TypeId,
@@ -152,6 +152,18 @@ namespace Sirius.Models
             }
             return false;
         }
-               
+
+        public bool UpdateDate(Guid id, DateTime date)
+        {
+            var invoice = _siriusContext.Invoices.FirstOrDefault(x => x.Id == id);
+            if (invoice != null)
+            {
+                invoice.Date = date;
+                if (_siriusContext.SaveChanges() >= 0)
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

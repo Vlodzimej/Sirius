@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
@@ -94,6 +94,9 @@ export class InvoiceDetailComponent implements OnInit {
     private editRegisterModal: ModalType;
     private templateModal: ModalType;
 
+    public date: any;
+    public dateUpdateTimer: any;
+
     public isValid: boolean = true;
 
     constructor(
@@ -104,7 +107,8 @@ export class InvoiceDetailComponent implements OnInit {
         private pageHeaderService: PageHeaderService,
         private modalService: ModalService,
         public loadingService: LoadingService,
-        private location: Location
+        private location: Location,
+        //private datePipe: DatePipe
     ) {
         this.newRegisterModal = {
             type: 'new',
@@ -124,15 +128,15 @@ export class InvoiceDetailComponent implements OnInit {
             submit: 'Вставить',
         };
 
-        // Устанавливаем значения переменных до загрузки накладной, что бы у парсера не возникало вопросов
         this.invoice.userFullName = '';
-        this.invoice.createDate = '';
+        this.invoice.date = '';
         this.invoice.isFixed = true;
         this.invoice.vendorName = '';
         this.invoice.vendorId = '';
     }
 
     ngOnInit() {
+        //this.date = this.datePipe.transform(d, 'dd-MM-yyyy');
         // Включаем визуализацию загрузки
         this.loadingService.showLoadingIcon();
         // Узнаём идентификатор открываемой накладной
@@ -143,6 +147,10 @@ export class InvoiceDetailComponent implements OnInit {
                 // Отключаем визуализацию загрузки
                 this.loadingService.hideLoadingIcon();
                 this.invoice = data;
+
+                const d = this.invoice.date.split('.');
+                this.date = d[2] + '-' + d[1] + '-' + d[0];
+
                 this.registers = this.invoice.registers;
                 this.generatePageHeader();
 
@@ -176,9 +184,11 @@ export class InvoiceDetailComponent implements OnInit {
         this.apiService.getAll<Item>('item').subscribe(
             data => {
                 //this.items = data;
-                const arr = Converter.ConvertToSelectOptionArray(data).map(x => {
-                    return { ...x, sortName: x.text.trim().toLowerCase() };
-                  });
+                const arr = Converter.ConvertToSelectOptionArray(data).map(
+                    x => {
+                        return { ...x, sortName: x.text.trim().toLowerCase() };
+                    }
+                );
                 this.optionItems = _.sortBy(arr, 'sortName');
                 this.loadingService.hideLoadingIcon();
             },
@@ -685,7 +695,7 @@ export class InvoiceDetailComponent implements OnInit {
     }
 
     generatePageHeader() {
-        var headerText = this.invoice.name + ' от ' + this.invoice.createDate;
+        var headerText = this.invoice.name + ' от ' + this.invoice.date;
         this.pageHeaderService.changeText(headerText);
     }
 
@@ -771,5 +781,26 @@ export class InvoiceDetailComponent implements OnInit {
                     }
                 );
         }, 2000);
+    }
+
+    updateDate() {
+        if (this.date.trim().length > 0) {
+            clearTimeout(this.dateUpdateTimer);
+            this.dateUpdateTimer = setTimeout(() => {
+                this.apiService
+                    .update<string>(
+                        'invoice/date',
+                        `${this.invoice.id}?value=${this.date}`
+                    )
+                    .subscribe(
+                        data => {
+                            console.log('date updated');
+                        },
+                        error => {
+                            this.alertService.serverError(error);
+                        }
+                    );
+            }, 2000);
+        }
     }
 }

@@ -55,5 +55,7 @@ namespace Sirius.DAL.Repository.Contract
         /// </summary>
         /// <returns></returns>
         IEnumerable<InvoiceType> GetTypes();
+
+        bool UpdateDate(Guid id, DateTime date);
     }
 }

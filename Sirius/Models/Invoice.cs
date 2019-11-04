@@ -56,7 +56,7 @@ namespace Sirius.Models
         /// <summary>
         /// Дата создания 
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Идентификатор типа накладной

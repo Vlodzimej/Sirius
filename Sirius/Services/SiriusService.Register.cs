@@ -25,8 +25,8 @@ namespace Sirius.Services
             Expression<Func<Register, bool>> f = x =>
             (filter.ItemId != Guid.Empty ? x.ItemId == filter.ItemId : true) &&
             (filter.CategoryId != Guid.Empty ? x.Item.CategoryId == filter.CategoryId : true) &&
-            (filter.StartDate != DateTime.MinValue ? x.Invoice.CreateDate >= filter.StartDate : true) &&
-            (filter.FinishDate != DateTime.MinValue ? x.Invoice.CreateDate <= filter.FinishDate : true) &&
+            (filter.StartDate != DateTime.MinValue ? x.Invoice.Date >= filter.StartDate : true) &&
+            (filter.FinishDate != DateTime.MinValue ? x.Invoice.Date <= filter.FinishDate : true) &&
             (filter.TypeId != Guid.Empty ? x.Invoice.TypeId == filter.TypeId : true) &&
             (x.Invoice.IsFixed == true);
 

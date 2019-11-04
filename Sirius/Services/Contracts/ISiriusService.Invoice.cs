@@ -101,5 +101,7 @@ namespace Sirius.Services
         /// <param name="filter"></param>
         /// <returns></returns>
         IEnumerable<InvoiceListDto> GetInvoices(InvoiceFilter filter);
+
+        bool UpdateDate(Guid invoiceId, string date);
     }
 }

@@ -9,6 +9,6 @@ export class Register
     name: string;
     dimension: string;
     itemId: string;
-    createDate: string;
+    date: string;
     invoiceId: string;
 }

@@ -76,7 +76,7 @@ namespace Sirius.Services
                 Name = "",
                 UserId = invoice.UserId,
                 VendorId = DefaultValues.Vendor.Primary.Id,
-                CreateDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
+                Date = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
                 IsTemporary = true,
                 IsFixed = false,
                 TypeId = invoice.TypeId,
@@ -97,7 +97,7 @@ namespace Sirius.Services
                 var prefix = GetSettingValueByTypeIdAndAlias(Types.SettingsTypes.Invoice.Prefix.Id, invoiceType.Alias);
 
                 var year = DateTime.Now.ToString("yy");
-                var number = addedInvoice.CreateDate.ToString("hhmmss");
+                var number = addedInvoice.Date.ToString("hhmmss");
 
                 addedInvoice.Name = $"{prefix}-{year}/{number}";
 
@@ -139,18 +139,20 @@ namespace Sirius.Services
             var registers = _unitOfWork.RegisterRepository.GetByInvoiceId(invoiceId);
 
             // Взаимодействие с регистром накопления
-            registers.ToList().ForEach(register => {
+            registers.ToList().ForEach(register =>
+            {
                 var storageRegister = _unitOfWork.StorageRegisterRepository.GetByItemIdAndCost(register.ItemId, register.Cost);
 
-                if(storageRegister != null)
+                if (storageRegister != null)
                 {
                     storageRegister.Amount += register.Amount * invoice.Factor;
-                } else
+                }
+                else
                 {
                     var newStorageRegister = new StorageRegister()
                     {
                         Id = Guid.NewGuid(),
-                        CreateDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
+                        Date = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime()),
                         Amount = register.Amount,
                         Cost = register.Cost,
                         ItemId = register.ItemId
@@ -165,7 +167,7 @@ namespace Sirius.Services
                     }
                 }
             });
-            
+
             // Изменение свойств существующей накладной
             invoice.IsTemporary = false;
             invoice.IsFixed = true;
@@ -185,7 +187,7 @@ namespace Sirius.Services
             }
             return result;
         }
-        
+
         /// <summary>
         /// Изменить поставщика
         /// </summary>
@@ -282,7 +284,7 @@ namespace Sirius.Services
             {
                 filter.Name = filter.Name.ToLower();
             }
-            if(filter.FinishDate != DateTime.MinValue)
+            if (filter.FinishDate != DateTime.MinValue)
             {
                 filter.FinishDate = filter.FinishDate.AddMinutes(59).AddHours(23);
             }
@@ -293,8 +295,8 @@ namespace Sirius.Services
                (filter.VendorId != Guid.Empty ? x.VendorId == filter.VendorId : true) &&
                (filter.UserId != Guid.Empty ? x.UserId == filter.UserId : true) &&
                (filter.TypeId != Guid.Empty ? x.TypeId == filter.TypeId : true) &&
-               (filter.StartDate != DateTime.MinValue ? x.CreateDate >= filter.StartDate : true) &&
-               (filter.FinishDate != DateTime.MinValue ? x.CreateDate <= filter.FinishDate : true) &&
+               (filter.StartDate != DateTime.MinValue ? x.Date >= filter.StartDate : true) &&
+               (filter.FinishDate != DateTime.MinValue ? x.Date <= filter.FinishDate : true) &&
                (filter.FixedOnly == true ? x.IsFixed == true : true);
             return _unitOfWork.InvoiceRepository.GetAll(f);
         }
@@ -306,7 +308,12 @@ namespace Sirius.Services
         /// <param name="comment"></param>
         public bool UpdateComment(Guid invoiceId, string comment)
         {
-           return _unitOfWork.InvoiceRepository.UpdateComment(invoiceId, comment);
+            return _unitOfWork.InvoiceRepository.UpdateComment(invoiceId, comment);
+        }
+
+        public bool UpdateDate(Guid invoiceId, string date)
+        {
+            return _unitOfWork.InvoiceRepository.UpdateDate(invoiceId, Convert.ToDateTime(date));
         }
     }
 }

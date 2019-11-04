@@ -90,7 +90,7 @@
                     <td class="text-center">{{ n + 1 }}</td>
                     <td>{{ invoice.name }}</td>
                     <td>{{ invoice.userFullName }}</td>
-                    <td>{{ invoice.createDate }}</td>
+                    <td>{{ invoice.date }}</td>
                     <td *ngIf="typeAlias != 'template'">
                         <div [style.color]="invoice.isFixed ? 'green' : 'red'">
                             <span
