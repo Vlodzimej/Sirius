@@ -1,59 +1,112 @@
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+    <div class="col-xs-12 col-sm-3 col-sm-push-8 sidemenu">
         <div class="panel-group" id="invoice-accordion-1">
-
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#filter-panel">
+                    <a
+                        class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#invoice-accordion"
+                        data-target="#filter-panel"
+                    >
                         Фильтр
                     </a>
                 </div>
                 <div id="filter-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <app-filter></app-filter>
-                        <button class="btn btn-default btn-block" (click)="getInvoicesByFilter()">Сформировать</button>
+                        <button
+                            class="btn btn-default btn-block"
+                            (click)="getInvoicesByFilter()"
+                        >
+                            Сформировать
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#invoice-accordion" data-target="#action-panel">
+                    <a
+                        class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#invoice-accordion"
+                        data-target="#action-panel"
+                    >
                         Действия
                     </a>
                 </div>
                 <div id="action-panel" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <a class="btn btn-default btn-block" (click)="onCreate()">Создать</a>
-                        <a class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedInvoice}" (click)="onOpen(selectedInvoice.id)">Перейти</a>
-                        <a class="btn btn-default btn-block" [ngClass]="{'disabled' : !selectedInvoice}" (click)="onDelete(selectedInvoice.id)">Удалить</a>
+                        <a
+                            class="btn btn-default btn-block"
+                            (click)="onCreate()"
+                            >Создать</a
+                        >
+                        <a
+                            class="btn btn-default btn-block"
+                            [ngClass]="{ disabled: !selectedInvoice }"
+                            (click)="onOpen(selectedInvoice.id)"
+                            >Перейти</a
+                        >
+                        <a
+                            class="btn btn-default btn-block"
+                            [ngClass]="{ disabled: !selectedInvoice }"
+                            (click)="onDelete(selectedInvoice.id)"
+                            >Удалить</a
+                        >
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+</div>
+<div class="row">
+    <div class="col-xs-8 text-center">
         <app-loading-icon></app-loading-icon>
-        <div class="panel panel-default" *ngIf="!loadingService.getLoadingStatus()">
-            <table class="table table-hover table-striped table-bordered table-condensed">
+        <div
+            class="panel panel-default"
+            *ngIf="!loadingService.getLoadingStatus()"
+        >
+            <table
+                class="table table-hover table-striped table-bordered table-condensed"
+            >
                 <tr>
                     <th class="text-center">№</th>
                     <th class="text-center">Название</th>
                     <th class="text-center">Автор</th>
                     <th class="text-center">Дата</th>
-                    <th class="text-center" *ngIf="typeAlias != 'template'">Статус</th>
+                    <th class="text-center" *ngIf="typeAlias != 'template'">
+                        Статус
+                    </th>
                 </tr>
-                <tr *ngFor="let invoice of invoices; let n = index" (click)="onSelect(invoice.id)" (dblclick)="onOpen(selectedInvoice.id)"
-                    [class.info]="invoice == selectedInvoice" [ngStyle]="{'cursor': 'pointer'}">
-                    <td class="text-center">{{n+1}}</td>
-                    <td>{{invoice.name}}</td>
-                    <td>{{invoice.userFullName}}</td>
-                    <td>{{invoice.createDate}}</td>
+                <tr
+                    *ngFor="let invoice of invoices; let n = index"
+                    (click)="onSelect(invoice.id)"
+                    (dblclick)="onOpen(selectedInvoice.id)"
+                    [class.info]="invoice == selectedInvoice"
+                    [ngStyle]="{ cursor: 'pointer' }"
+                >
+                    <td class="text-center">{{ n + 1 }}</td>
+                    <td>{{ invoice.name }}</td>
+                    <td>{{ invoice.userFullName }}</td>
+                    <td>{{ invoice.createDate }}</td>
                     <td *ngIf="typeAlias != 'template'">
                         <div [style.color]="invoice.isFixed ? 'green' : 'red'">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true" *ngIf="invoice.isTemporary" data-toggle="tooltip" title="Не проведено"></span>
-                            <span class="glyphicon glyphicon-check" aria-hidden="true" *ngIf="invoice.isFixed" data-toggle="tooltip" title="Проведено"></span>
+                            <span
+                                class="glyphicon glyphicon-edit"
+                                aria-hidden="true"
+                                *ngIf="invoice.isTemporary"
+                                data-toggle="tooltip"
+                                title="Не проведено"
+                            ></span>
+                            <span
+                                class="glyphicon glyphicon-check"
+                                aria-hidden="true"
+                                *ngIf="invoice.isFixed"
+                                data-toggle="tooltip"
+                                title="Проведено"
+                            ></span>
                         </div>
                     </td>
                 </tr>

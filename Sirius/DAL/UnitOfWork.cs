@@ -64,6 +64,9 @@ namespace Sirius.DAL
         public StorageRegisterRepository StorageRegisterRepository => storageRegisterRepository ?? new StorageRegisterRepository(_siriusContext);
         private StorageRegisterRepository storageRegisterRepository;
 
+        public RoleRepository RoleRepository => roleRepository ?? new RoleRepository(_siriusContext);
+        private RoleRepository roleRepository;
+
         public UnitOfWork(SiriusContext siriusContext)
         {
             _siriusContext = siriusContext;

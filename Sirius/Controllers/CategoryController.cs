@@ -63,6 +63,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="category"></param>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Category category)
         {
             var result = _siriusService.AddCategory(category);
@@ -80,6 +81,7 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Put(Guid id, [FromBody]Category category)
         {
             var result = _siriusService.UpdateCategory(id, category);
@@ -95,6 +97,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             if (_siriusService.DeleteCategoryById(id))

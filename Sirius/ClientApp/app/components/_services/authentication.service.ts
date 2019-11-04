@@ -4,19 +4,25 @@ import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+import { EMPTY_ARRAY } from '@angular/core/src/view';
+import { EmptyObservable } from 'rxjs/observable/EmptyObservable';
 
 @Injectable()
 export class AuthenticationService {
-
     constructor(
-        private http: Http, 
-        @Inject('BASE_URL') 
-        private baseUrl: string, 
+        private http: Http,
+        @Inject('BASE_URL')
+        private baseUrl: string,
         private router: Router
-    ) { }
+    ) {}
 
     login(username: string, password: string) {
-        return this.http.post(this.baseUrl + 'api/user/authenticate', { username: username, password: password })
+        return this.http
+            .post(this.baseUrl + 'api/user/authenticate', {
+                username: username,
+                password: password,
+            })
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 let user = response.json();
@@ -40,7 +46,9 @@ export class AuthenticationService {
         if (cookies) {
             let currentUser = JSON.parse(cookies);
             if (currentUser && currentUser.token) {
-                let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
+                let headers = new Headers({
+                    Authorization: 'Bearer ' + currentUser.token,
+                });
                 return new RequestOptions({ headers: headers });
             }
         } else {
@@ -65,6 +73,20 @@ export class AuthenticationService {
             let currentUser = JSON.parse(cookies);
             return currentUser.id;
         }
-        return "";
+        return '';
+    }
+    checkAdmin(): Observable<Response> {
+        let cookies = localStorage.getItem('currentUser');
+
+        // console.log("Current User: " + cookies);
+        if (cookies) {
+            let currentUser = JSON.parse(cookies);
+            console.log(currentUser);
+            return this.http.get(
+                `${this.baseUrl}api/user/checkadmin/${currentUser.id}`,
+                this.jwt()
+            );
+        }
+        return new EmptyObservable();
     }
 }

@@ -128,6 +128,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="register"></param>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Register register)
         {
             var result = _siriusService.AddRegister(register);
@@ -143,6 +144,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="register"></param>
         [HttpPost("registers")]
+        [Authorize(Roles = "admin")]
         public IActionResult PostArray([FromBody]Register[] registers)
         {
             var result = _siriusService.AddRegisters(registers);
@@ -158,6 +160,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="register"></param>
         [HttpPost("copy")]
+        [Authorize(Roles = "admin")]
         public IActionResult CopyRegisterArray([FromQuery]Guid sourceId,[FromQuery]Guid destinationId)
         {
             var result = _siriusService.CopyRegisters(sourceId, destinationId);
@@ -175,6 +178,7 @@ namespace Sirius.Controllers
         /// <param name="register"></param>
         /// <returns></returns>
         [HttpPut("{registerId}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Put(Guid registerId, [FromBody]Register register)
         {
             var result = _siriusService.UpdateRegister(registerId, register);
@@ -190,6 +194,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             if (_siriusService.DeleteRegisterById(id))

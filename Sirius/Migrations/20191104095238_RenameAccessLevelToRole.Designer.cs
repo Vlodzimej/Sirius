@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20191104095238_RenameAccessLevelToRole")]
+    partial class RenameAccessLevelToRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,7 +208,7 @@ namespace Sirius.Migrations
 
                     b.Property<byte[]>("PasswordSalt");
 
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid?>("RoleId");
 
                     b.Property<DateTime>("StartDate");
 
@@ -285,10 +286,9 @@ namespace Sirius.Migrations
 
             modelBuilder.Entity("Sirius.Models.User", b =>
                 {
-                    b.HasOne("Sirius.Models.Role", "Role")
+                    b.HasOne("Sirius.Models.Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

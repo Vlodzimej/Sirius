@@ -40,7 +40,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public User GetById(Guid id)
+        public User GetUserById(Guid id)
         {
             return _unitOfWork.UserRepository.GetByID(id);
         }
@@ -57,7 +57,8 @@ namespace Sirius.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Требуется ввести пароль.");
 
-            if (_unitOfWork.UserRepository.CheckUsername(user.Username)) {
+            if (_unitOfWork.UserRepository.CheckUsername(user.Username))
+            {
                 throw new AppException("Пользователь " + user.Username + " существует.");
             }
             byte[] passwordHash, passwordSalt;
@@ -189,7 +190,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public User GetUserById(Guid id)
+        public User GetById(Guid id)
         {
             return _unitOfWork.UserRepository.GetByID(id);
         }
@@ -212,7 +213,7 @@ namespace Sirius.Services
         public bool ChangeUserStatus(Guid userId, bool isConfirmed = false)
         {
             var user = GetUserById(userId);
-            if(user != null)
+            if (user != null)
             {
                 user.IsConfirmed = isConfirmed;
                 _unitOfWork.UserRepository.Update(user);
@@ -229,6 +230,16 @@ namespace Sirius.Services
         public int GetUserAmount()
         {
             return _unitOfWork.UserRepository.GetUserAmount();
+        }
+
+        /// <summary>
+        /// Проверка есть ли у пользователя права администратора
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool CheckAdminByUserId(Guid userId)
+        {
+            return _unitOfWork.UserRepository.GetByID(userId).RoleId == DefaultValues.Roles.Admin.Id;
         }
     }
 }

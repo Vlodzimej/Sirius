@@ -63,6 +63,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="dimension"></param>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Dimension dimension)
         {
             var result = _siriusService.AddDimension(dimension);
@@ -80,6 +81,7 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Put(Guid id, [FromBody]Dimension dimension)
         {
             var result = _siriusService.UpdateDimension(id, dimension);
@@ -95,6 +97,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public void Delete(Guid id)
         {
             _siriusService.DeleteDimensionById(id);

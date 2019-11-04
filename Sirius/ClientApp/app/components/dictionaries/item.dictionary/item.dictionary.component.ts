@@ -10,6 +10,7 @@ import {
 } from '../../_services';
 import { Filter } from '../../_extends';
 import * as _ from 'lodash';
+import { GenerateErrorMessage } from '../../_helpers/error-message';
 
 @Component({
     selector: 'app-item-dictionary',
@@ -17,6 +18,7 @@ import * as _ from 'lodash';
     styleUrls: [
         '../../../assets/css/accordion.css',
         '../../../assets/css/modal.css',
+        'item.dictionary.component.css',
     ],
 })
 export class ItemDictionaryComponent implements OnInit {
@@ -134,7 +136,7 @@ export class ItemDictionaryComponent implements OnInit {
                 this.ngOnInit();
             },
             error => {
-                this.alertService.error('Ошибка записи', true);
+                this.alertService.error(GenerateErrorMessage(error), true);
             }
         );
     }
@@ -159,7 +161,7 @@ export class ItemDictionaryComponent implements OnInit {
                     console.log(this.item);
                 },
                 error => {
-                    this.alertService.error('Ошибка записи', true);
+                    this.alertService.error(GenerateErrorMessage(error), true);
                 }
             );
         } else {

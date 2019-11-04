@@ -37,6 +37,7 @@ namespace Sirius.Controllers
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
             var user = _siriusService.Authenticate(userDto.Username, userDto.Password);
+            var role = _siriusService.GetRoleById(user.RoleId);
 
             if (user == null)
                 //return Unauthorized();
@@ -51,7 +52,8 @@ namespace Sirius.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role?.Name)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -134,6 +136,7 @@ namespace Sirius.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             _siriusService.Delete(id);
@@ -141,13 +144,28 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("status/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult ChangeStatus(Guid id, [FromQuery]bool isConfirmed)
         {
-            if(_siriusService.ChangeUserStatus(id, isConfirmed))
+            if (_siriusService.ChangeUserStatus(id, isConfirmed))
             {
                 return StatusCode(200, "Статус пользователя изменён.");
             }
             return StatusCode(400, "Пользователь не найден.");
+        }
+
+        [HttpGet("checkadmin/{id}")]
+        public IActionResult CheckAdmin(Guid id)
+        {
+            try
+            {
+                bool isAdmin = _siriusService.CheckAdminByUserId(id);
+                return StatusCode(200, isAdmin);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

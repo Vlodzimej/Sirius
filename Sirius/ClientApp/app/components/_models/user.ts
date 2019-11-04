@@ -8,4 +8,5 @@ export class User
     finishDate: Date;
     startDate: Date;
     isConfirmed: boolean;
+    roleId: string;
 }

@@ -15,7 +15,7 @@ namespace Sirius.Helpers
                 public static Guid Id { get { return _id; } }
             }
         }
-        public static class AccessLevels
+        public static class Roles
         {
             public static class Admin
             {

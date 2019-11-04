@@ -65,6 +65,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="register"></param>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Invoice invoice)
         {
             var result = _siriusService.AddInvoice(invoice);
@@ -82,6 +83,7 @@ namespace Sirius.Controllers
         /// <param name="invoice"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Put(Guid id, [FromBody]Invoice invoice)
         {
             var result = _siriusService.UpdateInvoice(id, invoice);
@@ -97,6 +99,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             var result = _siriusService.DeleteInvoiceById(id);
@@ -114,6 +117,7 @@ namespace Sirius.Controllers
         /// <param name="invoice"></param>
         /// <returns></returns>
         [HttpPut("fix/{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Fix(Guid id)
         {
             var result = _siriusService.FixInvoice(id);
@@ -125,6 +129,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("{invoiceId}/vendor")]
+        [Authorize(Roles = "admin")]
         public IActionResult ChangeVendor(Guid invoiceId, [FromQuery]Guid value)
         {
             if (invoiceId != null && value != null)
@@ -139,6 +144,7 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("{invoiceId}/name")]
+        [Authorize(Roles = "admin")]
         public IActionResult ChangeName(Guid invoiceId, [FromQuery]string value)
         {
             if (value != null && value != "")
@@ -201,14 +207,14 @@ namespace Sirius.Controllers
         }
 
         [HttpPut("comment/{invoiceId}")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateComment(Guid invoiceId, [FromQuery]string value)
         {
             if (_siriusService.UpdateComment(invoiceId, value))
             {
                 return Ok(true);
             }
-            
-             return NotFound();
+            return NotFound();
         }
 
 

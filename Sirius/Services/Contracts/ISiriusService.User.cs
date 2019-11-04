@@ -72,5 +72,12 @@ namespace Sirius.Services
         /// </summary>
         /// <returns></returns>
         int GetUserAmount();
+
+        /// <summary>
+        /// Проверка есть ли у пользователя права администратора
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        bool CheckAdminByUserId(Guid userId);
     }
 }

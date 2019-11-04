@@ -2,6 +2,7 @@
 import { Router, NavigationStart } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
+import { GenerateErrorMessage } from '../_helpers/error-message';
 
 @Injectable()
 export class AlertService {
@@ -47,9 +48,7 @@ export class AlertService {
          */ 
         if(error.status == 401) {
             this.router.navigateByUrl('/login');
-            this.error('Вы не распознаны. Выполните вход в систему.');
-        } else {
-            this.error('Ошибка сервера: ('+error.status+') '+error.statusText);
-        }
+        } 
+        this.error(GenerateErrorMessage(error));
     }
 }

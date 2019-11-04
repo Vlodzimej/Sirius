@@ -63,6 +63,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="vendor"></param>
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Vendor vendor)
         {
             var result = _siriusService.AddVendor(vendor);
@@ -80,6 +81,7 @@ namespace Sirius.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Put(Guid id, [FromBody]Vendor vendor)
         {
             var result = _siriusService.UpdateVendor(id, vendor);
@@ -95,6 +97,7 @@ namespace Sirius.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
             if (_siriusService.DeleteVendorById(id))

@@ -10,7 +10,7 @@ using Sirius.Helpers;
 
 namespace Sirius.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [Produces("application/json")]
     [Route("api/settings")]
     public class SettingsController : Controller
