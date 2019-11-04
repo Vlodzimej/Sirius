@@ -67,6 +67,8 @@ namespace Sirius.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
+            user.Role = _unitOfWork.RoleRepository.GetRoleById(DefaultValues.Roles.Viewer.Id);
+
             user.StartDate = DateConverter.ConvertToRTS(DateTime.UtcNow.ToLocalTime());
 
 
