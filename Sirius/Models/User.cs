@@ -51,7 +51,7 @@ namespace Sirius.Models
         /// Флаг подтверждения регистрации
         /// </summary>
         public bool IsConfirmed { get; set; }
-        public Guid RoleId { get; set; }
+        public Guid? RoleId { get; set; }
         public Role Role { get; set; }
     }
 }

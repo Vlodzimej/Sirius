@@ -208,7 +208,8 @@ namespace Sirius.Models
                 .OrderBy(r => r.Item.CategoryId)
                 .Select(sr => new Batch { Amount = sr.Amount, Cost = sr.Cost })
                 .ToList();
-            return result;
+
+            return result.Select(b => new Batch { Amount = Math.Round(b.Amount, 2), Cost = b.Cost });
         }
 
         /// <summary>

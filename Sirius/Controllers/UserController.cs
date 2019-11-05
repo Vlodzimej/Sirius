@@ -37,7 +37,7 @@ namespace Sirius.Controllers
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
             var user = _siriusService.Authenticate(userDto.Username, userDto.Password);
-            var role = _siriusService.GetRoleById(user.RoleId);
+            var role = _siriusService.GetRoleById(user.RoleId.Value);
 
             if (user == null)
                 //return Unauthorized();

@@ -47,6 +47,8 @@
     <Compile Remove="Migrations\20191104094823_RenameAccessLevelToRole.Designer.cs" />
     <Compile Remove="Migrations\20191104095039_UserTemporaryChange.cs" />
     <Compile Remove="Migrations\20191104095039_UserTemporaryChange.Designer.cs" />
+    <Compile Remove="Migrations\20191105191616_AddViewerUser.cs" />
+    <Compile Remove="Migrations\20191105191616_AddViewerUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
