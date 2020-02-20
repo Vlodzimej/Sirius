@@ -132,7 +132,7 @@ namespace Sirius.Models
                 });
                 batches.Add(new Batch()
                 {
-                    Amount = amount,
+                    Amount = Math.Round(amount, 2),
                     Cost = cost
                 });
             });
@@ -169,7 +169,7 @@ namespace Sirius.Models
                 });
                 batches.Add(new Batch()
                 {
-                    Amount = amount,
+                    Amount = Math.Round(amount, 2),
                     Cost = cost
                 });
             });
