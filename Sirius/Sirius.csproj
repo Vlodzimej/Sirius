@@ -11,7 +11,9 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+<Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+</PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" />
@@ -49,6 +51,8 @@
     <Compile Remove="Migrations\20191104095039_UserTemporaryChange.Designer.cs" />
     <Compile Remove="Migrations\20191105191616_AddViewerUser.cs" />
     <Compile Remove="Migrations\20191105191616_AddViewerUser.Designer.cs" />
+    <Compile Remove="DAL\Repository\Contracts\ILogRepository.cs" />
+    <Compile Remove="DAL\Repository\Contracts\ILogRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +63,9 @@
     <TypeScriptCompile Include="ClientApp\app\components\userlist\userlist.component.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Enums\" />
+  </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -82,7 +89,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>

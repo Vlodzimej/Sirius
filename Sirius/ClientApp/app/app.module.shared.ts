@@ -12,6 +12,7 @@ import { NomenclatureComponent } from './components/nomenclature/nomenclature.co
 import { LoginComponent } from "./components/login/login.component";
 import { RegistrationComponent } from './components/registration';
 import { SettingsComponent } from './components/settings';
+import { LogsComponent } from './components/logs/logs.component';
 
 import { AboutComponent } from './components/info';
 import { HelpComponent } from './components/info';
@@ -64,6 +65,7 @@ import {
 } from './components/_pipes';
 
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -90,7 +92,8 @@ import {
         FullDatePipe,
         LocalizedCurrencyPipe,
         AboutComponent,
-        HelpComponent
+        HelpComponent,
+        LogsComponent
     ],
     imports: [
         CommonModule,
@@ -114,6 +117,7 @@ import {
             { path: 'batches', component: BatchesComponent, canActivate: [AuthGuard] },
             { path: 'about', component: AboutComponent, canActivate: [AuthGuard] },
             { path: 'help', component: HelpComponent, canActivate: [AuthGuard] },
+            { path: 'logs', component: LogsComponent, canActivate: [AuthGuard] },
             { path: '**', redirectTo: 'home' }
         ])
     ],

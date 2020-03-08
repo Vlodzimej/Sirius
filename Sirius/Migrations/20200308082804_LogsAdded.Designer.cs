@@ -11,9 +11,10 @@ using System;
 namespace Sirius.Migrations
 {
     [DbContext(typeof(SiriusContext))]
-    partial class SiriusContextModelSnapshot : ModelSnapshot
+    [Migration("20200308082804_LogsAdded")]
+    partial class LogsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,8 +123,6 @@ namespace Sirius.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Action");
 
                     b.Property<string>("Content");
 

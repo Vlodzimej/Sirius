@@ -67,6 +67,13 @@ namespace Sirius.DAL
         public RoleRepository RoleRepository => roleRepository ?? new RoleRepository(_siriusContext);
         private RoleRepository roleRepository;
 
+        /// <summary>
+        /// Репозиторий "Логи"
+        /// </summary>
+        public LogRepository LogRepository => logRepository ?? new LogRepository(_siriusContext);
+        private LogRepository logRepository;
+
+
         public UnitOfWork(SiriusContext siriusContext)
         {
             _siriusContext = siriusContext;

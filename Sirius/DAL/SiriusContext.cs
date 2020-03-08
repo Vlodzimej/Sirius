@@ -29,6 +29,8 @@ namespace Sirius.DAL
 
         public DbSet<Role> Roles { get; set; }
 
+        public DbSet<Log> Logs { get; set; }
+
         public SiriusContext(DbContextOptions<SiriusContext> options) : base(options)  {  }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

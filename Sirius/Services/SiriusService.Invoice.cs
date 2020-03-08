@@ -104,6 +104,8 @@ namespace Sirius.Services
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
 
+                AddLog("CREATED", string.Format("{0} {1}", invoiceType.Name, addedInvoice.Name), invoice.UserId);
+
                 return _unitOfWork.InvoiceRepository.GetById(newInvoiceId);
             }
             return null;
