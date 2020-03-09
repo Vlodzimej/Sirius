@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 namespace Sirius.Models.Enums
 {
-    public class Actions
+    public static class Actions
     {
-        public IEnumerable<Action> ActionTypes()
+        public static string GetActionAliasByType(string type)
         {
-            return new Action[] {
+            var result = new List<Action> {
                 new Action("CREATED", "Создано"),
                 new Action("DELETED", "Удалено"),
-                new Action("UPDATED", "Обновлено")
-            };
+                new Action("UPDATED", "Обновлено"),
+                new Action("GET", "Просмотр")
+            }.Find(item => item.Type == type).Alias;
+            return result;
         }
     }
 

@@ -57,10 +57,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\components\userlist\userlist.component.ts" />
+    <None Remove="ClientApp\app\components\_models\logList.d.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\userlist\userlist.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\_models\log.d.ts" />
   </ItemGroup>
 
   <ItemGroup>

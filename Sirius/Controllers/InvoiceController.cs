@@ -10,6 +10,7 @@ using Sirius.Helpers;
 using Sirius.Extends.Filters;
 using System.Collections.Generic;
 using Sirius.Models.Dtos;
+using System.Security.Claims;
 
 namespace Sirius.Controllers
 {
@@ -27,6 +28,7 @@ namespace Sirius.Controllers
             _siriusService = new SiriusService(unitOfWork);
             _mapper = mapper;
             _appSettings = appSettings.Value;
+
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace Sirius.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(Guid id)
         {
-            var invoice = _siriusService.GetInvoiceDetailDtoById(id);
+            var invoice = _siriusService.GetInvoiceDetailDtoById(id, GetUserId());
             if (invoice != null)
             {
                 return Ok(invoice);
@@ -68,7 +70,7 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Post([FromBody]Invoice invoice)
         {
-            var result = _siriusService.AddInvoice(invoice);
+            var result = _siriusService.AddInvoice(invoice, GetUserId());
             if (result != null)
             {
                 return Ok(result);
@@ -86,7 +88,7 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Put(Guid id, [FromBody]Invoice invoice)
         {
-            var result = _siriusService.UpdateInvoice(id, invoice);
+            var result = _siriusService.UpdateInvoice(id, invoice, GetUserId());
             if (result != null)
             {
                 return Ok(result);
@@ -102,7 +104,7 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
-            var result = _siriusService.DeleteInvoiceById(id);
+            var result = _siriusService.DeleteInvoiceById(id, GetUserId());
             if (result != "")
             {
                 return Ok(result);
@@ -120,7 +122,7 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Fix(Guid id)
         {
-            var result = _siriusService.FixInvoice(id);
+            var result = _siriusService.FixInvoice(id, GetUserId());
             if (result != null)
             {
                 return Ok(result);
@@ -134,7 +136,7 @@ namespace Sirius.Controllers
         {
             if (invoiceId != null && value != null)
             {
-                var result = _siriusService.ChangeVendor(invoiceId, value);
+                var result = _siriusService.ChangeVendor(invoiceId, value, GetUserId());
                 if (result != null)
                 {
                     return Ok(result);
@@ -149,7 +151,7 @@ namespace Sirius.Controllers
         {
             if (value != null && value != "")
             {
-                var result = _siriusService.ChangeName(invoiceId, value);
+                var result = _siriusService.ChangeName(invoiceId, value, GetUserId());
                 if (result != null)
                 {
                     return Ok(result);
@@ -226,6 +228,12 @@ namespace Sirius.Controllers
                 return Ok(true);
             }
             return NotFound();
+        }
+
+        private Guid GetUserId()
+        {
+            var claimsIdentity = this.User.Identity as ClaimsIdentity;
+            return Guid.Parse(claimsIdentity.FindFirst(ClaimTypes.Name)?.Value);
         }
 
     }

@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirius.Helpers;
 using Sirius.Models;
+using Sirius.Models.Enums;
 
 namespace Sirius.Services
 {
     public partial class SiriusService : ISiriusService
     {
-        public IEnumerable<Log> GetLogs()
+        public object GetLogs()
         {
-            var logs = _unitOfWork.LogRepository.Get();
-            return logs;
+            var result = _unitOfWork.LogRepository.Get(null, null, "User").Select(item => new
+            {
+                item.Id,
+                item.Content,
+                Action = Actions.GetActionAliasByType(item.Action),
+                CreateDate = DateConverter.ConvertToStandardString(item.CreateDate),
+                User = string.Format("{0} {1}", item.User.LastName, item.User.FirstName)
+                 
+            });
+            return result;
         }
 
         public void AddLog(string action, string content, Guid userId)

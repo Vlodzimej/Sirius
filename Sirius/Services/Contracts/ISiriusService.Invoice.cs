@@ -15,7 +15,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        object GetInvoiceDetailDtoById(Guid invoiceId);
+        object GetInvoiceDetailDtoById(Guid invoiceId, Guid userId);
 
         /// <summary>
         /// Получить накладную по идентификатору
@@ -35,14 +35,14 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        string DeleteInvoiceById(Guid invoiceId);
+        string DeleteInvoiceById(Guid invoiceId, Guid userId);
 
         /// <summary>
         /// Добавить новую накладную
         /// </summary>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        object AddInvoice(Invoice invoice);
+        object AddInvoice(Invoice invoice, Guid userId);
 
         /// <summary>
         /// Обновить данные накладной
@@ -50,14 +50,14 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        object UpdateInvoice(Guid invoiceId, Invoice invoice);
+        object UpdateInvoice(Guid invoiceId, Invoice invoice, Guid userId);
 
         /// <summary>
         /// Проведение накладной
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        string FixInvoice(Guid invoiceId);
+        string FixInvoice(Guid invoiceId, Guid userId);
 
         /// <summary>
         /// Изменить поставщика
@@ -65,7 +65,7 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="vendorId"></param>
         /// <returns></returns>
-        string ChangeVendor(Guid invoiceId, Guid vendorId);
+        string ChangeVendor(Guid invoiceId, Guid vendorId, Guid userId);
 
         /// <summary>
         /// Изменить название накладной
@@ -73,7 +73,7 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        string ChangeName(Guid invoiceId, string name);
+        string ChangeName(Guid invoiceId, string name, Guid userId);
 
         /// <summary>
         /// Получение типа накладной по её идентификатору

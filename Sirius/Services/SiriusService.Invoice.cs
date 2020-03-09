@@ -16,9 +16,14 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public object GetInvoiceDetailDtoById(Guid invoiceId)
+        public object GetInvoiceDetailDtoById(Guid invoiceId, Guid userId)
         {
-            return _unitOfWork.InvoiceRepository.GetById(invoiceId);
+            ///TODO: Оптимизировать
+            var result = _unitOfWork.InvoiceRepository.GetById(invoiceId);
+            var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.TypeId);
+            AddLog("GET", string.Format("{0} {1}", invoiceType.Name, invoice.Name), userId);
+            return result;
         }
 
         /// <summary>
@@ -45,15 +50,17 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public string DeleteInvoiceById(Guid invoiceId)
+        public string DeleteInvoiceById(Guid invoiceId, Guid userId)
         {
             string result = "";
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
+            var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.TypeId);
             if (invoice != null && !invoice.IsFixed)
             {
                 _unitOfWork.InvoiceRepository.Delete(invoice);
                 _unitOfWork.Save();
                 result = "Накладная удалена.";
+                AddLog("DELETED", string.Format("{0} {1}", invoiceType.Name, invoice.Name), userId);
             }
             if (invoice.IsFixed)
             {
@@ -67,7 +74,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public object AddInvoice(Invoice invoice)
+        public object AddInvoice(Invoice invoice, Guid userId)
         {
             var newInvoiceId = Guid.NewGuid();
             var newInvoice = new Invoice()
@@ -104,7 +111,7 @@ namespace Sirius.Services
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
 
-                AddLog("CREATED", string.Format("{0} {1}", invoiceType.Name, addedInvoice.Name), invoice.UserId);
+                AddLog("CREATED", string.Format("{0} {1}", invoiceType.Name, addedInvoice.Name), userId);
 
                 return _unitOfWork.InvoiceRepository.GetById(newInvoiceId);
             }
@@ -117,14 +124,17 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="invoice"></param>
         /// <returns></returns>
-        public object UpdateInvoice(Guid invoiceId, Invoice invoice)
+        public object UpdateInvoice(Guid invoiceId, Invoice invoice, Guid userId)
         {
             if (invoiceId != null && invoice != null && invoiceId == invoice.Id)
             {
                 _unitOfWork.InvoiceRepository.Update(invoice);
                 _unitOfWork.Save();
-                return _unitOfWork.InvoiceRepository.GetById(invoiceId);
 
+                var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.TypeId);
+                AddLog("UPDATED", string.Format("{0} {1}", invoiceType.Name, invoice.Name), userId);
+
+                return _unitOfWork.InvoiceRepository.GetById(invoiceId);
             }
             return null;
         }
@@ -134,7 +144,7 @@ namespace Sirius.Services
         /// </summary>
         /// <param name="invoiceId"></param>
         /// <returns></returns>
-        public string FixInvoice(Guid invoiceId)
+        public string FixInvoice(Guid invoiceId, Guid userId)
         {
             string result;
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
@@ -181,6 +191,9 @@ namespace Sirius.Services
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             if (invoice != null && invoice.IsFixed == true)
             {
+                var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.Id);
+                AddLog("UPDATED", string.Format("{0} {1}", invoiceType.Name, invoice.Name), userId);
+
                 result = "Накладная " + invoice.Name + " успешно проведена!";
             }
             else
@@ -196,14 +209,14 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="vendorId"></param>
         /// <returns></returns>
-        public string ChangeVendor(Guid invoiceId, Guid vendorId)
+        public string ChangeVendor(Guid invoiceId, Guid vendorId, Guid userId)
         {
             string result;
 
             // Изменение свойств существующей накладной
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             invoice.VendorId = vendorId;
-            UpdateInvoice(invoiceId, invoice);
+            UpdateInvoice(invoiceId, invoice, userId);
 
             // Проверка сохраненных изменений
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
@@ -224,14 +237,14 @@ namespace Sirius.Services
         /// <param name="invoiceId"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public string ChangeName(Guid invoiceId, string name)
+        public string ChangeName(Guid invoiceId, string name, Guid userId)
         {
             string result;
 
             // Изменение свойств существующей накладной
             var invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             invoice.Name = name;
-            UpdateInvoice(invoiceId, invoice);
+            UpdateInvoice(invoiceId, invoice, userId);
 
             // Проверка сохраненных изменений
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);

@@ -1,3 +1,22 @@
-<div>
-    LOGS
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <app-loading-icon></app-loading-icon>
+        <div class="panel panel-default"
+             *ngIf="!loadingService.getLoadingStatus()">
+            <table class="table table-hover table-striped table-bordered table-condensed">
+                <tr>
+                    <th class="text-center">Дата</th>
+                    <th class="text-center">Действие</th>
+                    <th class="text-center">Описание</th>
+                    <th class="text-center">Автор</th>
+                </tr>
+                <tr *ngFor="let log of logs; let n = index">
+                    <td>{{ log.createDate }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.content }}</td>
+                    <td>{{ log.user }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
