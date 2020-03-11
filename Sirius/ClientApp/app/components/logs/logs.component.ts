@@ -9,7 +9,7 @@ export class LogsComponent implements OnInit {
 
     logs: Array<Log> = [];
 
-    constructor(private apiService: ApiService, private loadingService: LoadingService, private pageHeaderService: PageHeaderService) { }
+    constructor(private apiService: ApiService, public loadingService: LoadingService, private pageHeaderService: PageHeaderService) { }
 
     ngOnInit() {
         this.pageHeaderService.changeText("Журнал действий");
