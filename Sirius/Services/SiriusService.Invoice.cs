@@ -191,7 +191,7 @@ namespace Sirius.Services
             invoice = _unitOfWork.InvoiceRepository.GetByID(invoiceId);
             if (invoice != null && invoice.IsFixed == true)
             {
-                var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.Id);
+                var invoiceType = _unitOfWork.InvoiceRepository.GetTypeById(invoice.TypeId);
                 AddLog("UPDATED", string.Format("{0} {1}", invoiceType.Name, invoice.Name), userId);
 
                 result = "Накладная " + invoice.Name + " успешно проведена!";
