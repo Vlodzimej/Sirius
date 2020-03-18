@@ -48,18 +48,7 @@ export class BatchesComponent implements OnInit {
         this.loadingService.showLoadingIcon();
         this.isReport = true;
         this.listItems = [];
-        var params: string = "";
-
-        // Получение критериев фильтрации 
-        var filter = this.filterService.getFilter();
-
-        params += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
-        params += filter.itemId != null ? "&itemId=" + filter.itemId : "";
-        params += filter.vendorId != null ? "&vendorId=" + filter.vendorId : "";
-        params += filter.startDate != null ? "&startDate=" + filter.startDate : "";
-        params += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
-        params += filter.isDynamic == true ? "&isDynamic=true" : "";
-        params += filter.isMinimumLimit == true ? "&isMinimumLimit=true" : "";
+        var params: string = this.getQueryString();
 
         this.apiService.get<BatchGroup[]>('register/batches', params).subscribe(
             data => {
@@ -89,6 +78,26 @@ export class BatchesComponent implements OnInit {
             error => {
                 this.alertService.serverError(error);
             });
+    }
+
+    private getQueryString() {
+        // Получение критериев фильтрации 
+        let filter = this.filterService.getFilter();
+        let result = ''
+        result += filter.categoryId != null ? "categoryId=" + filter.categoryId : "";
+        result += filter.itemId != null ? "&itemId=" + filter.itemId : "";
+        result += filter.vendorId != null ? "&vendorId=" + filter.vendorId : "";
+        result += filter.startDate != null ? "&startDate=" + filter.startDate : "";
+        result += filter.finishDate != null ? "&finishDate=" + filter.finishDate : "";
+        result += filter.isDynamic == true ? "&isDynamic=true" : "";
+        result += filter.isMinimumLimit == true ? "&isMinimumLimit=true" : "";
+        return result;
+    }
+
+    onGetExcelReport() {
+        let link = document.createElement('a');
+        link.setAttribute('href',`./api/report/getexcelreport`);
+        link.click();
     }
 }
 

@@ -57,7 +57,7 @@ namespace Sirius.DAL.Repository.Contract
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IEnumerable<object> GetBatches(BatchFilter filter);
+        List<BatchGroup> GetBatches(BatchFilter filter);
 
     }
 }

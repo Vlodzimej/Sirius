@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirius.Extends.Filters;
 using System.Linq.Expressions;
+using System.IO;
 
 namespace Sirius.Services
 {
@@ -81,7 +82,14 @@ namespace Sirius.Services
         /// <returns></returns>
         public IEnumerable<object> GetBatches(BatchFilter filter)
         {
-            return _unitOfWork.RegisterRepository.GetBatches(filter);
+            var batches = _unitOfWork.RegisterRepository.GetBatches(filter);
+
+            var fileDownloadName = "report.xlsx";
+            using (var package = CreateExcelPackage(batches))
+            {
+                package.SaveAs(new FileInfo(fileDownloadName));
+            }
+            return batches;
         }
 
         /// <summary>

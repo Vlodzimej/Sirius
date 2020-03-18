@@ -217,7 +217,7 @@ namespace Sirius.Models
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IEnumerable<object> GetBatches(BatchFilter filter)
+        public List<BatchGroup> GetBatches(BatchFilter filter)
         {
             List<BatchGroup> batchGroups = new List<BatchGroup>();
             Guid itemId = filter.ItemId;
