@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using AutoMapper;
 using Sirius.Models;
@@ -11,8 +12,6 @@ using System.IO;
 
 namespace Sirius.Controllers
 {
-    [Authorize(Roles = "admin")]
-    [Produces("application/json")]
     [Route("api/report")]
     public class ReportController : Controller
     {
@@ -33,17 +32,23 @@ namespace Sirius.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getexcelreport")]
-        public FileStreamResult GetExcelReport()
+        public IActionResult GetExcelReport()
         {
-            var contentType = "application/octet-stream";
-            var fileName = "report.xlsx";
-            var stream = new MemoryStream();
-            stream.Position = 0;
-            /*
+            try
+            {
+                // Путь к файлу
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "report.xlsx");
+                // Тип файла - content-type
+                string fileType = XlsxContentType;
+                // Имя файла - необязательно
+                string fileName = "report.xlsx";
+                return PhysicalFile(filePath, fileType, fileName);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return File(fileDownloadName, XlsxContentType, fileDownloadName);*/
-
-            return File(stream, contentType, fileName);
         }
     }
 }

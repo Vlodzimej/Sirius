@@ -84,10 +84,17 @@ namespace Sirius.Services
         {
             var batches = _unitOfWork.RegisterRepository.GetBatches(filter);
 
-            var fileDownloadName = "report.xlsx";
+            string fileDownloadName = Path.Combine(Directory.GetCurrentDirectory(), "report.xlsx");
             using (var package = CreateExcelPackage(batches))
             {
-                package.SaveAs(new FileInfo(fileDownloadName));
+                try
+                {
+                    package.SaveAs(new FileInfo(fileDownloadName));
+                }
+                catch (AppException ex)
+                {
+                    return batches;
+                }
             }
             return batches;
         }

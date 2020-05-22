@@ -97,6 +97,7 @@ export class BatchesComponent implements OnInit {
     onGetExcelReport() {
         let link = document.createElement('a');
         link.setAttribute('href',`./api/report/getexcelreport`);
+        link.setAttribute('target',`_blank`);
         link.click();
     }
 }
