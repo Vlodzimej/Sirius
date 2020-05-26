@@ -1,6 +1,7 @@
 ﻿using Sirius.Helpers;
 using Sirius.Models;
 using System;
+using Sirius.Models.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -325,8 +326,28 @@ namespace Sirius.Services
                 };
                 _unitOfWork.RegisterRepository.Insert(newRegister);
             }
+        }
 
-
+        /// <summary>
+        /// Получение элементов для общего отчета и создание Excel документа
+        /// </summary>
+        /// <returns></returns>
+        public List<ReportItemDto> GetReportItems()
+        {
+            var items = _unitOfWork.RegisterRepository.GetReportItems().ToList();
+            string fileDownloadName = Path.Combine(Directory.GetCurrentDirectory(), "report.xlsx");
+            using (var package = CreateCommonReport(items))
+            {
+                try
+                {
+                    package.SaveAs(new FileInfo(fileDownloadName));
+                }
+                catch (AppException ex)
+                {
+                    return items;
+                }
+            }
+            return items;
         }
     }
 }

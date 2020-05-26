@@ -55,7 +55,8 @@ import {
 // Импорт компонентов отчетов
 import {
     ReportComponent,
-    BatchesComponent
+    BatchesComponent,
+    CommonReportComponent
 } from './components/report'
 
 // Импорт пайпов
@@ -93,7 +94,8 @@ import {
         LocalizedCurrencyPipe,
         AboutComponent,
         HelpComponent,
-        LogsComponent
+        LogsComponent,
+        CommonReportComponent
     ],
     imports: [
         CommonModule,
@@ -114,6 +116,7 @@ import {
             { path: 'invoices/:typealias', component: InvoiceListComponent, canActivate: [AuthGuard] },
             { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
             { path: 'report/:typealias', component: ReportComponent, canActivate: [AuthGuard] },
+            { path: 'commonreport', component: CommonReportComponent, canActivate: [AuthGuard]},
             { path: 'batches', component: BatchesComponent, canActivate: [AuthGuard] },
             { path: 'about', component: AboutComponent, canActivate: [AuthGuard] },
             { path: 'help', component: HelpComponent, canActivate: [AuthGuard] },

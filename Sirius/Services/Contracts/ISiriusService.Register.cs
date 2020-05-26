@@ -1,9 +1,9 @@
 ﻿using Sirius.Extends.Filters;
 using Sirius.Helpers;
 using Sirius.Models;
+using Sirius.Models.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sirius.Services
@@ -108,5 +108,11 @@ namespace Sirius.Services
         /// <param name="destinationInvoiceId"></param>
         /// <returns></returns>
         IEnumerable<Register> CopyRegisters(Guid sourceInvoiceId, Guid destinationInvoiceId);
+
+        /// <summary>
+        /// Получение элементов для общего отчета
+        /// </summary>
+        /// <returns></returns>
+        List<ReportItemDto> GetReportItems();
     }
 }

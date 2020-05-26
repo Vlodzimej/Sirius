@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+        <div class="panel-group" id="report-accordion-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a
+                        class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#report-accordion"
+                        data-target="#filter-panel"
+                    >
+                        Управление
+                    </a>
+                </div>
+                <div id="filter-panel" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button
+                            class="btn btn-default btn-block"
+                            (click)="getReport()"
+                        >
+                            Сформировать
+                        </button>
+                        <button
+                            class="btn btn-default btn-block"
+                            (click)="onGetExcelReport()"
+                            [disabled]="!hasReport"
+                        >
+                            Выгрузить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-8 col-sm-pull-4 text-center">
+        <app-loading-icon></app-loading-icon>
+        <div
+            class="panel panel-default"
+            *ngIf="!loadingService.getLoadingStatus()"
+        >
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th class="text-center">№</th>
+                    <th>Наименование</th>
+                    <th>Приход</th>
+                    <th>Расход</th>
+                    <th>Остаток</th>
+                    <th>Ед. изм.</th>
+                </tr>
+                <tr *ngFor="let item of reportItems; let n = index">
+                    <td class="text-center">{{ n + 1 }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.incoming }}</td>
+                    <td>{{ item.consumption }}</td>
+                    <td>{{ item.total }}</td>
+                    <td>{{ item.dimension }}</td>
+                </tr>
+            </table>
+        </div>
+        <div *ngIf="reportItems.length == 0">
+            <h3>Список пуст</h3>
+        </div>
+    </div>
+</div>

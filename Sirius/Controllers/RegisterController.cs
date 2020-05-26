@@ -203,7 +203,6 @@ namespace Sirius.Controllers
             }
             return new BadRequestResult();
         }
-
     }
 }
 

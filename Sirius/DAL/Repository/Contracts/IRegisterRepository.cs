@@ -1,6 +1,7 @@
 ﻿using Sirius.Extends.Filters;
 using Sirius.Helpers;
 using Sirius.Models;
+using Sirius.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,8 @@ namespace Sirius.DAL.Repository.Contract
         /// <param name="filter"></param>
         /// <returns></returns>
         List<BatchGroup> GetBatches(BatchFilter filter);
+
+        IEnumerable<ReportItemDto> GetReportItems();
 
     }
 }

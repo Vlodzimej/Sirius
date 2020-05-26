@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirius.DAL.Repository.Contract;
 using System.Linq.Expressions;
+using Sirius.Models.Dtos;
 
 namespace Sirius.Models
 {
@@ -253,5 +254,49 @@ namespace Sirius.Models
                 .Include(i => i.Invoice)
                 .Where(x => x.Invoice.IsFixed == true);
         }
+
+        public IEnumerable<ReportItemDto> GetReportItems()
+        {
+            var incoming = _siriusContext.Registers
+                .Include(i => i.Invoice)
+                .Include(i => i.Item)
+                .Where(i => i.Invoice.TypeId == Types.InvoiceTypes.Arrival.Id).Select(i => new ReportItem()
+                {
+                    Id = i.ItemId,
+                    Name = i.Item.Name,
+                    Amount = i.Amount,
+                }).ToList();
+
+            var consumption = _siriusContext.Registers
+                .Include(i => i.Invoice)
+                .Include(i => i.Item)
+                .Where(i => i.Invoice.TypeId == Types.InvoiceTypes.Consumption.Id).Select(i => new ReportItem()
+                {
+                    Id = i.ItemId,
+                    Name = i.Item.Name,
+                    Amount = i.Amount,
+                }).ToList();
+
+            return _siriusContext.Items.Include(i => i.Dimension).ToList().Select(item =>
+            {
+                var incomingItems = incoming.Where(i => i.Id == item.Id && i.Amount > 0).Select(i => i.Amount);
+                var consumptionItems = consumption.Where(i => i.Id == item.Id && i.Amount > 0).Select(i => i.Amount);
+
+                var totalIncoming = incomingItems.Count() > 0 ? Math.Round(incomingItems.Aggregate((f, s) => f + s), 2) : 0;
+                var totalConsumption = consumptionItems.Count() > 0 ? Math.Round(consumptionItems.Aggregate((f, s) => f + s), 2) : 0;
+
+                return new ReportItemDto()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Incoming = totalIncoming,
+                    Consumption = totalConsumption,
+                    Total = Math.Round(totalIncoming - totalConsumption, 2),
+                    Dimension = item.Dimension?.Name
+                };
+
+            }).Where(i => i.Incoming > 0 || i.Consumption > 0);
+        }
     }
 }
+

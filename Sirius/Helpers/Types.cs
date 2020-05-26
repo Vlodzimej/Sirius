@@ -21,7 +21,7 @@ namespace Sirius.Helpers
             {
                 private static Guid _id = new Guid("5F726CEC-BD33-4474-817C-0C50DFDDA25C");
                 /// <summary>
-                /// Идентификатор для приходной накладной
+                /// Идентификатор для расхрднрй накладной
                 /// </summary>
                 public static Guid Id { get { return _id; } }
             }
@@ -29,7 +29,7 @@ namespace Sirius.Helpers
             {
                 private static Guid _id = new Guid("EC5CE665-903C-4434-B928-0AEA8F9F45F6");
                 /// <summary>
-                /// Идентификатор для приходной накладной
+                /// Идентификатор для накладной списания
                 /// </summary>
                 public static Guid Id { get { return _id; } }
             }

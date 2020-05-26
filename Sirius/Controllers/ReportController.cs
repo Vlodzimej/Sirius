@@ -1,10 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using AutoMapper;
-using Sirius.Models;
 using Sirius.DAL;
 using Sirius.Services;
 using Sirius.Helpers;
@@ -49,6 +46,17 @@ namespace Sirius.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpGet("getcommonreport")]
+        public IActionResult GetCommonReport()
+        {
+            var result = _siriusService.GetReportItems();
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
         }
     }
 }
