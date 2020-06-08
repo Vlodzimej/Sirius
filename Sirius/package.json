@@ -67,6 +67,6 @@
     "lodash": "^4.17.15"
   },
   "optionalDependencies": {
-    "fsevents": "*"
+    "fsevents": "^2.1.3"
   }
 }

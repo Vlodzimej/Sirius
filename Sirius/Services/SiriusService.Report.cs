@@ -26,7 +26,6 @@ namespace Sirius.Services
             worksheet.Cells[1, 4].Value = "Сумма";
 
             //Add values
-
             var numberformat = "#,##0.00";
             var dataCellStyleName = "TableNumber";
             var numStyle = package.Workbook.Styles.CreateNamedStyle(dataCellStyleName);

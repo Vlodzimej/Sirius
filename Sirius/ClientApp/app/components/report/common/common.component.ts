@@ -13,7 +13,7 @@ export class CommonReportComponent implements OnInit {
     constructor(
         private pageHeaderService: PageHeaderService,
         private apiService: ApiService,
-        private loadingService: LoadingService
+        public loadingService: LoadingService
     ) {}
 
     ngOnInit() {
@@ -34,8 +34,8 @@ export class CommonReportComponent implements OnInit {
 
     onGetExcelReport() {
         let link = document.createElement('a');
-        link.setAttribute('href',`./api/report/getexcelreport`);
-        link.setAttribute('target',`_blank`);
+        link.setAttribute('href', `./api/report/getexcelreport`);
+        link.setAttribute('target', `_blank`);
         link.click();
     }
 }
