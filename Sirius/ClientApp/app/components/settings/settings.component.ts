@@ -6,20 +6,32 @@ import { ApiService, PageHeaderService, AlertService } from '../_services';
     templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {
-    constructor(private apiService: ApiService, private pageHeaderService: PageHeaderService, private alertService: AlertService) { }
+    constructor(
+        private apiService: ApiService,
+        private pageHeaderService: PageHeaderService,
+        private alertService: AlertService
+    ) {}
 
-    ngOnInit() { 
-        this.pageHeaderService.changeText("Настройки");
+    ngOnInit() {
+        this.pageHeaderService.changeText('Настройки');
     }
 
     dbReset() {
-        console.log("click");
+        console.log('click');
         this.apiService.dbReset().subscribe(
-            data => {
-                this.alertService.success("База данных очищена.");
+            (data) => {
+                this.alertService.success('База данных очищена.');
             },
-            error => {
+            (error) => {
                 this.alertService.serverError(error);
-            });
+            }
+        );
+    }
+
+    removeInvoices() {
+        this.apiService.removeInvoices().subscribe(
+            (data) => this.alertService.success('Накладные удалены'),
+            (err) => this.alertService.serverError(err)
+        );
     }
 }

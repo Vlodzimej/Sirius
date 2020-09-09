@@ -66,14 +66,17 @@ namespace Sirius.Controllers
         /// <param name="item"></param>
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public IActionResult Post([FromBody]ItemSaveDto item)
+        public IActionResult Post([FromBody] ItemSaveDto item)
         {
-            var result = _siriusService.AddItem(item);
-            if (result != null)
+            try
             {
+                var result = _siriusService.AddItem(item);
                 return Ok(result);
             }
-            return new BadRequestResult();
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -84,7 +87,7 @@ namespace Sirius.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
-        public IActionResult Put(Guid id, [FromBody]Item item)
+        public IActionResult Put(Guid id, [FromBody] Item item)
         {
             var result = _siriusService.UpdateItem(id, item);
             if (result != null)
@@ -102,12 +105,15 @@ namespace Sirius.Controllers
         [Authorize(Roles = "admin")]
         public IActionResult Delete(Guid id)
         {
-            var result = _siriusService.DeleteItemById(id);
-            if (result == id.ToString())
+            try
             {
+                var result = _siriusService.DeleteItemById(id);
                 return Ok(result);
             }
-            return BadRequest(result);
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

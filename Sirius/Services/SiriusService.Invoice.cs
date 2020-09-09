@@ -98,15 +98,15 @@ namespace Sirius.Services
 
             if (addedInvoice != null)
             {
+                var year = addedInvoice.Date.Year;
+                var number = _unitOfWork.InvoiceRepository.Get(x => x.Date.Year == year && x.TypeId == invoice.TypeId).Select(i => i.Number).Max() + 1;
                 // Получаем информацию о типе накладной 
                 var invoiceType = GetInvoiceTypeByTypeId(invoice.TypeId);
                 // И узнаём префикс из настроек
                 var prefix = GetSettingValueByTypeIdAndAlias(Types.SettingsTypes.Invoice.Prefix.Id, invoiceType.Alias);
 
-                var year = DateTime.Now.ToString("yy");
-                var number = addedInvoice.Date.ToString("hhmmss");
-
                 addedInvoice.Name = $"{prefix}-{year}/{number}";
+                addedInvoice.Number = number;
 
                 _unitOfWork.InvoiceRepository.Update(addedInvoice);
                 _unitOfWork.Save();
@@ -329,6 +329,22 @@ namespace Sirius.Services
         public bool UpdateDate(Guid invoiceId, string date)
         {
             return _unitOfWork.InvoiceRepository.UpdateDate(invoiceId, Convert.ToDateTime(date));
+        }
+
+        /// <summary>
+        /// Удаление всех накладных и их регистров, кроме шаблонов
+        /// </summary>
+        /// <returns></returns>
+        public void RemoveInvoices()
+        {
+            var invoices = _unitOfWork.InvoiceRepository.Get(x => x.TypeId != Types.InvoiceTypes.Template.Id);
+            var invoiceIds = invoices.Select(i => i.Id);
+            var registers = _unitOfWork.RegisterRepository.Get(x => invoiceIds.Contains(x.InvoiceId)).ToList();
+
+            registers.ForEach(x => _unitOfWork.RegisterRepository.Delete(x));
+            invoices.ToList().ForEach(x => _unitOfWork.InvoiceRepository.Delete(x));
+            
+            _unitOfWork.Save();
         }
     }
 }

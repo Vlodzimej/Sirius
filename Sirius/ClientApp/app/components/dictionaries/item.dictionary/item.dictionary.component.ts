@@ -25,7 +25,7 @@ export class ItemDictionaryComponent implements OnInit {
     public loading: boolean = true;
     public items: Item[] = [];
     public item: Item = new Item();
-    public selectedItemId: string;
+    public selectedItemId: string = '';
 
     public dimensions: Dimension[] = [];
     public categories: Category[] = [];
@@ -64,14 +64,14 @@ export class ItemDictionaryComponent implements OnInit {
         params += filter.itemId != null ? '&itemId=' + filter.itemId : '';
 
         this.apiService.get<Item[]>('item', params).subscribe(
-            data => {
-                const arr = data.map(x => {
+            (data) => {
+                const arr = data.map((x) => {
                     return { ...x, sortName: x.name.trim().toLowerCase() };
                 });
                 this.items = _.sortBy(arr, 'sortName');
                 this.loadingService.hideLoadingIcon();
             },
-            error => {
+            (error) => {
                 this.alertService.serverError(error);
             }
         );
@@ -114,12 +114,12 @@ export class ItemDictionaryComponent implements OnInit {
             this.apiService
                 .getById<Item>('item', this.selectedItemId)
                 .subscribe(
-                    data => {
+                    (data) => {
                         this.item = data;
                         this.modalService.open('modal-edit-item');
                         console.log(this.item);
                     },
-                    error => {
+                    (error) => {
                         this.alertService.error('Ошибка загрузки', true);
                     }
                 );
@@ -131,12 +131,12 @@ export class ItemDictionaryComponent implements OnInit {
      */
     onAddItem() {
         this.apiService.create<Item>('item', this.item).subscribe(
-            data => {
+            (data) => {
                 this.modalService.close('modal-new-item');
                 this.ngOnInit();
             },
-            error => {
-                this.alertService.error(GenerateErrorMessage(error), true);
+            (error) => {
+                this.alertService.error(error._body, true);
             }
         );
     }
@@ -155,12 +155,12 @@ export class ItemDictionaryComponent implements OnInit {
             console.log(newItem);
 
             this.apiService.update<Item>('item', newItem.id, newItem).subscribe(
-                data => {
+                (data) => {
                     this.modalService.close('modal-edit-item');
                     this.ngOnInit();
                     console.log(this.item);
                 },
-                error => {
+                (error) => {
                     this.alertService.error(GenerateErrorMessage(error), true);
                 }
             );
@@ -174,19 +174,19 @@ export class ItemDictionaryComponent implements OnInit {
      */
     loadDictionaries() {
         this.apiService.getAll<Dimension>('dimension').subscribe(
-            data => {
+            (data) => {
                 this.dimensions = data;
             },
-            error => {
+            (error) => {
                 this.alertService.serverError(error);
             }
         );
 
         this.apiService.getAll<Category>('category').subscribe(
-            data => {
+            (data) => {
                 this.categories = data;
             },
-            error => {
+            (error) => {
                 this.alertService.serverError(error);
             }
         );
@@ -194,21 +194,18 @@ export class ItemDictionaryComponent implements OnInit {
 
     onDeleteItem() {
         this.apiService.delete('item', this.selectedItemId).subscribe(
-            data => {
+            (data) => {
                 this.closeModal('modal-edit-item');
-                if (this.selectedItemId == data.text()) {
-                    var deletedItem = this.items.find(
-                        i => i.id == this.selectedItemId
-                    ) as Item;
-                    const i = this.items.indexOf(deletedItem);
-                    this.items.splice(i, 1);
-                    delete this.selectedItemId;
-                } else {
-                    this.alertService.error('Идентификатор не совпадает.');
-                }
+
+                var deletedItem = this.items.find(
+                    (i) => i.id == this.selectedItemId
+                ) as Item;
+                const i = this.items.indexOf(deletedItem);
+                this.items.splice(i, 1);
+                delete this.selectedItemId;
             },
-            error => {
-                this.alertService.error(error.text());
+            (error) => {
+                this.alertService.error(error._body);
             }
         );
     }

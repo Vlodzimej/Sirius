@@ -260,7 +260,7 @@ namespace Sirius.Models
             var incoming = _siriusContext.Registers
                 .Include(i => i.Invoice)
                 .Include(i => i.Item)
-                .Where(i => i.Invoice.TypeId == Types.InvoiceTypes.Arrival.Id).Select(i => new ReportItem()
+                .Where(i => i.Invoice.IsFixed && i.Invoice.Factor == 1).Select(i => new ReportItem()
                 {
                     Id = i.ItemId,
                     Name = i.Item.Name,
@@ -270,7 +270,7 @@ namespace Sirius.Models
             var consumption = _siriusContext.Registers
                 .Include(i => i.Invoice)
                 .Include(i => i.Item)
-                .Where(i => i.Invoice.TypeId == Types.InvoiceTypes.Consumption.Id).Select(i => new ReportItem()
+                .Where(i => i.Invoice.IsFixed && i.Invoice.Factor == (-1)).Select(i => new ReportItem()
                 {
                     Id = i.ItemId,
                     Name = i.Item.Name,

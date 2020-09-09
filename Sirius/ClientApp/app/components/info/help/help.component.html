@@ -1,3 +1,15 @@
 <div class="col-xs-12 text-center">
-    <span>Раздел в разработке</span>
+    <ul class="list-group">
+        <li
+            class="list-group-item"
+            *ngFor="let item of helpItems; let i = index"
+        >
+            <a (click)="selectItem(i)">{{ item.title }}</a>
+        </li>
+    </ul>
+    <div class="panel panel-default" containerId="logs" *ngIf="selectedItem">
+        <div class="panel-heading">{{ selectedItem.title }}</div>
+        <div class="panel-body" [innerHtml]="selectedItem.content">
+        </div>
+    </div>
 </div>

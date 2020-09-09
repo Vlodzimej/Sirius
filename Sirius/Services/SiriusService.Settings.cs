@@ -179,6 +179,5 @@ namespace Sirius.Services
             _unitOfWork.SettingRepository.DatabaseFill(invoiceTypes, dimensionPrototypes, categoryPrototypes, vendorPrototypes, itemPrototypes, settingsPrototypes);
             _unitOfWork.Save();
         }
-
     }
 }

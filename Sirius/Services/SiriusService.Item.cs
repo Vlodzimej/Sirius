@@ -41,7 +41,7 @@ namespace Sirius.Services
         {
             if (filter != null)
             {
-                var items = _unitOfWork.ItemRepository.GetAll(x => 
+                var items = _unitOfWork.ItemRepository.GetAll(x =>
                     (filter.CategoryId != Guid.Empty ? x.CategoryId == filter.CategoryId : true) &&
                     (filter.ItemId != Guid.Empty ? x.Id == filter.ItemId : true));
                 return items;
@@ -59,21 +59,22 @@ namespace Sirius.Services
         public string DeleteItemById(Guid id)
         {
             var item = _unitOfWork.ItemRepository.GetByID(id);
-            var registers = _unitOfWork.RegisterRepository.GetFixedRegisters();
             // Если какой-либо регистр проведённой накладной ссылается на предмет, то удалять предмет запрещено
             if (item != null)
             {
-                if (registers.FirstOrDefault(x => x.ItemId == item.Id) == null)
+                if (_unitOfWork.RegisterRepository.Get(x => x.ItemId == id).Any())
+                {
+                    throw new AppException("Наименование невозможно удалить, так как на него ссылаются проведённые документы!");
+
+                }
+                else
                 {
                     _unitOfWork.ItemRepository.Delete(item);
                     _unitOfWork.Save();
                     return item.Id.ToString();
-                } else
-                {
-                    return "Наименование невозможно удалить, так как на него ссылаются проведённые документы!";
                 }
-            } 
-            return "Наименование не найдено.";
+            }
+            throw new AppException("Наименование не найдено.");
         }
 
         /// <summary>
@@ -83,6 +84,11 @@ namespace Sirius.Services
         /// <returns></returns>
         public object AddItem(ItemSaveDto savingItem)
         {
+            if (_unitOfWork.ItemRepository.Get(x => x.Name == savingItem.Name).Any())
+            {
+                throw new AppException("Наименование уже существует");
+            }
+            
             var item = new Item()
             {
                 Id = Guid.NewGuid(),
@@ -116,6 +122,6 @@ namespace Sirius.Services
             return null;
         }
 
-         
+
     }
 }

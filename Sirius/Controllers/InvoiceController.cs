@@ -68,7 +68,7 @@ namespace Sirius.Controllers
         /// <param name="register"></param>
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public IActionResult Post([FromBody]Invoice invoice)
+        public IActionResult Post([FromBody] Invoice invoice)
         {
             var result = _siriusService.AddInvoice(invoice, GetUserId());
             if (result != null)
@@ -86,7 +86,7 @@ namespace Sirius.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
-        public IActionResult Put(Guid id, [FromBody]Invoice invoice)
+        public IActionResult Put(Guid id, [FromBody] Invoice invoice)
         {
             var result = _siriusService.UpdateInvoice(id, invoice, GetUserId());
             if (result != null)
@@ -132,7 +132,7 @@ namespace Sirius.Controllers
 
         [HttpPut("{invoiceId}/vendor")]
         [Authorize(Roles = "admin")]
-        public IActionResult ChangeVendor(Guid invoiceId, [FromQuery]Guid value)
+        public IActionResult ChangeVendor(Guid invoiceId, [FromQuery] Guid value)
         {
             if (invoiceId != null && value != null)
             {
@@ -147,7 +147,7 @@ namespace Sirius.Controllers
 
         [HttpPut("{invoiceId}/name")]
         [Authorize(Roles = "admin")]
-        public IActionResult ChangeName(Guid invoiceId, [FromQuery]string value)
+        public IActionResult ChangeName(Guid invoiceId, [FromQuery] string value)
         {
             if (value != null && value != "")
             {
@@ -210,7 +210,7 @@ namespace Sirius.Controllers
 
         [HttpPut("comment/{invoiceId}")]
         [Authorize(Roles = "admin")]
-        public IActionResult UpdateComment(Guid invoiceId, [FromQuery]string value)
+        public IActionResult UpdateComment(Guid invoiceId, [FromQuery] string value)
         {
             if (_siriusService.UpdateComment(invoiceId, value))
             {
@@ -221,13 +221,28 @@ namespace Sirius.Controllers
 
         [HttpPut("date/{invoiceId}")]
         [Authorize(Roles = "admin")]
-        public IActionResult UpdateDate(Guid invoiceId, [FromQuery]string value)
+        public IActionResult UpdateDate(Guid invoiceId, [FromQuery] string value)
         {
             if (_siriusService.UpdateDate(invoiceId, value))
             {
                 return Ok(true);
             }
             return NotFound();
+        }
+
+        [HttpPost("remove_all")]
+        [Authorize(Roles = "admin")]
+        public IActionResult RemoveInvoices()
+        {
+            try
+            {
+                _siriusService.RemoveInvoices();
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         private Guid GetUserId()

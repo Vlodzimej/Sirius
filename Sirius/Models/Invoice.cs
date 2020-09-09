@@ -72,5 +72,10 @@ namespace Sirius.Models
         /// Фактор
         /// </summary>
         public double Factor { get; set; }
+
+        /// <summary>
+        /// Порядковый номер
+        /// </summary>
+        public int Number { get; set; }
     }
 }
